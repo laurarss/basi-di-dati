@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Css Grids</title>
+    <style>
+        .wrapper    {
+            display:grid;
+            /*need to define the width of divs*/
+            grid-template-columns: 40% 30% 30%;
+            /*grid-column-gap: 1em;*/
+            /*grid-row-gap: 1em;*/
+
+            grid-gap: 1em;
+        }
+
+
+        .wrapper > div {
+            background: #eee;
+            padding: 1em;
+        }
+
+        .wrapper > div:nth-child(odd) {
+            background: #ddd;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="wrapper">
+    <div>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium amet delectus dicta dolores dolorum eius
+        enim est laborum molestiae nemo neque nihil nobis obcaecati omnis pariatur, quaerat ratione, repellat
+        repellendus sunt tempora tenetur, ullam veritatis voluptatibus. Aut consequuntur facere odio quas quod unde ut?
+        Aliquid culpa cum cumque dolorem doloribus ea impedit, iste labore, nemo nesciunt obcaecati quos ratione
+        repellendus similique voluptas. Accusantium beatae deserunt dolore iusto labore omnis quod ratione veritatis. Ab
+        error et eum eveniet ipsum odio porro.
+    </div>
+    <div>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus aperiam beatae, commodi consequuntur
+        cupiditate delectus deleniti eaque facilis fuga fugit harum, incidunt libero, odio officia quam quidem veritatis
+        voluptate! Nisi!
+    </div>
+    <div>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium amet delectus dicta dolores dolorum eius
+        enim est laborum molestiae nemo neque nihil nobis obcaecati omnis pariatur, quaerat ratione, repellat
+        repellendus sunt tempora tenetur, ullam veritatis voluptatibus. Aut consequuntur facere odio quas quod unde ut?
+        Aliquid culpa cum cumque dolorem doloribus ea impedit, iste labore, nemo nesciunt obcaecati quos ratione
+        repellendus similique voluptas. Accusantium beatae deserunt dolore iusto labore omnis quod ratione veritatis. Ab
+        error et eum eveniet ipsum odio porro.
+    </div>
+    <div>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus aperiam beatae, commodi consequuntur
+        cupiditate delectus deleniti eaque facilis fuga fugit harum, incidunt libero, odio officia quam quidem veritatis
+        voluptate! Nisi!
+    </div>
+    <div>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus aperiam beatae, commodi consequuntur
+        cupiditate delectus deleniti eaque facilis fuga fugit harum, incidunt libero, odio officia quam quidem veritatis
+        voluptate! Nisi!
+    </div>
+</div>
+
+</body>
+
+</html>
