@@ -1,1 +1,9 @@
 # Created by .ignore support plugin (hsz.mobi)
+
+### Git ignore per progetto basi di dati laura rossi
+
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
