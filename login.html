@@ -1,20 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Login BDD App</title>
 
-    <style>
-        .login-container {
-            padding: 30vh;
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+
+    <!--  Link css generali  -->
+    <link rel="stylesheet" type="text/css" href="css/general.css">
+    <link rel="stylesheet" type="text/css" href="css/tipography.css">
+    <link rel="stylesheet" type="text/css" href="css/card.css">
+
+    <!-- Link css specifici -->
+    <link rel="stylesheet" type="text/css" href="css/pages/login-page.css">
+
 </head>
 
 <body>
 
 <div class="login-container">
 
+    <div class="login-title">
+        <h1>Basi di dati</h1>
+    </div>
+
+    <div class="card">
+        <form>
+            <div class="login-form">
+
+                <div class="login-input-row">
+                    <input id="username"
+                           name="username"
+                           type="text"
+                           placeholder="Inserisci username">
+                </div>
+
+                <div class="login-input-row">
+                    <input id="password"
+                           name="password"
+                           type="password"
+                           placeholder="Inserisci password">
+                </div>
+
+                <div class="login-submit-row">
+                    <button type="submit">Login</button>
+                    <button>Registrati</button>
+                </div>
+
+            </div>
+        </form>
+    </div>
 </div>
 
 </body>
