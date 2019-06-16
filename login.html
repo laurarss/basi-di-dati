@@ -7,10 +7,15 @@
 
     <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
 
-    <!--  Link css generali  -->
+    <!-- Link css generale   -->
     <link rel="stylesheet" type="text/css" href="css/general.css">
-    <link rel="stylesheet" type="text/css" href="css/tipography.css">
-    <link rel="stylesheet" type="text/css" href="css/card.css">
+
+    <!-- Link bootstrap   -->
+    <link rel="stylesheet" href="bootstrap-4.3.1/css/bootstrap-grid.min.css">
+
+    <!--  Link css custom - SOSTITUITI DA BOOTSTRAP -->
+    <!--    <link rel="stylesheet" type="text/css" href="css/tipography.css">-->
+    <!--    <link rel="stylesheet" type="text/css" href="css/card.css">-->
 
     <!-- Link css specifici -->
     <link rel="stylesheet" type="text/css" href="css/pages/login-page.css">
@@ -19,39 +24,74 @@
 
 <body>
 
-<div class="login-container">
+<!-- IMPLEMENTAZIONE LOGIN CON BOOTSTRAPPO -->
 
-    <div class="login-title">
-        <h1>Basi di dati</h1>
-    </div>
 
-    <div class="card">
-        <form>
-            <div class="login-form">
+<div class="login-content">
 
-                <div class="login-input-row">
-                    <input id="username"
-                           name="username"
-                           type="text"
-                           placeholder="Inserisci username">
-                </div>
+    <div class="container">
 
-                <div class="login-input-row">
-                    <input id="password"
-                           name="password"
-                           type="password"
-                           placeholder="Inserisci password">
-                </div>
+        <div class="row justify-content-center">
 
-                <div class="login-submit-row">
-                    <button type="submit">Login</button>
-                    <button>Registrati</button>
+            <div class="col-6">
+
+                <div class="card">
+                    <div class="card-block">
+                        <h4 class="card-title">Card title</h4>
+                        <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
+                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                    </div>
+
+                    <div class="card-body">
+
+                        <h2>PROVA</h2>
+
+                    </div>
+
                 </div>
 
             </div>
-        </form>
+
+        </div>
+
     </div>
 </div>
+
+<!-- VECCHIA IMPLEMENTAZIONE LOGIN PAGE CON CSS MANUALE -->
+
+<!--<div class="login-container">-->
+
+<!--    <div class="login-title">-->
+<!--        <h1>Basi di dati</h1>-->
+<!--    </div>-->
+
+<!--    <div class="card">-->
+<!--        <form>-->
+<!--            <div class="login-form">-->
+
+<!--                <div class="login-input-row">-->
+<!--                    <input id="username"-->
+<!--                           name="username"-->
+<!--                           type="text"-->
+<!--                           placeholder="Inserisci username">-->
+<!--                </div>-->
+
+<!--                <div class="login-input-row">-->
+<!--                    <input id="password"-->
+<!--                           name="password"-->
+<!--                           type="password"-->
+<!--                           placeholder="Inserisci password">-->
+<!--                </div>-->
+
+<!--                <div class="login-submit-row">-->
+<!--                    <button type="submit">Login</button>-->
+<!--                    <button>Registrati</button>-->
+<!--                </div>-->
+
+<!--            </div>-->
+<!--        </form>-->
+<!--    </div>-->
+<!--</div>-->
 
 </body>
 </html>
