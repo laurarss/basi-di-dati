@@ -4,20 +4,28 @@
 <head>
 
     <meta charset="UTF-8">
-    <title>Login BDD App</title>
+    <title>BDD App</title>
 
     <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
 
     <!-- Link css generale -->
     <link rel="stylesheet" type="text/css" href="css/general.css">
 
-    <!-- Link bootstrap -->
+    <!-- Link css bootstrap -->
     <link href="css/bootstrap/bootstrap.css" rel="stylesheet"/>
 
-</head>
+    <!-- todo: scaricare jquery e popper per install locale   -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
 
-<!-- collegamento javascript bootstrap -->
-<script src="js/bootstrap/bootstrap.min.js"></script>
+    <!-- collegamento javascript bootstrap -->
+    <script src="js/bootstrap/bootstrap.min.js"></script>
+
+</head>
 
 <body>
 
@@ -33,27 +41,67 @@
 
                 <div class="card-body">
 
-                    <h4 class="card-title">Entra nel sito</h4>
+                    <h4 class="card-title text-center">Login</h4>
 
                     <form>
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">Email address</label>
-                            <input type="email" class="form-control" id="exampleInputEmail1"
-                                   aria-describedby="emailHelp" placeholder="Enter email">
-                            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
-                                else.
-                            </small>
+
+                        <div class="row">
+
+                            <div class="col-12">
+
+                                <!-- INPUT username -->
+                                <div class="form-group">
+                                    <label for="usernameInput"><strong>Username</strong></label>
+                                    <input id="usernameInput"
+                                           required
+                                           type="text"
+                                           class="form-control"
+                                           aria-describedby="usernameHelp"
+                                           placeholder="Nome utente...">
+                                </div>
+
+                            </div>
+
+                            <div class="col-12">
+
+                                <!-- INPUT password -->
+                                <div class="form-group">
+                                    <label for="exampleInputPassword"><strong>Password</strong></label>
+                                    <input id="exampleInputPassword"
+                                           type="password"
+                                           required
+                                           class="form-control"
+                                           placeholder="Password...">
+                                </div>
+
+                            </div>
+
+                            <div class="col-6">
+
+                                <a href="register.html"
+                                   class="btn btn-secondary float-left">
+                                    Registrati
+                                </a>
+
+                            </div>
+
+                            <div class="col-6">
+
+                                <button type="submit"
+                                        class="btn btn-primary float-right">
+                                    Accedi
+                                </button>
+
+                            </div>
+
                         </div>
-                        <div class="form-group">
-                            <label for="exampleInputPassword1">Password</label>
-                            <input type="password" class="form-control" id="exampleInputPassword1"
-                                   placeholder="Password">
-                        </div>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                            <label class="form-check-label" for="exampleCheck1">Check me out</label>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Submit</button>
+
+                        <!--                        <div class="form-check">-->
+                        <!--                            <input type="checkbox" class="form-check-input" id="exampleCheck1">-->
+                        <!--                            <label class="form-check-label" for="exampleCheck1">Check me out</label>-->
+                        <!--                        </div>-->
+
+
                     </form>
                 </div>
 
