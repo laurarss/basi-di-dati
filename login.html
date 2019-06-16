@@ -11,53 +11,50 @@
     <!-- Link css generale -->
     <link rel="stylesheet" type="text/css" href="css/general.css">
 
-    <!-- Link css specifici -->
-    <link rel="stylesheet" type="text/css" href="css/custom/login-page.css">
-
     <!-- Link bootstrap -->
-    <link href="css/bootstrap.css" rel="stylesheet"/>
-
-    <!--    <link href="css/bootstrap-theme.css" rel="stylesheet" />-->
+    <link href="css/bootstrap/bootstrap.css" rel="stylesheet"/>
 
 </head>
 
-<script src="js/bootstrap.min.js"></script>
+<!-- collegamento javascript bootstrap -->
+<script src="js/bootstrap/bootstrap.min.js"></script>
 
 <body>
 
 <!-- IMPLEMENTAZIONE LOGIN CON BOOTSTRAPPO -->
-<div class="login-content">
 
-    <div class="container">
+<div class="container" style="padding-top: 18vh;">
 
-        <div class="row justify-content-center">
+    <div class="row justify-content-center">
 
-            <div class="col-6">
+        <div class="col-6">
 
-                <div class="card bg-light shadow">
+            <div class="card bg-light shadow">
 
-                    <div class="card-body">
+                <div class="card-body">
 
-                        <h4 class="card-title">Entra nel sito</h4>
+                    <h4 class="card-title">Entra nel sito</h4>
 
-                        <form>
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Email address</label>
-                                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-                                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputPassword1">Password</label>
-                                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-                            </div>
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                                <label class="form-check-label" for="exampleCheck1">Check me out</label>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </form>
-                    </div>
-
+                    <form>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Email address</label>
+                            <input type="email" class="form-control" id="exampleInputEmail1"
+                                   aria-describedby="emailHelp" placeholder="Enter email">
+                            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
+                                else.
+                            </small>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Password</label>
+                            <input type="password" class="form-control" id="exampleInputPassword1"
+                                   placeholder="Password">
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                            <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
                 </div>
 
             </div>
@@ -65,43 +62,8 @@
         </div>
 
     </div>
+
 </div>
-
-<!-- VECCHIA IMPLEMENTAZIONE LOGIN PAGE CON CSS MANUALE -->
-
-<!--<div class="login-container">-->
-
-<!--    <div class="login-title">-->
-<!--        <h1>Basi di dati</h1>-->
-<!--    </div>-->
-
-<!--    <div class="card">-->
-<!--        <form>-->
-<!--            <div class="login-form">-->
-
-<!--                <div class="login-input-row">-->
-<!--                    <input id="username"-->
-<!--                           name="username"-->
-<!--                           type="text"-->
-<!--                           placeholder="Inserisci username">-->
-<!--                </div>-->
-
-<!--                <div class="login-input-row">-->
-<!--                    <input id="password"-->
-<!--                           name="password"-->
-<!--                           type="password"-->
-<!--                           placeholder="Inserisci password">-->
-<!--                </div>-->
-
-<!--                <div class="login-submit-row">-->
-<!--                    <button type="submit">Login</button>-->
-<!--                    <button>Registrati</button>-->
-<!--                </div>-->
-
-<!--            </div>-->
-<!--        </form>-->
-<!--    </div>-->
-<!--</div>-->
 
 </body>
 </html>
