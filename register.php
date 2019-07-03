@@ -1,5 +1,8 @@
+<!-- collegamento al file server.php, qui c'è il codice che accoglie i dati inseriti in questa pagina -->
+<?php include('server.php') ?>
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 
 <head>
 
@@ -41,7 +44,8 @@
 
                     <h4 class="card-title text-center">Registrazione</h4>
 
-                    <form>
+                    <form method="post" action="register.php">
+                        <?php include('errors.php'); ?>
 
                         <div class="row">
 
@@ -55,7 +59,9 @@
                                            type="text"
                                            class="form-control"
                                            aria-describedby="usernameHelp"
-                                           placeholder="Inserisci un nome utente...">
+                                           placeholder="Inserisci un nome utente..."
+                                           name="nome_utente" //roba aggiunta per php
+                                           value="<?php echo $nome_utente; ?>">
                                     <small id="usernameHelp" class="form-text text-muted">
                                         Il nome utente e' riservato
                                     </small>
@@ -65,19 +71,36 @@
 
                             <div class="col-12">
 
-                                <!-- INPUT password -->
+                                <!-- INPUT password 1 -->
                                 <div class="form-group">
                                     <label for="inputPassword"><strong>Password</strong></label>
                                     <input id="inputPassword"
                                            type="password"
                                            required
                                            class="form-control"
-                                           placeholder="Inserisci la password...">
+                                           placeholder="Inserisci la password..."
+                                           name="password_1">
+                                </div>
+
+                            </div>
+
+                            <div class="col-12">
+
+                                <!-- INPUT password 2 -->
+                                <div class="form-group">
+                                    <label for="inputPassword"><strong>Conferma password</strong></label>
+                                    <input id="inputPassword"
+                                           type="password"
+                                           required
+                                           class="form-control"
+                                           placeholder="Reinserisci la password..."
+                                           name="password_2">
                                 </div>
 
                             </div>
 
                             <div class="col-6">
+
                                 <!-- INPUT nome -->
                                 <div class="form-group">
                                     <label for="inputNome"><strong>Nome</strong></label>
@@ -85,11 +108,13 @@
                                            required
                                            type="text"
                                            class="form-control"
-                                           placeholder="Inserisci il tuo nome...">
+                                           placeholder="Inserisci il tuo nome..."
+                                           name="nome">
                                 </div>
                             </div>
 
                             <div class="col-6">
+
                                 <!-- INPUT cognome -->
                                 <div class="form-group">
                                     <label for="inputCognome"><strong>Cognome</strong></label>
@@ -97,7 +122,8 @@
                                            required
                                            type="text"
                                            class="form-control"
-                                           placeholder="Inserisci il tuo cognome... ">
+                                           placeholder="Inserisci il tuo cognome... "
+                                           name="cognome">
                                 </div>
                             </div>
 
@@ -109,7 +135,9 @@
                                     <input type="email"
                                            class="form-control"
                                            id="inputEmail"
-                                           placeholder="Inserisci la tua email...">
+                                           placeholder="Inserisci la tua email..."
+                                           name="email"
+                                           value="<?php echo $email; ?>">
                                 </div>
 
                             </div>
@@ -121,12 +149,18 @@
                         <!--                            <label class="form-check-label" for="exampleCheck1">Check me out</label>-->
                         <!--                        </div>-->
 
-                        <button type="submit"
-                                class="btn btn-primary float-right">
-                            Registrati
-                        </button>
+                        <div class="form-group">
+                            <button type="submit"
+                                    class="btn btn-primary float-right" name="reg_btn">
+                                Registrati
+                            </button>
+                        </div>
+                        <p>
+                            Sei già iscritto? Vai al <a href="login.php">Log in</a>
+                        </p>
 
                     </form>
+
                 </div>
 
             </div>

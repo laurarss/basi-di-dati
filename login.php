@@ -1,5 +1,7 @@
+<?php include('server.php') ?>
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 
 <head>
 
@@ -43,7 +45,8 @@
 
                     <h4 class="card-title text-center">Login</h4>
 
-                    <form>
+                    <form method="post" action="login.php">  <!-- aggiunte per php(POST) -->
+                        <?php include('errors.php'); ?>
 
                         <div class="row">
 
@@ -57,7 +60,8 @@
                                            type="text"
                                            class="form-control"
                                            aria-describedby="usernameHelp"
-                                           placeholder="Nome utente...">
+                                           placeholder="Nome utente..."
+                                           name="nome_utente"> <!-- aggiunte per php -->
                                 </div>
 
                             </div>
@@ -71,26 +75,31 @@
                                            type="password"
                                            required
                                            class="form-control"
-                                           placeholder="Password...">
+                                           placeholder="Password..."
+                                           name="password"> <!-- aggiunte per php -->
                                 </div>
 
                             </div>
 
                             <div class="col-6">
 
-                                <a href="register.html"
-                                   class="btn btn-secondary float-left">
-                                    Registrati
-                                </a>
+                                <button type="submit"
+                                        class="btn btn-primary float-right"
+                                        name="login_user">
+                                    Accedi
+                                </button>
 
                             </div>
 
-                            <div class="col-6">
+                            <div class="col-6 float-left"> <!-- aggiunto qui float-left se no non funge -->
 
-                                <button type="submit"
-                                        class="btn btn-primary float-right">
-                                    Accedi
-                                </button>
+                                <p>
+                                    Non sei ancora registrato?
+                                    <a href="register.php"
+                                       class="btn btn-secondary">
+                                        Registrati
+                                    </a>
+                                </p>
 
                             </div>
 
