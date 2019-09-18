@@ -1,22 +1,22 @@
 <?php
-session_start();
-
-if (!isset($_SESSION['nome_utente'])) {
-    $_SESSION['msg'] = "You must log in first";
-    header('location: login.php');
-}
-if (isset($_GET['logout'])) {
-    session_destroy();
-    unset($_SESSION['nome_utente']);
-    header("location: login.php");
-}
-?>
+//session_start();
+//if (! empty($_SESSION['logged_in'])){
+//    ?>
+<!---->
+<!--    <p>here is my super-secret content</p>-->
+<!--    <a href='logout.php'>Click here to log out</a>-->
+<!---->
+<!--    --><?php
+//}
+//else{
+//    echo 'You are not logged in. <a href="login.php">Click here</a> to log in.';
+//}
+//?>
 
 <!DOCTYPE html>
 <html lang="it">
 
 <head>
-
     <meta charset="UTF-8">
     <title>BDD App</title>
 
@@ -24,6 +24,9 @@ if (isset($_GET['logout'])) {
 
     <!-- Link css generale -->
     <link rel="stylesheet" type="text/css" href="css/general.css">
+
+    <!-- Link css custom -->
+    <link rel="stylesheet" type="text/css" href="css/style.css">
 
     <!-- Link css bootstrap -->
     <link href="css/bootstrap/bootstrap.css" rel="stylesheet"/>
@@ -38,18 +41,16 @@ if (isset($_GET['logout'])) {
 
     <!-- collegamento javascript bootstrap -->
     <script src="js/bootstrap/bootstrap.min.js"></script>
-
 </head>
 
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <a class="navbar-brand" href="#">Navbar</a>
+<nav class="navbar fixed-top navbar-expand-lg navbar-light shadow p-3 mb-5 bg-white rounded>
+    <a class="navbar-brand" href="index.php">BDD</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
         <ul class="navbar-nav mr-auto">
@@ -70,7 +71,7 @@ if (isset($_GET['logout'])) {
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item" href="#">Action</a>
                     <a class="dropdown-item" href="#">Another action</a>
-                    <div class="dropdown-divider"></div>
+    <!--                    <div class="dropdown-divider"></div>-->
                     <a class="dropdown-item" href="#">Something else here</a>
                 </div>
             </li>
@@ -80,11 +81,18 @@ if (isset($_GET['logout'])) {
             <!--            </li>-->
 
         </ul>
-
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
+        <ul class="nav navbar-nav ml-auto">
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+            <li class="nav-item">
+                <a class="nav-link" href="register.php"><span class="fas fa-user"></span> Sign Up</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="login.php"><span class="fas fa-sign-in-alt"></span> Login</a>
+            </li>
+        </ul>
 
     </div>
 </nav>
@@ -110,6 +118,25 @@ if (isset($_GET['logout'])) {
     <?php endif ?>
 </div>
 
+<div class="container">
+
+    <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores aspernatur, assumenda cupiditate distinctio dolor ducimus eaque, enim, fugiat impedit ipsa iste iusto placeat quaerat quasi ratione totam voluptatibus? Amet dolorem eos eum excepturi impedit iste perspiciatis quisquam, repudiandae. Dicta, maiores.</p>
+
+    <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores aspernatur, assumenda cupiditate distinctio dolor ducimus eaque, enim, fugiat impedit ipsa iste iusto placeat quaerat quasi ratione totam voluptatibus? Amet dolorem eos eum excepturi impedit iste perspiciatis quisquam, repudiandae. Dicta, maiores.</p>
+
+    <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores aspernatur, assumenda cupiditate distinctio dolor ducimus eaque, enim, fugiat impedit ipsa iste iusto placeat quaerat quasi ratione totam voluptatibus? Amet dolorem eos eum excepturi impedit iste perspiciatis quisquam, repudiandae. Dicta, maiores.</p>
+
+    <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores aspernatur, assumenda cupiditate distinctio dolor ducimus eaque, enim, fugiat impedit ipsa iste iusto placeat quaerat quasi ratione totam voluptatibus? Amet dolorem eos eum excepturi impedit iste perspiciatis quisquam, repudiandae. Dicta, maiores.</p>
+
+    <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores aspernatur, assumenda cupiditate distinctio dolor ducimus eaque, enim, fugiat impedit ipsa iste iusto placeat quaerat quasi ratione totam voluptatibus? Amet dolorem eos eum excepturi impedit iste perspiciatis quisquam, repudiandae. Dicta, maiores.</p>
+
+    <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores aspernatur, assumenda cupiditate distinctio dolor ducimus eaque, enim, fugiat impedit ipsa iste iusto placeat quaerat quasi ratione totam voluptatibus? Amet dolorem eos eum excepturi impedit iste perspiciatis quisquam, repudiandae. Dicta, maiores.</p>
+
+    <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores aspernatur, assumenda cupiditate distinctio dolor ducimus eaque, enim, fugiat impedit ipsa iste iusto placeat quaerat quasi ratione totam voluptatibus? Amet dolorem eos eum excepturi impedit iste perspiciatis quisquam, repudiandae. Dicta, maiores.</p>
+
+    <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores aspernatur, assumenda cupiditate distinctio dolor ducimus eaque, enim, fugiat impedit ipsa iste iusto placeat quaerat quasi ratione totam voluptatibus? Amet dolorem eos eum excepturi impedit iste perspiciatis quisquam, repudiandae. Dicta, maiores.</p>
+
+</div>
 
 </body>
 

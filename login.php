@@ -31,7 +31,7 @@
 
 <body>
 
-<!-- IMPLEMENTAZIONE LOGIN CON BOOTSTRAPPO -->
+<!-- IMPLEMENTAZIONE LOGIN CON BOOTSTRAP -->
 
 <div class="container" style="padding-top: 18vh;">
 
