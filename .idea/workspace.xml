@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3545c724-5c47-4887-9970-6d1e736f6e4f" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/logout.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/session.php" afterDir="false" />
+    <list default="true" id="3545c724-5c47-4887-9970-6d1e736f6e4f" name="Default Changelist" comment="creata navbar e file css custom">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/login.php" beforeDir="false" afterPath="$PROJECT_DIR$/login.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/logout.php" beforeDir="false" afterPath="$PROJECT_DIR$/logout.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/session.php" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -29,22 +28,6 @@
         <option value="CSS File" />
       </list>
     </option>
-  </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>class=&quot;wrapper&quot;</find>
-      <find>\</find>
-      <find>id</find>
-      <find>e</find>
-      <find>reg_user</find>
-      <find>username</find>
-      <find>users</find>
-    </findStrings>
-    <replaceStrings>
-      <replace>reg_btn</replace>
-      <replace>utenti</replace>
-      <replace>nome_utente</replace>
-    </replaceStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -108,7 +91,7 @@
       <workItem from="1565645654817" duration="17000" />
       <workItem from="1566208475211" duration="760000" />
       <workItem from="1568462690592" duration="9000" />
-      <workItem from="1568650373422" duration="14261000" />
+      <workItem from="1568650373422" duration="18032000" />
     </task>
     <task id="LOCAL-00001" summary="first commit">
       <created>1558557300927</created>
@@ -152,7 +135,21 @@
       <option name="project" value="LOCAL" />
       <updated>1562169674881</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="creata navbar e file css custom">
+      <created>1568829923088</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1568829923088</updated>
+    </task>
+    <task id="LOCAL-00008" summary="creata navbar e file css custom">
+      <created>1568829965462</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1568829965462</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TodoView">
@@ -200,7 +197,8 @@
     <MESSAGE value="creata pagina di login" />
     <MESSAGE value="install bootstrap" />
     <MESSAGE value="cambiamenti per php e trasf delle pagine .html in .php, traduzioni varie da ing a ita&#10;commenti sulle aggiunte fatte" />
-    <option name="LAST_COMMIT_MESSAGE" value="cambiamenti per php e trasf delle pagine .html in .php, traduzioni varie da ing a ita&#10;commenti sulle aggiunte fatte" />
+    <MESSAGE value="creata navbar e file css custom" />
+    <option name="LAST_COMMIT_MESSAGE" value="creata navbar e file css custom" />
   </component>
   <component name="masterDetails">
     <states>

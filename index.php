@@ -1,3 +1,4 @@
+<?php //include('server.php') ?>
 <?php
 //session_start();
 //if (! empty($_SESSION['logged_in'])){
@@ -9,7 +10,7 @@
 <!--    --><?php
 //}
 //else{
-//    echo 'You are not logged in. <a href="login.php">Click here</a> to log in.';
+//    header("Location: main.php");
 //}
 //?>
 
@@ -87,10 +88,10 @@
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
             <li class="nav-item">
-                <a class="nav-link" href="register.php"><span class="fas fa-user"></span> Sign Up</a>
+                <a class="nav-link" href="user.php"><span class="fas fa-user"></span><php></php></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="login.php"><span class="fas fa-sign-in-alt"></span> Login</a>
+                <a class="nav-link" href="register.php"><span class="fas fa-user"></span>Logout</a>
             </li>
         </ul>
 
