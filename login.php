@@ -45,7 +45,8 @@
 
                     <h4 class="card-title text-center">Login</h4>
 
-                    <form method="post" action="login.php">  <!-- aggiunte per php(POST) -->
+                    <form class="needs-validation" method="post" action="login.php" novalidate>
+                        <!-- aggiunte per php(POST) -->
                         <?php include('errors.php'); ?>
 
                         <div class="row">
@@ -54,14 +55,18 @@
 
                                 <!-- INPUT username -->
                                 <div class="form-group">
-                                    <label for="usernameInput"><strong>Username</strong></label>
-                                    <input id="usernameInput"
-                                           required
+                                    <label for="validationCustomUsername"><strong>Username</strong></label>
+                                    <input id="validationCustomUsername" required
                                            type="text"
                                            class="form-control"
                                            aria-describedby="usernameHelp"
-                                           placeholder="Nome utente..."
-                                           name="nome_utente"> <!-- aggiunte per php -->
+                                           placeholder="Nome utente"
+                                           name="nome_utente"
+                                           value="<?php echo htmlspecialchars($nome_utente) ?>"/>
+                                    <!-- aggiunte per php -->
+                                </div>
+                                <div class="invalid-feedback">
+                                    Please choose a username.
                                 </div>
 
                             </div>
@@ -72,11 +77,10 @@
                                 <div class="form-group">
                                     <label for="exampleInputPassword"><strong>Password</strong></label>
                                     <input id="exampleInputPassword"
-                                           type="password"
-                                           required
+                                           type="password" required
                                            class="form-control"
                                            placeholder="Password..."
-                                           name="password"> <!-- aggiunte per php -->
+                                           name="password">
                                 </div>
 
                             </div>
@@ -123,4 +127,7 @@
 </div>
 
 </body>
+
+<?php include('footer.php') ?>
+
 </html>

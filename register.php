@@ -4,31 +4,8 @@
 <!DOCTYPE html>
 <html lang="it">
 
-<head>
-
-    <meta charset="UTF-8">
-    <title>BDD App</title>
-
-    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
-
-    <!-- Link css generale -->
-    <link rel="stylesheet" type="text/css" href="css/general.css">
-
-    <!-- Link css bootstrap -->
-    <link href="css/bootstrap/bootstrap.css" rel="stylesheet"/>
-
-    <!-- todo: scaricare jquery e popper per install locale   -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-            crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-            crossorigin="anonymous"></script>
-
-    <!-- collegamento javascript bootstrap -->
-    <script src="js/bootstrap/bootstrap.min.js"></script>
-
-</head>
+<!--includo file header-->
+<?php include('header.php'); ?>
 
 <body>
 
@@ -37,14 +14,11 @@
     <div class="row justify-content-center">
 
         <div class="col-6">
-
             <div class="card bg-light shadow">
-
                 <div class="card-body">
-
                     <h4 class="card-title text-center">Registrazione</h4>
 
-                    <form method="post" action="register.php">
+                    <form class="was-validated" method="post" action="register.php">
                         <?php include('errors.php'); ?>
 
                         <div class="row">
@@ -53,15 +27,20 @@
 
                                 <!-- INPUT username -->
                                 <div class="form-group">
-                                    <label for="usernameInput"><strong>Username</strong></label>
-                                    <input id="usernameInput"
-                                           required
-                                           type="text"
-                                           class="form-control"
-                                           aria-describedby="usernameHelp"
-                                           placeholder="Inserisci un nome utente..."
-                                           name="nome_utente" //roba aggiunta per php
-                                           value="<?php echo $nome_utente; ?>">
+                                    <label for="validationCustomUsername"><strong>Username</strong></label>
+                                    <div class="input-group">
+                                        <input id="validationCustomUsername"
+                                               required
+                                               type="text"
+                                               class="form-control invalid"
+                                               aria-describedby="inputGroupPrepend"
+                                               placeholder="Inserisci un nome utente..."
+                                               name="nome_utente"
+                                               value="<?php echo $nome_utente; ?>"//roba aggiunta per php >
+                                        <div class="invalid-feedback">
+                                            Please choose a username.
+                                        </div>
+                                    </div>
                                     <small id="usernameHelp" class="form-text text-muted">
                                         Il nome utente e' riservato
                                     </small>
@@ -80,6 +59,9 @@
                                            class="form-control"
                                            placeholder="Inserisci la password..."
                                            name="password_1">
+                                    <small id="pwHelp" class="form-text text-muted">
+                                        La tua password deve essere minimo di 8 caratteri.
+                                    </small>
                                 </div>
 
                             </div>
@@ -138,6 +120,9 @@
                                            placeholder="Inserisci la tua email..."
                                            name="email"
                                            value="<?php echo $email; ?>">
+                                    <small id="emailHelp" class="form-text text-muted">
+                                        Non condivideremo la tua email con nessun'altro.
+                                    </small>
                                 </div>
 
                             </div>

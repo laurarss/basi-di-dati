@@ -1,18 +1,26 @@
 
+<!-- connessione al db e caricamento blog -->
 <?php
-//session_start();
-//if (! empty($_SESSION['logged_in'])){
-//    ?>
-<!---->
-<!--    <p>here is my super-secret content</p>-->
-<!--    <a href='logout.php'>Click here to log out</a>-->
-<!---->
-<!--    --><?php
-//}
-//else{
-//    header("Location: main.php");
-//}
-//?>
+    include('db_connect.php');
+
+//    /* impostiamo la query*/
+//    $sqlquery = "SELECT * FROM blog ";
+//
+//    //esegui query e ottieni il risultato
+//    $result = mysqli_query($conn, $sqlquery);
+//
+//    //fetch del risultato come array
+//    $blogs = mysqli_fetch_all($result, MYSQLI_ASSOC);
+//
+//    //elimina result dalla memoria
+//    mysqli_free_result($result);
+//
+//    //chiudi connessione
+//    mysqli_close($conn);
+//
+//    print_r($blogs);
+
+?>
 
 <!DOCTYPE html>
 <html lang="it">
@@ -27,8 +35,8 @@
         <div class="error success">
             <h3>
                 <?php
-                echo $_SESSION['success'];
-                unset($_SESSION['success']);
+                    echo $_SESSION['success'];
+                    unset($_SESSION['success']);
                 ?>
             </h3>
         </div>
@@ -47,29 +55,6 @@
         <?php endif ?>
     </div>
 
-
-    <!-- connessione al db e caricamento blog -->
-    <?php
-    /* specifichiamo il nome della nostra tabella */
-    $blogtable = "blog";
-
-    /* Connettiamoci al database */
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "progettodb1";
-
-    // Create connection
-    $conn = new mysqli($servername, $username, $password, $dbname);
-    // Check connection
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-
-    /* impostiamo la query*/
-    $sqlquery = "SELECT * FROM $blogtable";
-    $result = $conn->query($sqlquery);
-    ?>
 
     <div class="row">
 

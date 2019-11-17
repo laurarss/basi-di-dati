@@ -47,7 +47,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="#">Crea Blog</a>
+                <a class="nav-link" href="addblog.php">Crea Blog</a>
             </li>
 
             <li class="nav-item">
@@ -55,7 +55,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="#">Blog Creati</a>
+                <a class="nav-link" href="elencoblog.php">Blog Creati</a>
             </li>
 
             <li class="nav-item dropdown">
