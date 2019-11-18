@@ -3,16 +3,16 @@
 include('db_connect.php');
 
 // write query
-$sql = "SELECT titolo, descrizione FROM blog";
+$sqlGetBlogData = "SELECT titolo, descrizione FROM blog";
 
 // get the result set (set of rows)
-$result = mysqli_query($conn, $sql);
+$resultBlogData = mysqli_query($conn, $sqlGetBlogData);
 
 // fetch the resulting rows as an array
-$blogs = mysqli_fetch_all($result, MYSQLI_ASSOC);
+$blogs = mysqli_fetch_all($resultBlogData, MYSQLI_ASSOC);
 
 // free the $result from memory (good practise)
-mysqli_free_result($result);
+mysqli_free_result($resultBlogData);
 
 // close connection
 mysqli_close($conn);
@@ -40,22 +40,18 @@ mysqli_close($conn);
     <?php endif ?>
 </div>
 
-
 <div class="container">
 
-    <!--alert grigio di benvenuto utente-->
-    <div class="alert alert-secondary col-sm-3" role="alert">
-        <!-- logged in user information php -->
-        <?php if (isset($_SESSION['nome_utente'])) : ?>
+    <!--alert grigio di benvenuto utente -->
+    <?php if (isset($_SESSION['nome_utente'])) : ?>
+        <div class="alert alert-secondary col-sm-3" role="alert">
             Benvenuto <strong><?php echo $_SESSION['nome_utente']; ?></strong>
-        <?php endif ?>
-    </div>
-
+        </div>
+    <?php endif ?>
 
     <div class="container">
-        <h4 class="text-left grey-text">I tuoi Blog creati:</h4>
 
-        <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores aspernatur, assumend.</p>
+        <h4 class="text-left grey-text">Blogs</h4>
 
         <div class="row">
 
