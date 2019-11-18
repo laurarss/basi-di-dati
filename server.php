@@ -1,3 +1,5 @@
+<?php include('nav_unauth.php') ?>
+
 <?php
 session_start();
 
@@ -82,12 +84,12 @@ if (isset($_POST['login_user'])) {
     $results = mysqli_query($conn, $query);
 
     if (mysqli_num_rows($results) == 1) {
-        echo 'porco il dio';
         $_SESSION['nome_utente'] = $nome_utente;
-        $_SESSION['success'] = "You are now logged in";
+        $_SESSION['success'] = "Ora sei loggato";
         header('Location: index.php');
     } else {
         // todo dare avvertimento quando la query non trova risultati
+        echo "La query non ha prodotto risultati";
     }
 }
 

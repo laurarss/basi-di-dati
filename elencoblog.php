@@ -1,37 +1,37 @@
 <?php
 
-    include('db_connect.php');
+include('db_connect.php');
+include('header.php');
 
-    // write query
-    $sql = "SELECT titolo, descrizione FROM blog";
+// write query
+$sql = "SELECT titolo, descrizione FROM blog WHERE 'autore = $nome_utente'";
+$sql2 = "SELECT titolo, descrizione FROM blog";
 
-    // get the result set (set of rows)
-    $result = mysqli_query($conn, $sql);
+print($nome_utente);
 
-    print_r($result);
+// get the result set (set of rows)
+$result = mysqli_query($conn, $sql);
 
-    // fetch the resulting rows as an array
-    $blogs = mysqli_fetch_all($result, MYSQLI_ASSOC);
+// fetch the resulting rows as an array
+$blogs = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-    // free the $result from memory (good practise)
-    mysqli_free_result($result);
+// free the $result from memory (good practise)
+mysqli_free_result($result);
 
-    // close connection
-    mysqli_close($conn);
+// close connection
+mysqli_close($conn);
 
 ?>
 
 <!DOCTYPE html>
 <html>
 
-<?php include('header.php'); ?>
-
-<h4 class="text-center grey-text">Blogs!</h4>
+<h4 class="text-center grey-text">Tutti i Blog!</h4>
 
 <div class="container">
     <div class="row">
 
-        <?php foreach($blogs as $blog){ ?>
+        <?php foreach ($blogs as $blog) { ?>
 
             <div class="col s6 md3">
                 <div class="card z-depth-0">

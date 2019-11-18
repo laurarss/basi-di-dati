@@ -1,31 +1,28 @@
-
 <!-- connessione al db e caricamento blog -->
 <?php
-    include('db_connect.php');
+include('db_connect.php');
 
-//    /* impostiamo la query*/
-//    $sqlquery = "SELECT * FROM blog ";
-//
-//    //esegui query e ottieni il risultato
-//    $result = mysqli_query($conn, $sqlquery);
-//
-//    //fetch del risultato come array
-//    $blogs = mysqli_fetch_all($result, MYSQLI_ASSOC);
-//
-//    //elimina result dalla memoria
-//    mysqli_free_result($result);
-//
-//    //chiudi connessione
-//    mysqli_close($conn);
-//
-//    print_r($blogs);
+// write query
+$sql = "SELECT titolo, descrizione FROM blog";
+
+// get the result set (set of rows)
+$result = mysqli_query($conn, $sql);
+
+// fetch the resulting rows as an array
+$blogs = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+// free the $result from memory (good practise)
+mysqli_free_result($result);
+
+// close connection
+mysqli_close($conn);
 
 ?>
 
 <!DOCTYPE html>
 <html lang="it">
 
-<!--includo file header-->
+<!--header & nav-->
 <?php include('header.php'); ?>
 
 <!-- aggiunto per php il div seguente-->
@@ -35,8 +32,8 @@
         <div class="error success">
             <h3>
                 <?php
-                    echo $_SESSION['success'];
-                    unset($_SESSION['success']);
+                echo $_SESSION['success'];
+                unset($_SESSION['success']);
                 ?>
             </h3>
         </div>
@@ -51,84 +48,35 @@
         <!-- logged in user information php -->
         <?php if (isset($_SESSION['nome_utente'])) : ?>
             Benvenuto <strong><?php echo $_SESSION['nome_utente']; ?></strong>
-            <!--        <p><a href="index.php?logout='1'" style="color: red;">logout</a></p>-->
         <?php endif ?>
     </div>
 
 
-    <div class="row">
+    <div class="container">
+        <h4 class="text-left grey-text">I tuoi Blog creati:</h4>
 
-        <div class="card" style="width: 18rem;">
-            <img src="img/prova1.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-                <p class="card-text">
-                    <?php
-                    if ($result->num_rows > 0) {
-                        // output data of each row
-                        while ($row = $result->fetch_assoc()) {
-                            echo "<br>" .
-                                "<h5 class='card-title'>Titolo Blog:" . $row["titolo"] . "<br>" . "</h5>" .
-                                "<h6 class=\"card-subtitle mb-2 text-muted\">Autore: " . $row["autore"] . "<br>" . "</h6>" .
-                                "<p class='lead'>Descrizione: " . $row["descrizione"] . "<br>"."<p>";
-                        }
-                    } else {
-                        echo "0 results";
-                    }
-                    $conn->close();
-                    ?>
-                </p>
-            </div>
+        <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores aspernatur, assumend.</p>
+
+        <div class="row">
+
+            <?php foreach ($blogs as $blog) { ?>
+
+                <div class="col s6 md3">
+                    <div class="card z-depth-0">
+                        <div class="card-body text-center">
+                            <h6 class="card-title"><?php echo htmlspecialchars($blog['titolo']); ?></h6>
+                            <div class="card-text"><?php echo htmlspecialchars($blog['descrizione']); ?></div>
+                            <a class="card-link" href="#">more info</a>
+                        </div>
+                    </div>
+                </div>
+
+            <?php } ?>
+
         </div>
 
     </div>
 
-
-    <div class="container">
-
-        <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores aspernatur, assumenda
-            cupiditate distinctio dolor ducimus eaque, enim, fugiat impedit ipsa iste iusto placeat quaerat quasi
-            ratione
-            totam voluptatibus? Amet dolorem eos eum excepturi impedit iste perspiciatis quisquam, repudiandae. Dicta,
-            maiores.</p>
-
-        <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores aspernatur, assumenda
-            cupiditate distinctio dolor ducimus eaque, enim, fugiat impedit ipsa iste iusto placeat quaerat quasi
-            ratione
-            totam voluptatibus? Amet dolorem eos eum excepturi impedit iste perspiciatis quisquam, repudiandae. Dicta,
-            maiores.</p>
-
-        <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores aspernatur, assumenda
-            cupiditate distinctio dolor ducimus eaque, enim, fugiat impedit ipsa iste iusto placeat quaerat quasi
-            ratione
-            totam voluptatibus? Amet dolorem eos eum excepturi impedit iste perspiciatis quisquam, repudiandae. Dicta,
-            maiores.</p>
-
-        <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores aspernatur, assumenda
-            cupiditate distinctio dolor ducimus eaque, enim, fugiat impedit ipsa iste iusto placeat quaerat quasi
-            ratione
-            totam voluptatibus? Amet dolorem eos eum excepturi impedit iste perspiciatis quisquam, repudiandae. Dicta,
-            maiores.</p>
-
-        <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores aspernatur, assumenda
-            cupiditate distinctio dolor ducimus eaque, enim, fugiat impedit ipsa iste iusto placeat quaerat quasi
-            ratione
-            totam voluptatibus? Amet dolorem eos eum excepturi impedit iste perspiciatis quisquam, repudiandae. Dicta,
-            maiores.</p>
-
-        <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores aspernatur, assumenda
-            cupiditate distinctio dolor ducimus eaque, enim, fugiat impedit ipsa iste iusto placeat quaerat quasi
-            ratione
-            totam voluptatibus? Amet dolorem eos eum excepturi impedit iste perspiciatis quisquam, repudiandae. Dicta,
-            maiores.</p>
-
-        <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores aspernatur, assumenda
-            cupiditate distinctio dolor ducimus eaque, enim, fugiat impedit ipsa iste iusto placeat quaerat quasi
-            ratione
-            totam voluptatibus? Amet dolorem eos eum excepturi impedit iste perspiciatis quisquam, repudiandae. Dicta,
-            maiores.</p>
-
-    </div>
-
-    <?php include ('footer.php') ?>
+    <?php include('footer.php') ?>
 
 </html>
