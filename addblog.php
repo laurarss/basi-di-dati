@@ -1,11 +1,8 @@
 <?php
 include('db_connect.php');
 
-session_start();
-
 $titolo = $categoria = $descrizione = ''; //inizializzo le variabili vuote (altrimenti php dà errore quando le uso senza avere mai cliccato submit)
 $errors = array('titolo' => '', 'categoria' => '', 'descrizione' => ''); //array associativo che immagazzina gli errori
-print_r($errors);
 
 if (isset($_POST['submit'])) {
 

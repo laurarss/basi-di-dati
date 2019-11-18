@@ -4,8 +4,8 @@ include('db_connect.php');
 include('header.php');
 
 // write query
-$sql = "SELECT titolo, descrizione FROM blog WHERE 'autore = $nome_utente'";
-$sql2 = "SELECT titolo, descrizione FROM blog";
+$sql = "SELECT titolo, descrizione FROM blog";
+$sql2 = "SELECT titolo, descrizione FROM blog WHERE 'autore = $nome_utente'";
 
 print($nome_utente);
 

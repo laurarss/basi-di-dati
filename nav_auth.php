@@ -1,4 +1,3 @@
-
 <nav class="navbar fixed-top navbar-expand-lg navbar-light shadow p-3 mb-5 bg-white rounded">
 
     <a class="navbar-brand" href="index.php">BDD</a>
@@ -11,11 +10,6 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
         <ul class="navbar-nav mr-auto">
-
-            <li class="nav-item active">
-                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-            </li>
-
             <li class="nav-item">
                 <a class="nav-link" href="addblog.php">Crea Blog</a>
             </li>
@@ -40,11 +34,9 @@
                     <a class="dropdown-item" href="#">Something else here</a>
                 </div>
             </li>
-
-
         </ul>
-        <ul class="nav navbar-nav ml-auto">
 
+        <ul class="nav navbar-nav ml-auto">
             <form class="form-inline my-2 my-lg-0">
                 <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Cerca</button>

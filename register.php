@@ -1,11 +1,11 @@
 <!-- collegamento al file server.php, qui c'è il codice che accoglie i dati inseriti in questa pagina -->
 <?php include('server.php') ?>
 
-<!DOCTYPE html>
-<html lang="it">
-
 <!--includo file header-->
 <?php include('header.php'); ?>
+
+<!DOCTYPE html>
+<html lang="it">
 
 <body>
 

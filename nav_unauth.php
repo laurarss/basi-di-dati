@@ -1,4 +1,3 @@
-
 <nav class="navbar fixed-top navbar-expand-lg navbar-light shadow p-3 mb-5 bg-white rounded">
 
     <a class="navbar-brand" href="index.php">BDD</a>
@@ -9,12 +8,6 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="index.php">Home <span class="sr-only">(current)</span></a>
-            </li>
-        </ul>
 
         <ul class="nav navbar-nav ml-auto">
             <form class="form-inline my-2 my-lg-0">
