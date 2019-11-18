@@ -1,25 +1,19 @@
-<?php include('server.php') ?>
-
 <?php
-if(!isset($_SESSION)){
+
+// includes
+include('server.php');
+
+if (!isset($_SESSION)) {
     session_start();
 }
-if (!isset($_SESSION['nome_utente'])){
-   header("Location: login.php");
-} else {
-    echo $nome_utente;
-}
-?>
 
-<?php
-if(isset($_SESSION['nome_utente'])){
+if (isset($_SESSION['nome_utente'])) {
     include 'nav_auth.php';
-}
-else{
+} else {
     include 'nav_unauth.php';
 }
-?>
 
+?>
 
 <head>
     <meta charset="UTF-8">
