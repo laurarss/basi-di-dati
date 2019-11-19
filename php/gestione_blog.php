@@ -1,16 +1,24 @@
 <?php
 
+/**
+ * Gestione blog e' la pagine che gestiste i blog dell'utente loggato.
+ * Permette di creare nuovi blog, eliminare propri blog, modificare propri blog.
+ * Si puo' anche aggiornare i blog seguiti, seguendone di nuovi o togliendo i segui messi fino ad ora.
+ */
+
+// todo valutare se possibile inserire analitics con i dati dei propri blog (i.e. mi piace ricevuti, top blog eccetera)
+
 include('db_connect.php');
 include('header.php');
 
 // write query
-$sql = "SELECT titolo, descrizione FROM blog";
-$sql2 = "SELECT titolo, descrizione FROM blog WHERE 'autore = $nome_utente'";
+$sqlGetAllBlogs = "SELECT titolo, descrizione FROM blog";
+$sqlGetBlogsByAutore = "SELECT titolo, descrizione FROM blog WHERE 'autore = $nome_utente'";
 
 print($nome_utente);
 
 // get the result set (set of rows)
-$result = mysqli_query($conn, $sql);
+$result = mysqli_query($conn, $sqlGetAllBlogs);
 
 // fetch the resulting rows as an array
 $blogs = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -24,29 +32,53 @@ mysqli_close($conn);
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="it">
 
-<h4 class="text-center grey-text">Tutti i Blog!</h4>
+<div class="container"> <!-- tutte le row e le col di bootstrap devono stare dentro un unico container -->
 
-<div class="container">
+    <div class="row py-2">
+        <h3 class="text-left grey-text">Gestione Blogs</h3>
+    </div>
+
     <div class="row">
-
         <?php foreach ($blogs as $blog) { ?>
 
-            <div class="col s6 md3">
-                <div class="card z-depth-0">
+            <div class="col-sm-3">
+                <div class="card h-100 z-depth-0">
+
+                    <div class="card-header">
+                        <?php echo htmlspecialchars($blog['titolo']); ?>
+                    </div>
+
                     <div class="card-body text-center">
-                        <h6 class="card-title"><?php echo htmlspecialchars($blog['titolo']); ?></h6>
-                        <div class="card-text"><?php echo htmlspecialchars($blog['descrizione']); ?></div>
-                        <a class="card-link" href="#">more info</a>
+
+                        <div class="row py-2">
+                            <div class="col-12">
+                                <div class="card-text"><?php echo htmlspecialchars($blog['descrizione']); ?></div>
+                            </div>
+                        </div>
+
+                        <!-- card commands row -->
+                        <div class="row py-2">
+                            <div class="col-6">
+                                <a class="btn btn-sm btn-primary" href="#">Apri</a>
+                            </div>
+                            <div class="col-6">
+                                <button class="btn btn-sm btn-danger">
+                                    Elimina
+                                </button>
+                                <!-- todo gestire delete blog con jquery + ajax ! -->
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
 
         <?php } ?>
-
     </div>
-</div>
+
+</div> <!-- fine container -->
 
 <?php include('footer.php'); ?>
 
