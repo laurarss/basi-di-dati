@@ -19,6 +19,8 @@ mysqli_close($conn);
 
 ?>
 
+<!--todo fare una  sidebar con i blog più recenti-->
+
 <!DOCTYPE html>
 <html lang="it">
 
@@ -39,6 +41,8 @@ mysqli_close($conn);
         </div>
     <?php endif ?>
 </div>
+
+
 
 <div class="container">
 

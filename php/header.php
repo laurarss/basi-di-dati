@@ -23,13 +23,13 @@ if (isset($_SESSION['nome_utente'])) {
     <script src="https://kit.fontawesome.com/bbde602ffb.js" crossorigin="anonymous"></script>
 
     <!-- Link css generale -->
-    <link rel="stylesheet" type="text/css" href="css/general.css">
+    <link rel="stylesheet" type="text/css" href="../css/general.css">
 
     <!-- Link css custom -->
-    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="../css/style.css">
 
     <!-- Link css bootstrap -->
-    <link href="css/bootstrap/bootstrap.css" rel="stylesheet"/>
+    <link href="../css/bootstrap/bootstrap.css" rel="stylesheet"/>
 
     <!-- todo: scaricare jquery e popper per install locale   -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -40,5 +40,5 @@ if (isset($_SESSION['nome_utente'])) {
             crossorigin="anonymous"></script>
 
     <!-- collegamento javascript bootstrap -->
-    <script src="js/bootstrap/bootstrap.min.js"></script>
+    <script src="../js/bootstrap/bootstrap.min.js"></script>
 </head>
