@@ -7,6 +7,7 @@ if (!isset($_SESSION)) {
     session_start();
 }
 
+// carico la navbar: ci sono due navbar distinte per utenti loggati e non
 if (isset($_SESSION['nome_utente'])) {
     include 'nav_auth.php';
 } else {

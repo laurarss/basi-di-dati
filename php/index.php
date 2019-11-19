@@ -19,8 +19,6 @@ mysqli_close($conn);
 
 ?>
 
-<!--todo fare una  sidebar con i blog più recenti-->
-
 <!DOCTYPE html>
 <html lang="it">
 
@@ -42,8 +40,6 @@ mysqli_close($conn);
     <?php endif ?>
 </div>
 
-
-
 <div class="container">
 
     <!--alert grigio di benvenuto utente -->
@@ -54,15 +50,12 @@ mysqli_close($conn);
     <?php endif ?>
 
     <div class="container">
-
-        <h4 class="text-left grey-text">Blogs</h4>
-
         <div class="row">
 
             <?php foreach ($blogs as $blog) { ?>
 
-                <div class="col s6 md3">
-                    <div class="card z-depth-0">
+                <div class="col-sm-4 py-3">
+                    <div class="card h-100 z-depth-0">
                         <div class="card-body text-center">
                             <h6 class="card-title"><?php echo htmlspecialchars($blog['titolo']); ?></h6>
                             <div class="card-text"><?php echo htmlspecialchars($blog['descrizione']); ?></div>
