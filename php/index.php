@@ -25,21 +25,6 @@ mysqli_close($conn);
 <!--header & nav-->
 <?php include('header.php'); ?>
 
-<!-- aggiunto per php il div seguente-->
-<div class="container">
-    <!-- notification message -->
-    <?php if (isset($_SESSION['success'])) : ?>
-        <div class="error success">
-            <h3>
-                <?php
-                echo $_SESSION['success'];
-                unset($_SESSION['success']);
-                ?>
-            </h3>
-        </div>
-    <?php endif ?>
-</div>
-
 <div class="container">
 
     <!--alert grigio di benvenuto utente -->

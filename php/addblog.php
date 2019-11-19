@@ -54,7 +54,7 @@ if (isset($_POST['submit'])) {
         if (mysqli_query($conn, $sql)) {
             echo 'dio cane maiale';
             //successo
-            header('Location: elencoblog.php');
+            header('Location: gestione_blog.php');
         } else {
             //errore
             echo 'errore query: ' . mysqli_error($conn);

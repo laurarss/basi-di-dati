@@ -59,7 +59,6 @@ if (isset($_POST['reg_btn'])) {
                       VALUES('$nome_utente', '$password', '$nome', '$cognome', '$email')";
         mysqli_query($conn, $query);
         $_SESSION['nome_utente'] = $nome_utente;
-        $_SESSION['success'] = "Ora sei loggato";
         header('Location: index.php');
     }
 }
@@ -85,7 +84,6 @@ if (isset($_POST['login_user'])) {
 
     if (mysqli_num_rows($results) == 1) {
         $_SESSION['nome_utente'] = $nome_utente;
-        $_SESSION['success'] = "Ora sei loggato";
         header('Location: index.php');
     } else {
         // todo dare avvertimento quando la query non trova risultati

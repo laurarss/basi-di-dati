@@ -10,18 +10,12 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="addblog.php">Crea Blog</a>
-            </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="#">Blog Seguiti</a>
+                <a class="nav-link" href="gestione_blog.php">Gestisci Blog</a>
             </li>
 
-            <li class="nav-item">
-                <a class="nav-link" href="elencoblog.php">Blog Creati</a>
-            </li>
-
+            <!-- todo tobet: anche questo e' da rimuovere secondo me -->
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
@@ -36,7 +30,7 @@
 
         <ul class="nav navbar-nav ml-auto">
             <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <input class="form-control mr-sm-2" type="search" placeholder="" aria-label="">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Cerca</button>
             </form>
 
