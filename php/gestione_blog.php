@@ -13,9 +13,9 @@ include('header.php');
 
 // write query
 $sqlGetAllBlogs = "SELECT titolo, descrizione FROM blog";
-$sqlGetBlogsByAutore = "SELECT titolo, descrizione FROM blog WHERE 'autore = $nome_utente'";
+$sqlGetBlogsByAutore = "SELECT titolo, descrizione FROM blog WHERE autore IN $nomeUtente";
 
-print($nome_utente);
+print($nomeUtente);
 
 // get the result set (set of rows)
 $result = mysqli_query($conn, $sqlGetAllBlogs);

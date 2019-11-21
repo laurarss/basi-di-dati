@@ -35,8 +35,8 @@
                                                class="form-control invalid"
                                                aria-describedby="inputGroupPrepend"
                                                placeholder="Inserisci un nome utente..."
-                                               name="nome_utente"
-                                               value="<?php echo $nome_utente; ?>"//roba aggiunta per php >
+                                               name="nomeUtente"
+                                               value="<?php echo $nomeUtente; ?>"//roba aggiunta per php >
                                         <div class="invalid-feedback">
                                             Please choose a username.
                                         </div>

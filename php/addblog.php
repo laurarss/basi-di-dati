@@ -43,7 +43,7 @@ if (isset($_POST['submit'])) {
         //escape sql chars
         $titolo = mysqli_real_escape_string($conn, $_POST['titolo']);
         $categoria = mysqli_real_escape_string($conn, $_POST['categoria']);
-        $autore = mysqli_real_escape_string($conn, $_SESSION['nome_utente']); //autore, aggiunto da me (non so se è giusto, deve recuperare l'user della sessione)
+        $autore = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']); //autore, aggiunto da me (non so se è giusto, deve recuperare l'user della sessione)
         echo 'cane di dio: ' . $_SESSION;
         $descrizione = mysqli_real_escape_string($conn, $_POST['descrizione']);
 

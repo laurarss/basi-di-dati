@@ -1,7 +1,7 @@
 <?php
 
     // connect to the database
-    $conn = mysqli_connect('localhost', 'laura', 'bl0gcr34t0r', 'progettodb1');
+    $conn = mysqli_connect('localhost', 'laura', 'bl0gcr34t0r', 'progdb');
 
     // check connection
     if(!$conn){

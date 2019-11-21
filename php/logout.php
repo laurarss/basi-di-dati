@@ -6,8 +6,8 @@ session_destroy();
 
 <div class="alert alert-warning col-sm-3" role="alert">
     <!-- logged in user information php -->
-    <?php if (!isset($_SESSION['nome_utente'])) : ?>
-        Sei stato disconnesso, a presto <strong><?php echo $_SESSION['nome_utente']; ?></strong>
+    <?php if (!isset($_SESSION['nomeUtente'])) : ?>
+        Sei stato disconnesso, a presto <strong><?php echo $_SESSION['nomeUtente']; ?></strong>
     <?php endif ?>
 </div>
 

@@ -61,8 +61,8 @@
                                            class="form-control"
                                            aria-describedby="usernameHelp"
                                            placeholder="Nome utente"
-                                           name="nome_utente"
-                                           value="<?php echo htmlspecialchars($nome_utente) ?>"/>
+                                           name="nomeUtente"
+                                           value="<?php echo htmlspecialchars($nomeUtente) ?>"/>
                                     <!-- aggiunte per php -->
                                 </div>
                                 <div class="invalid-feedback">

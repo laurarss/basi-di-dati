@@ -40,7 +40,7 @@
                                            class="form-control"
                                            value="<?php ?>"
                                            name="titolo">
-                                    <!--                                        sopra ho "echo" le variabili vuote nei campi // htmlspecialchars() aggiunto per evitare script maligni-->
+                                    <!--        sopra ho "echo" le variabili vuote nei campi // htmlspecialchars() aggiunto per evitare script maligni-->
                                 </div>
                             </div>
 

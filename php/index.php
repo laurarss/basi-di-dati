@@ -28,9 +28,9 @@ mysqli_close($conn);
 <div class="container">
 
     <!--alert grigio di benvenuto utente -->
-    <?php if (isset($_SESSION['nome_utente'])) : ?>
+    <?php if (isset($_SESSION['nomeUtente'])) : ?>
         <div class="alert alert-secondary col-sm-3" role="alert">
-            Benvenuto <strong><?php echo $_SESSION['nome_utente']; ?></strong>
+            Benvenuto <strong><?php echo $_SESSION['nomeUtente']; ?></strong>
         </div>
     <?php endif ?>
 
