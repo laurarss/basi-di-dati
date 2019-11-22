@@ -12,8 +12,8 @@ include('db_connect.php');
 include('header.php');
 
 // write query
-$sqlGetAllBlogs = "SELECT titolo, descrizione FROM blog";
-$sqlGetBlogsByAutore = "SELECT titolo, descrizione, autore FROM blog WHERE autore IN '$nomeUtente'";
+$sqlGetAllBlogs = "SELECT idBlog, titolo, descrizione FROM blog";
+$sqlGetBlogsByAutore = "SELECT titolo, descrizione, autore FROM blog WHERE autore IN $nomeUtente";
 
 print($nomeUtente);
 
@@ -61,7 +61,7 @@ mysqli_close($conn);
                         <!-- card commands row -->
                         <div class="row py-2">
                             <div class="col-6">
-                                <a class="btn btn-sm btn-primary" href="#">Apri</a>
+                                <a class="btn btn-sm btn-primary" href="visual_blog.php?idBlog=<?php echo $blog['idBlog']?>">Apri</a> //passa il codice del blog(array che stiamo scorrendo col for) alla pagina visual_blog
                             </div>
                             <div class="col-6">
                                 <button class="btn btn-sm btn-danger">

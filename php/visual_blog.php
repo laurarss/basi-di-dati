@@ -1,5 +1,5 @@
 <?php
-
+//header( "Location: visual_blog.php? blog = $blog" );
 /**
  * La pagina visualizzazione blog permette di visualizzare un blog dell'utente loggato.
  * Mostra l'elenco di tutti i post al suo interno, con i relativi commenti.
@@ -9,24 +9,41 @@
 include('db_connect.php');
 include('header.php');
 
-// write query
-$sqlblog = "SELECT idBlog, titolo, descrizione FROM blog"; //dovrebbe prendere i dati che l'utente ha cliccato nell'elenco blog
-$sqlpost = "SELECT titolo, data, testo, media FROM post WHERE idBlog = "; //dovrebbe prendere i post con lo stesso idBlog del blog
+//verifica la richiesta GET del parametro idBlog
+if (isset($_GET['idBlog'])) {
 
-print($nomeUtente);
+    $idBlog = mysqli_real_escape_string($conn, $_GET['idBlog']);
 
-// get the result set (set of rows)
-$result = mysqli_query($conn, $sql);
+    // sql codice
+    $sqlBlog = "SELECT * FROM blog WHERE idBlog = $idBlog";
+    $sqlPost = "SELECT * FROM post WHERE idBlog = $idBlog";
 
-// fetch the resulting rows as an array
-$blogs = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    //risultato query
+    $risBlog = mysqli_query($conn, $sqlBlog);
+    $risPost = mysqli_query($conn, $sqlPost);
 
-// free the $result from memory (good practise)
-mysqli_free_result($result);
+    //fetch risultato in un array
+    $blog = mysqli_fetch_assoc($risBlog); //si usa assoc e non all perchè prendiamo solo una riga della tab risultato
+    $posts = mysqli_fetch_all($risPost, MYSQLI_ASSOC);
 
-// close connection
-mysqli_close($conn);
+    // prendo dall'array associativo blog l'id della categoria associata, poi faccio la query che prende la categoria
+    $idCategoriaBlog = $blog['categoria'];
+    $sqlCategorie = "SELECT * FROM categorie WHERE codice = $idCategoriaBlog";
+    $risCateg = mysqli_query($conn, $sqlCategorie);
+    $categoriaBlog = mysqli_fetch_assoc($risCateg);
 
+    //libera memoria
+    mysqli_free_result($risBlog);
+    mysqli_free_result($risPost);
+    mysqli_free_result($risCateg);
+
+    //chiudi connessione
+    mysqli_close($conn);
+
+//    print_r($blog);
+//    print_r($posts);
+//    print_r($categoria);
+}
 ?>
 
 <!DOCTYPE html>
@@ -36,22 +53,36 @@ mysqli_close($conn);
 
 <div class="container">
     <div class="row">
+        <div class="col s6 md3">
+            <?php if ($blog): ?>
+                <h4><?php echo htmlspecialchars($blog['titolo']); ?></h4>
+                <p>Creato da: <?php echo htmlspecialchars($blog['autore']); ?></p>
+                <p><?php echo date($blog['data']); ?></p>
+                <p><?php echo htmlspecialchars($blog['descrizione']); ?></p>
+                <p><?php echo htmlspecialchars($categoriaBlog['nome']); //TODO prendere nome categoria da tab categorie?></p>
+                <h5>Post:</h5>
+                <?php //TODO bisogna scorrere i post relativi al blog e mostrarli?>
 
-        <?php foreach ($blogs as $blog) { ?>
+            <?php else: ?>
 
-            <div class="col s6 md3">
-                <div class="card z-depth-0">
-                    <div class="card-body text-center">
-                        <h6 class="card-title"><?php echo htmlspecialchars($blog['titolo']); ?></h6>
-                        <div class="card-text"><?php echo htmlspecialchars($blog['descrizione']); ?></div>
-                        <a class="card-link" href="#">more info</a>
-                    </div>
-                </div>
-            </div>
-
-        <?php } ?>
-
+            <?php endif; ?>
+        </div>
     </div>
+
+    <!--        --><?php //foreach ($blogs as $blog) { ?>
+    <!---->
+    <!--            <div class="col s6 md3">-->
+    <!--                <div class="card z-depth-0">-->
+    <!--                    <div class="card-body text-center">-->
+    <!--                        <h6 class="card-title">--><?php //echo htmlspecialchars($blog['titolo']); ?><!--</h6>-->
+    <!--                        <div class="card-text">-->
+    <?php //echo htmlspecialchars($blog['descrizione']); ?><!--</div>-->
+    <!--                        <a class="card-link" href="visual_blog.php? blog = $blog">more info</a>-->
+    <!--                    </div>-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!---->
+    <!--        --><?php //} ?>
 </div>
 
 <?php include('footer.php'); ?>
