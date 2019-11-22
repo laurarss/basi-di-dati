@@ -28,7 +28,7 @@
                 <div class="card-body">
                     <h4 class="card-title text-center">Crea un Post</h4>
 
-                    <form method="POST" action="addblog.php">
+                    <form method="POST" action="crea_blog.php">
 
                         <div class="row">
 

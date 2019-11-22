@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Gestione blog e' la pagine che gestiste i blog dell'utente loggato.
+ * Gestione blog e' la pagine che gestisce i blog dell'utente loggato.
  * Permette di creare nuovi blog, eliminare propri blog, modificare propri blog.
  * Si puo' anche aggiornare i blog seguiti, seguendone di nuovi o togliendo i segui messi fino ad ora.
  */
@@ -13,7 +13,7 @@ include('header.php');
 
 // write query
 $sqlGetAllBlogs = "SELECT titolo, descrizione FROM blog";
-$sqlGetBlogsByAutore = "SELECT titolo, descrizione FROM blog WHERE autore IN $nomeUtente";
+$sqlGetBlogsByAutore = "SELECT titolo, descrizione, autore FROM blog WHERE autore IN '$nomeUtente'";
 
 print($nomeUtente);
 

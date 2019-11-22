@@ -3,7 +3,7 @@
 include('db_connect.php');
 
 // write query
-$sqlGetBlogData = "SELECT titolo, descrizione FROM blog";
+$sqlGetBlogData = "SELECT titolo, autore, descrizione FROM blog";
 
 // get the result set (set of rows)
 $resultBlogData = mysqli_query($conn, $sqlGetBlogData);
@@ -42,9 +42,10 @@ mysqli_close($conn);
                 <div class="col-sm-4 py-3">
                     <div class="card h-100 z-depth-0">
                         <div class="card-body text-center">
-                            <h6 class="card-title"><?php echo htmlspecialchars($blog['titolo']); ?></h6>
+                            <h5 class="card-title"><?php echo htmlspecialchars($blog['titolo']); ?></h5>
+                            <h6 class="card-title"><?php echo htmlspecialchars($blog['autore']); ?></h6>
                             <div class="card-text"><?php echo htmlspecialchars($blog['descrizione']); ?></div>
-                            <a class="card-link" href="#">more info</a>
+                            <a class="card-link" href="visual_blog.php">more info</a>
                         </div>
                     </div>
                 </div>

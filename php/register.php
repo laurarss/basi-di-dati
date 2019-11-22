@@ -37,9 +37,6 @@
                                                placeholder="Inserisci un nome utente..."
                                                name="nomeUtente"
                                                value="<?php echo $nomeUtente; ?>"//roba aggiunta per php >
-                                        <div class="invalid-feedback">
-                                            Please choose a username.
-                                        </div>
                                     </div>
                                     <small id="usernameHelp" class="form-text text-muted">
                                         Il nome utente e' riservato

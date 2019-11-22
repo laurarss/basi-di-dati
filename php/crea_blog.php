@@ -81,7 +81,7 @@ if (isset($_POST['submit'])) {
 
                     <h4 class="card-title text-center">Crea un Blog</h4>
 
-                    <form method="POST" action="addblog.php">
+                    <form method="POST" action="crea_blog.php">
 
                         <div class="row">
 

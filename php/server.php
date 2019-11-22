@@ -1,6 +1,7 @@
-<?php include('nav_unauth.php') ?>
-
 <?php
+
+include('nav_unauth.php');
+
 session_start();
 
 // initializing variables
@@ -43,7 +44,7 @@ if (isset($_POST['reg_btn'])) {
 
     if ($user) { // if user exists
         if ($user['nomeUtente'] === $nomeUtente) {
-            array_push($errors, "nomeUtente already exists");
+            array_push($errors, "nome utente already exists");
         }
 
         if ($user['email'] === $email) {
@@ -70,25 +71,25 @@ if (isset($_POST['login_user'])) {
     $nomeUtente = mysqli_real_escape_string($conn, $_POST['nomeUtente']);
     $password = mysqli_real_escape_string($conn, $_POST['password']);
 
-    //    if (empty($nomeUtente)) {
-    //        array_push($errors, "nomeUtente richiesto");
-    //    }
-    //    if (empty($password)) {
-    //        array_push($errors, "password richiesta");
-    //    }
+//    if (empty($nomeUtente)) {
+//        array_push($errors, "nomeUtente richiesto");
+//    }
+//    if (empty($password)) {
+//        array_push($errors, "password richiesta");
+//    }
+//
+//    if (count($errors) == 0) {
+        $password = md5($password);
+        $query = "SELECT * FROM utenti WHERE nomeUtente='$nomeUtente' AND password='$password'";
+        $results = mysqli_query($conn, $query);
 
-    //    if (count($errors) == 0) {
-    $password = md5($password);
-    $query = "SELECT * FROM utenti WHERE nomeUtente='$nomeUtente' AND password='$password'";
-    $results = mysqli_query($conn, $query);
-
-    if (mysqli_num_rows($results) == 1) {
-        $_SESSION['nomeUtente'] = $nomeUtente;
-        header('Location: index.php');
-    } else {
-        // todo dare avvertimento quando la query non trova risultati
-        echo "La query non ha prodotto risultati";
+        if (mysqli_num_rows($results) == 1) {
+            $_SESSION['nomeUtente'] = $nomeUtente;
+            header('Location: index.php');
+        } else {
+            // todo dare avvertimento quando la query non trova risultati
+            echo "La query non ha prodotto risultati";
+        }
     }
-}
 
 ?>

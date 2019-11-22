@@ -12,20 +12,26 @@
         <ul class="navbar-nav mr-auto">
 
             <li class="nav-item">
-                <a class="nav-link" href="gestione_blog.php">Gestisci Blog</a>
+                <a class="nav-link" href="gestione_blog.php">Gestisci blog</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="gestione_blog.php">Gestisci commenti</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="gestione_blog.php">Blog che segui</a>
             </li>
 
             <!-- todo tobet: anche questo e' da rimuovere secondo me -->
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="false">
-                    Post
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Crea Nuovo</a>
-                    <a class="dropdown-item" href="#">Another action</a>
-                </div>
-            </li>
+<!--            <li class="nav-item dropdown">-->
+<!--                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"-->
+<!--                   aria-haspopup="true" aria-expanded="false">-->
+<!--                    Post-->
+<!--                </a>-->
+<!--                <div class="dropdown-menu" aria-labelledby="navbarDropdown">-->
+<!--                    <a class="dropdown-item" href="#">Gestisci Blog</a>-->
+<!--                    <a class="dropdown-item" href="#">I tuoi commenti</a>-->
+<!--                </div>-->
+<!--            </li>-->
         </ul>
 
         <ul class="nav navbar-nav ml-auto">
