@@ -1,3 +1,4 @@
+<!-- collegamento al file server.php, qui c'è il codice che accoglie i dati inseriti in questa pagina -->
 <?php include('server.php') ?>
 
 <!DOCTYPE html>
