@@ -30,12 +30,13 @@ mysqli_close($conn);
     <!--alert grigio di benvenuto utente -->
     <?php if (isset($_SESSION['nomeUtente'])) : ?>
         <div class="alert alert-secondary col-sm-3" role="alert">
-        <!--  apre gestione blog memorizzando il nomeUtente della sessione-->
+            <!--  apre gestione blog memorizzando il nomeUtente della sessione-->
             Benvenuto <strong><?php echo $_SESSION['nomeUtente']; ?></strong>
         </div>
         <div class="row py-2">
             <div class="col-6">
-                <a class="btn btn-sm btn-primary" href="gestione_blog.php?nomeUtente=<?php echo $_SESSION['nomeUtente']?>">Gestisci i tuoi blog</a>
+                <a class="btn btn-sm btn-primary"
+                   href="gestione_blog.php?nomeUtente=<?php echo $_SESSION['nomeUtente'] ?>">Gestisci i tuoi blog</a>
             </div>
         </div>
     <?php endif ?>
@@ -51,7 +52,8 @@ mysqli_close($conn);
                             <h5 class="card-title"><?php echo htmlspecialchars($blog['titolo']); ?></h5>
                             <h6 class="card-title"><?php echo htmlspecialchars($blog['autore']); ?></h6>
                             <div class="card-text"><?php echo htmlspecialchars($blog['descrizione']); ?></div>
-                            <a class="card-link" href="visual_blog.php?idBlog=<?php echo $blog['idBlog'] ?>">more info</a>
+                            <a class="card-link" href="visual_blog.php?idBlog=<?php echo $blog['idBlog'] ?>">more
+                                info</a>
                         </div>
                     </div>
                 </div>

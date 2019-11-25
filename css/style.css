@@ -6,7 +6,20 @@ body{
 .container-bg {
 	background-image: url('../img/background1.jpg');
 	color: white;
+	padding-top: 9%;
+	padding-bottom: 2%;
+  	background-repeat: repeat-x;
+  	background-attachment: fixed;
+ 	background-position: center;
+}
+
+.container-post{
+	background-color: #F5F5F5;
 	padding-top: 20px;
 	padding-bottom: 20px;
-	background-position: fixed;
+  	background-repeat: repeat-x;
+  	background-attachment: fixed;
+ 	background-position: center;
+ 	width: 40%;
 }
+

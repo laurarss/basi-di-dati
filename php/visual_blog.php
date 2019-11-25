@@ -49,11 +49,9 @@ if (isset($_GET['idBlog'])) {
 <!DOCTYPE html>
 <html lang="it">
 
-<h4 class="text-center grey-text">Tutti i Blog!</h4>
-
 <div class="container-bg">
     <div class="container-fluid">
-        <h4 class="text-center mt-5 mb-5"><?php echo htmlspecialchars($blog['titolo']); ?></h4>
+        <h1 class="display-3 text-center mt-5 mb-5"><?php echo htmlspecialchars($blog['titolo']); ?></h1>
     </div>
 </div>
 
@@ -61,34 +59,58 @@ if (isset($_GET['idBlog'])) {
     <div class="row">
         <div class="col s6 md3 text-center">
             <?php if ($blog): ?>
-                <p>Creato da: <?php echo htmlspecialchars($blog['autore']); ?></p>
-                <p>Ultima modifica il: <?php echo date($blog['data']); ?></p>
-                <p><?php echo htmlspecialchars($blog['descrizione']); ?></p>
-                <p>
+                <p class="lead display-4">Creato da: <?php echo htmlspecialchars($blog['autore']); ?></p>
+                <p class="lead text-muted display-5">Ultima modifica il: <?php echo date($blog['data']); ?></p>
+                <p class="lead text text-muted display-5">
                     Categoria: <?php echo htmlspecialchars($categoriaBlog['nome']); //TODO prendere nome categoria da tab categorie?></p>
-                <h5>Post:</h5>
-                <?php //TODO bisogna scorrere i post relativi al blog e mostrarli?>
+
+                <p class="lead"><?php echo htmlspecialchars($blog['descrizione']); ?></p>
 
             <?php else: ?>
 
             <?php endif; ?>
+            <h1 class="lead display-4">Post:</h1>
+        </div>
+    </div>
+<!--    mostra i post del blog:-->
+    <div class="container">
+    <div class="row">
+        <?php foreach ($posts as $post) { ?>
+
+            <div class="container-post text-center h-75 d-inline-block">
+                <h1 class="lead display-5"><?php echo htmlspecialchars($post['titolo']); ?></h1>
+                <div class="row py-2">
+                    <div class="col-12">
+                        <p class="text-muted"><?php echo htmlspecialchars($post['data']); ?></p>
+                        <img class="w-75 p-3" src="<?php echo htmlspecialchars($post['media']); ?>">
+                        <p><?php echo htmlspecialchars($post['testo']); ?></p>
+                    </div>
+                </div>
+                    <button class="btn btn-sm btn-danger">
+                        Elimina
+                    </button>
+                    <!-- todo gestire delete blog con jquery + ajax ! -->
+            </div>
         </div>
     </div>
 
-    <!--        --><?php //foreach ($blogs as $blog) { ?>
-    <!---->
-    <!--            <div class="col s6 md3">-->
-    <!--                <div class="card z-depth-0">-->
-    <!--                    <div class="card-body text-center">-->
-    <!--                        <h6 class="card-title">--><?php //echo htmlspecialchars($blog['titolo']); ?><!--</h6>-->
-    <!--                        <div class="card-text">-->
-    <?php //echo htmlspecialchars($blog['descrizione']); ?><!--</div>-->
-    <!--                        <a class="card-link" href="visual_blog.php? blog = $blog">more info</a>-->
-    <!--                    </div>-->
-    <!--                </div>-->
-    <!--            </div>-->
-    <!---->
-    <!--        --><?php //} ?>
+    <?php } ?>
+</div>
+
+<!--        --><?php //foreach ($blogs as $blog) { ?>
+<!---->
+<!--            <div class="col s6 md3">-->
+<!--                <div class="card z-depth-0">-->
+<!--                    <div class="card-body text-center">-->
+<!--                        <h6 class="card-title">--><?php //echo htmlspecialchars($blog['titolo']); ?><!--</h6>-->
+<!--                        <div class="card-text">-->
+<?php //echo htmlspecialchars($blog['descrizione']); ?><!--</div>-->
+<!--                        <a class="card-link" href="visual_blog.php? blog = $blog">more info</a>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!---->
+<!--        --><?php //} ?>
 </div>
 
 <?php include('footer.php'); ?>
