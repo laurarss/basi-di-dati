@@ -1,16 +1,22 @@
 body{
-    padding-top: 100px;
+	margin-top: 73px;
+    padding-top: 10px;
 }
-
 
 .container-bg {
 	background-image: url('../img/background1.jpg');
 	color: white;
-	padding-top: 9%;
+	padding-top: 2%;
 	padding-bottom: 2%;
   	background-repeat: repeat-x;
   	background-attachment: fixed;
  	background-position: center;
+}
+
+// overflow su classe nativa bootstrap
+.jumbotron-background {
+  background-image: url('../img/background1.jpg');
+  background-size: cover;
 }
 
 .container-post{

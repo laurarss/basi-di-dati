@@ -40,7 +40,7 @@ if (isset($_GET['idBlog'])) {
     //chiudi connessione
     mysqli_close($conn);
 
-
+    // debug
 //    print_r($posts);
 //    print_r($categoria);
 }
@@ -49,13 +49,16 @@ if (isset($_GET['idBlog'])) {
 <!DOCTYPE html>
 <html lang="it">
 
-<div class="container-bg">
-    <div class="container-fluid">
-        <h1 class="display-3 text-center mt-5 mb-5"><?php echo htmlspecialchars($blog['titolo']); ?></h1>
+<!-- banner -->
+<div class="jumbotron jumbotron-fluid jumbotron-background">
+    <div class="container">
+        <h1 class="display-3 text-center m-0"><?php echo htmlspecialchars($blog['titolo']); ?></h1>
     </div>
 </div>
 
 <div class="container">
+
+    <!-- intestazione blog -->
     <div class="row">
         <div class="col s6 md3 text-center">
             <?php if ($blog): ?>
@@ -72,45 +75,42 @@ if (isset($_GET['idBlog'])) {
             <h1 class="lead display-4">Post:</h1>
         </div>
     </div>
-<!--    mostra i post del blog:-->
-    <div class="container">
-    <div class="row">
-        <?php foreach ($posts as $post) { ?>
 
-            <div class="container-post text-center h-75 d-inline-block">
-                <h1 class="lead display-5"><?php echo htmlspecialchars($post['titolo']); ?></h1>
-                <div class="row py-2">
-                    <div class="col-12">
-                        <p class="text-muted"><?php echo htmlspecialchars($post['data']); ?></p>
-                        <img class="w-75 p-3" src="<?php echo htmlspecialchars($post['media']); ?>">
-                        <p><?php echo htmlspecialchars($post['testo']); ?></p>
-                    </div>
-                </div>
-                    <button class="btn btn-sm btn-danger">
-                        Elimina
-                    </button>
-                    <!-- todo gestire delete blog con jquery + ajax ! -->
+    <!-- mostra i post del blog:-->
+
+    <?php foreach ($posts
+
+                   as $post) { ?>
+
+        <!-- riga intestazione post -->
+        <div class="row py-2">
+            <div class="col-sm-12">
+                <h1 class="lead display-5 font-weight-bold"><?php echo htmlspecialchars($post['titolo']); ?></h1>
+                <p class="text-muted"><?php echo htmlspecialchars($post['data']); ?></p>
             </div>
         </div>
-    </div>
+
+        <!-- riga immagine descrizione e bottoni post -->
+        <div class="row py-2">
+
+            <div class="col-sm-5">
+                <img class="img-fluid" alt="Immagine post" src="<?php echo htmlspecialchars($post['media']); ?>">
+            </div>
+
+            <div class="col-sm-5">
+                <p><?php echo htmlspecialchars($post['testo']); ?></p>
+            </div>
+
+            <div class="col-sm-2 text-right">
+                <!-- todo gestire delete blog con jquery + ajax ! -->
+                <button class="btn btn-sm btn-danger fa fa-trash">
+                </button>
+            </div>
+
+        </div>
 
     <?php } ?>
-</div>
 
-<!--        --><?php //foreach ($blogs as $blog) { ?>
-<!---->
-<!--            <div class="col s6 md3">-->
-<!--                <div class="card z-depth-0">-->
-<!--                    <div class="card-body text-center">-->
-<!--                        <h6 class="card-title">--><?php //echo htmlspecialchars($blog['titolo']); ?><!--</h6>-->
-<!--                        <div class="card-text">-->
-<?php //echo htmlspecialchars($blog['descrizione']); ?><!--</div>-->
-<!--                        <a class="card-link" href="visual_blog.php? blog = $blog">more info</a>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!---->
-<!--        --><?php //} ?>
 </div>
 
 <?php include('footer.php'); ?>
