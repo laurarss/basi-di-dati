@@ -25,12 +25,12 @@ if (isset($_SESSION['nomeUtente'])) {
 
     <!-- Link css generale -->
     <link rel="stylesheet" type="text/css" href="../css/general.css">
-
-    <!-- Link css custom -->
-    <link rel="stylesheet" type="text/css" href="../css/style.css">
-
     <!-- Link css bootstrap -->
     <link href="../css/bootstrap/bootstrap.css" rel="stylesheet"/>
+    <!-- Link css custom, con quel "?v=1.0" che "fixa" la cache e permette al file custom di funzionare con btsrp-->
+    <link href="../css/style.css?v=1.0" rel="stylesheet" type="text/css" />
+
+
 
     <!-- todo: scaricare jquery e popper per install locale   -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

@@ -11,24 +11,32 @@
 include('db_connect.php');
 include('header.php');
 
-// write query
-$sqlGetAllBlogs = "SELECT idBlog, titolo, descrizione FROM blog";
-$sqlGetBlogsByAutore = "SELECT titolo, descrizione, autore FROM blog WHERE autore IN $nomeUtente";
 
-print($nomeUtente);
+if (isset($_SESSION['nomeUtente'])) {
 
-// get the result set (set of rows)
-$result = mysqli_query($conn, $sqlGetAllBlogs);
+    $nomeUtente = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']);
+    // write query
+    $sqlUtenti = "SELECT * FROM utenti WHERE nomeUtente = '$nomeUtente'";
+    $risUtente = mysqli_query($conn, $sqlUtenti);
+    $utente = mysqli_fetch_assoc($risUtente);
 
-// fetch the resulting rows as an array
-$blogs = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    $autore = $utente['nomeUtente'];
 
-// free the $result from memory (good practise)
-mysqli_free_result($result);
+    //$sqlGetAllBlogs = "SELECT idBlog, titolo, descrizione FROM blog";
+    $sqlGetBlogsByAutore = "SELECT * FROM blog WHERE autore = '$autore'";
 
-// close connection
-mysqli_close($conn);
+    // get the result set (set of rows)
+    $result = mysqli_query($conn, $sqlGetBlogsByAutore);
 
+    // fetch the resulting rows as an array
+    $blogs = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+    // free the $result from memory (good practise)
+    mysqli_free_result($result);
+
+    // close connection
+    mysqli_close($conn);
+}
 ?>
 
 <!DOCTYPE html>
@@ -61,7 +69,9 @@ mysqli_close($conn);
                         <!-- card commands row -->
                         <div class="row py-2">
                             <div class="col-6">
-                                <a class="btn btn-sm btn-primary" href="visual_blog.php?idBlog=<?php echo $blog['idBlog']?>">Apri</a> //passa il codice del blog(array che stiamo scorrendo col for) alla pagina visual_blog
+                                <!--  passa il codice del blog(array che stiamo scorrendo col for) alla pagina visual_blog  -->
+                                <a class="btn btn-sm btn-primary"
+                                   href="visual_blog.php?idBlog=<?php echo $blog['idBlog'] ?>">Apri</a>
                             </div>
                             <div class="col-6">
                                 <button class="btn btn-sm btn-danger">

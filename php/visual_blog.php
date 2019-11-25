@@ -26,7 +26,7 @@ if (isset($_GET['idBlog'])) {
     $blog = mysqli_fetch_assoc($risBlog); //si usa assoc e non all perchè prendiamo solo una riga della tab risultato
     $posts = mysqli_fetch_all($risPost, MYSQLI_ASSOC);
 
-    // prendo dall'array associativo blog l'id della categoria associata, poi faccio la query che prende la categoria
+    //prendo dall'array associativo blog l'id della categoria associata, poi faccio la query che prende la categoria
     $idCategoriaBlog = $blog['categoria'];
     $sqlCategorie = "SELECT * FROM categorie WHERE codice = $idCategoriaBlog";
     $risCateg = mysqli_query($conn, $sqlCategorie);
@@ -40,7 +40,7 @@ if (isset($_GET['idBlog'])) {
     //chiudi connessione
     mysqli_close($conn);
 
-//    print_r($blog);
+
 //    print_r($posts);
 //    print_r($categoria);
 }
@@ -51,15 +51,21 @@ if (isset($_GET['idBlog'])) {
 
 <h4 class="text-center grey-text">Tutti i Blog!</h4>
 
+<div class="container-bg">
+    <div class="container-fluid">
+        <h4 class="text-center mt-5 mb-5"><?php echo htmlspecialchars($blog['titolo']); ?></h4>
+    </div>
+</div>
+
 <div class="container">
     <div class="row">
-        <div class="col s6 md3">
+        <div class="col s6 md3 text-center">
             <?php if ($blog): ?>
-                <h4><?php echo htmlspecialchars($blog['titolo']); ?></h4>
                 <p>Creato da: <?php echo htmlspecialchars($blog['autore']); ?></p>
-                <p><?php echo date($blog['data']); ?></p>
+                <p>Ultima modifica il: <?php echo date($blog['data']); ?></p>
                 <p><?php echo htmlspecialchars($blog['descrizione']); ?></p>
-                <p><?php echo htmlspecialchars($categoriaBlog['nome']); //TODO prendere nome categoria da tab categorie?></p>
+                <p>
+                    Categoria: <?php echo htmlspecialchars($categoriaBlog['nome']); //TODO prendere nome categoria da tab categorie?></p>
                 <h5>Post:</h5>
                 <?php //TODO bisogna scorrere i post relativi al blog e mostrarli?>
 
