@@ -9,6 +9,8 @@
 include('db_connect.php');
 include('header.php');
 
+
+
 //verifica la richiesta GET del parametro idBlog
 if (isset($_GET['idBlog'])) {
 
@@ -47,7 +49,9 @@ if (isset($_GET['idBlog'])) {
 ?>
 
 <!DOCTYPE html>
-<html lang="it">
+<html  xmlns="http://www.w3.org/1999/xhtml" xml:lang="it" lang="it">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="Content-Language" content="it" />
 
 <!-- banner -->
 <div class="jumbotron jumbotron-fluid jumbotron-background">

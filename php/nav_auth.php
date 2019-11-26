@@ -12,7 +12,7 @@
         <ul class="navbar-nav mr-auto">
 
             <li class="nav-item">
-                <a class="nav-link" href="gestione_blog.php">Gestisci blog</a>
+                <a class="nav-link" href="gestione_blog.php?nomeUtente=<?php echo $_SESSION['nomeUtente'] ?>">Gestisci blog</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="gestione_blog.php">Gestisci commenti</a>
@@ -50,5 +50,3 @@
 
     </div>
 </nav>
-
-
