@@ -55,36 +55,36 @@ if (isset($_GET['idBlog'])) {
 
 <!-- banner -->
 <div class="jumbotron jumbotron-fluid jumbotron-background">
-    <div class="container">
-        <h1 class="display-3 text-center m-0"><?php echo htmlspecialchars($blog['titolo']); ?></h1>
-    </div>
-</div>
 
-<div class="container">
+    <div class="container">
+        <h1 class="text-capitalize display-3 text-center m-0"><?php echo htmlspecialchars($blog['titolo']); ?></h1>
+    </div>
 
     <!-- intestazione blog -->
     <div class="row">
         <div class="col s6 md3 text-center">
             <?php if ($blog): ?>
-                <p class="lead display-4">Creato da: <?php echo htmlspecialchars($blog['autore']); ?></p>
+                <p class="lead display-5">Creato da: <?php echo htmlspecialchars($blog['autore']); ?></p>
                 <p class="lead text-muted display-5">Ultima modifica il: <?php echo date($blog['data']); ?></p>
                 <p class="lead text text-muted display-5">
                     Categoria: <?php echo htmlspecialchars($categoriaBlog['nome']); //TODO prendere nome categoria da tab categorie?></p>
 
-                <p class="lead"><?php echo htmlspecialchars($blog['descrizione']); ?></p>
+                <p class="lead display-5"><?php echo htmlspecialchars($blog['descrizione']); ?></p>
 
             <?php else: ?>
-
             <?php endif; ?>
-            <h1 class="lead display-4">Post:</h1>
         </div>
     </div>
 
+</div>
+
+<div class="container">
+
+
+
     <!-- mostra i post del blog:-->
 
-    <?php foreach ($posts
-
-                   as $post) { ?>
+    <?php foreach ($posts as $post) { ?>
 
         <!-- riga intestazione post -->
         <div class="row py-2">
