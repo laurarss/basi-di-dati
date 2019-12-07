@@ -10,7 +10,6 @@ include('db_connect.php');
 include('header.php');
 
 
-
 //verifica la richiesta GET del parametro idBlog
 if (isset($_GET['idBlog'])) {
 
@@ -45,27 +44,29 @@ if (isset($_GET['idBlog'])) {
     // debug
 //    print_r($posts);
 //    print_r($categoria);
+
+    //  operazioni sulla data
+//    $dataBlog = DateTIme::createFromFormat('Y-m-d', $blog['data']);
+//    $dataBlogFormatt = $dataBlog->format('d M Y');
 }
 ?>
 
 <!DOCTYPE html>
-<html  xmlns="http://www.w3.org/1999/xhtml" xml:lang="it" lang="it">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="it" lang="it">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<meta http-equiv="Content-Language" content="it" />
-
+<meta http-equiv="Content-Language" content="it"/>
 <!-- banner -->
-<div class="jumbotron jumbotron-fluid jumbotron-background">
-
-    <div class="container">
-        <h1 class="text-capitalize display-3 text-center m-0"><?php echo htmlspecialchars($blog['titolo']); ?></h1>
-    </div>
+<div class="container-bg" style="background-image: url('<?php echo htmlspecialchars($blog['banner']) ?>');">
+    <h1 class="text-capitalize display-3 text-center m-0"><?php echo htmlspecialchars($blog['titolo']); ?></h1>
 
     <!-- intestazione blog -->
     <div class="row">
         <div class="col s6 md3 text-center">
             <?php if ($blog): ?>
                 <p class="lead display-5">Creato da: <?php echo htmlspecialchars($blog['autore']); ?></p>
-                <p class="lead text-muted display-5">Ultima modifica il: <?php echo date($blog['data']); ?></p>
+
+                <p class="lead text-muted display-5">Ultima modifica
+                    il: <?php echo date_format(new DateTime($blog['data']), 'd M Y H:i:s'); ?></p>
                 <p class="lead text text-muted display-5">
                     Categoria: <?php echo htmlspecialchars($categoriaBlog['nome']); //TODO prendere nome categoria da tab categorie?></p>
 
@@ -75,12 +76,9 @@ if (isset($_GET['idBlog'])) {
             <?php endif; ?>
         </div>
     </div>
-
 </div>
 
 <div class="container">
-
-
 
     <!-- mostra i post del blog:-->
 
@@ -88,29 +86,24 @@ if (isset($_GET['idBlog'])) {
 
         <!-- riga intestazione post -->
         <div class="row py-2">
-            <div class="col-sm-12">
+            <div class="col-sm-10">
                 <h1 class="lead display-5 font-weight-bold"><?php echo htmlspecialchars($post['titolo']); ?></h1>
                 <p class="text-muted"><?php echo htmlspecialchars($post['data']); ?></p>
             </div>
-        </div>
-
-        <!-- riga immagine descrizione e bottoni post -->
-        <div class="row py-2">
-
-            <div class="col-sm-5">
-                <img class="img-fluid" alt="Immagine post" src="<?php echo htmlspecialchars($post['media']); ?>">
-            </div>
-
-            <div class="col-sm-5">
-                <p><?php echo htmlspecialchars($post['testo']); ?></p>
-            </div>
-
             <div class="col-sm-2 text-right">
                 <!-- todo gestire delete blog con jquery + ajax ! -->
                 <button class="btn btn-sm btn-danger fa fa-trash">
                 </button>
             </div>
-
+        </div>
+        <!-- riga immagine descrizione e bottoni post -->
+        <div class="row py-2">
+            <div class="col-sm-6">
+                <img class="img-fluid" alt="Immagine post" src="<?php echo htmlspecialchars($post['media']); ?>">
+            </div>
+            <div class="col-sm-6">
+                <p><?php echo htmlspecialchars($post['testo']); ?></p>
+            </div>
         </div>
 
     <?php } ?>
