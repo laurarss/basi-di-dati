@@ -48,7 +48,9 @@ if (isset($_SESSION['nomeUtente'])) {
         <h3 class="text-left grey-text">Gestione Blogs</h3>
     </div>
 
+
     <div class="row">
+        <!--- mostra le card con i blog dell'utente -->
         <?php foreach ($blogs as $blog) { ?>
 
             <div class="col-sm-3">
@@ -84,9 +86,38 @@ if (isset($_SESSION['nomeUtente'])) {
                     </div>
                 </div>
             </div>
-
         <?php } ?>
+
+        <!--aggiunta card di crea blog-->
+        <div class="col-sm-3">
+            <div class="card h-100 z-depth-0">
+
+                <div class="card-header">
+                    Nuovo Blog
+                </div>
+
+                <div class="card-body text-center">
+
+                    <div class="row py-2">
+                        <div class="col-12">
+                            <div class="card-text">Crea un nuovo blog</div>
+                        </div>
+                    </div>
+
+                    <!-- card commands row -->
+                    <div class="row py-2">
+                        <div class="col-12 text-center">
+                            <!--  passa il codice del blog(array che stiamo scorrendo col for) alla pagina visual_blog  -->
+                            <a class="btn btn-primary" href="crea_blog.php"> <i class="fa fa-plus-circle"></i> </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
     </div>
+
 
 </div> <!-- fine container -->
 

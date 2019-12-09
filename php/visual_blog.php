@@ -9,7 +9,6 @@
 include('db_connect.php');
 include('header.php');
 
-
 //verifica la richiesta GET del parametro idBlog
 if (isset($_GET['idBlog'])) {
 
@@ -24,7 +23,7 @@ if (isset($_GET['idBlog'])) {
     $risPost = mysqli_query($conn, $sqlPost);
 
     //fetch risultato in un array
-    $blog = mysqli_fetch_assoc($risBlog); //si usa assoc e non all perchè prendiamo solo una riga della tab risultato
+    $blog = mysqli_fetch_assoc($risBlog); // si usa assoc e non all perchè prendiamo solo una riga della tab risultato
     $posts = mysqli_fetch_all($risPost, MYSQLI_ASSOC);
 
     //prendo dall'array associativo blog l'id della categoria associata, poi faccio la query che prende la categoria
