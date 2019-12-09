@@ -1,11 +1,14 @@
 <?php
+//includo file connessione al db
 include('db_connect.php');
+//includo file header
+include('header.php');
 
-$titolo = $categoria = $descrizione = ''; //inizializzo le variabili vuote (altrimenti php dà errore quando le uso senza avere mai cliccato submit)
+$titolo = $data = $categoria = $descrizione = $banner = ''; //inizializzo le variabili vuote (altrimenti php dà errore quando le uso senza avere mai cliccato submit)
 $errors = array('titolo' => '', 'categoria' => '', 'descrizione' => ''); //array associativo che immagazzina gli errori
+print_r($errors);//TODO:SISTEMARE NON SALVA GLI ERRORIII
 
-if (isset($_POST['submit'])) {
-
+if (isset($_POST['crea_blog_submit'])) {
     //check titolo
     if (empty($_POST['titolo'])) {
         $errors['titolo'] = 'Manca un titolo per il tuo blog!';
@@ -31,10 +34,34 @@ if (isset($_POST['submit'])) {
         $errors['descrizione'] = 'Manca una descrizione per il tuo blog!';
     } else {
         $descrizione = $_POST['descrizione'];
-        if (!preg_match('/^[a-zA-Z\s,]+$/', $descrizione)) { //sistemare espressione regolare per lettere, spazi e PUNTEGGIATURA
-            $errors['descrizione'] = 'la descrizione deve contenere solo lettere, spazi e virgole';
-        }
+//        if (!preg_match('/^[a-zA-Z\s,]+$/', $descrizione)) { //sistemare espressione regolare per lettere, spazi e PUNTEGGIATURA
+//            $errors['descrizione'] = 'la descrizione deve contenere solo lettere, spazi e virgole';
+//        }
     }
+
+    // check immagine
+    $nomeBannerBlog = $_FILES['blog_banner']['name']; // salvo il nome dell'immagine uploadata
+    $targetDir = "../img/";
+    $targetFile = $targetDir . basename($_FILES['blog_banner']['name']);
+
+    // debug
+    echo "debug tommy: " . $targetFile;
+
+
+    // get image file type
+    $tipoImg = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+
+    // creo un array di stringhe nei quali scrivo i formati accettati di immagine
+    $estensioniAccettate = array("jpg", "png", "jpeg");
+
+    // controllo se l'estensione e' tra quelle accettate
+    // in caso contrario creo un errore
+    if (!in_array($tipoImg, $estensioniAccettate)) {
+        $errors['banner'] = 'Il formato del banner selezionato non è accettato';
+    }
+
+    //retrieve timestamp
+    $timestamp = date("Y-m-d H:i:s");
 
     if (array_filter($errors)) {
         //echo 'errori nel form';
@@ -42,17 +69,18 @@ if (isset($_POST['submit'])) {
 
         //escape sql chars
         $titolo = mysqli_real_escape_string($conn, $_POST['titolo']);
-        $categoria = mysqli_real_escape_string($conn, $_POST['categoria']);
         $autore = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']); //autore, aggiunto da me (non so se è giusto, deve recuperare l'user della sessione)
-        echo 'cane di dio: ' . $_SESSION;
+        $data = mysqli_real_escape_string($conn, $_POST['timestamp']);
         $descrizione = mysqli_real_escape_string($conn, $_POST['descrizione']);
+        $categoria = mysqli_real_escape_string($conn, $_POST['categoria']);
+        $banner = mysqli_real_escape_string($conn, $_POST['banner']);
+
 
         //tabella sql in cui inserire il dato
-        $sql = "INSERT INTO blog(titolo,categoria,autore,descrizione) VALUES('$titolo', '$categoria', '$autore','$descrizione')";
+        $sql = "INSERT INTO blog (idBlog, titolo, autore, data, descrizione, categoria, banner) VALUES('NULL', '$titolo', '$autore', '$data', '$descrizione', '$categoria', '$banner')";
 
         //controlla e salva sul db
         if (mysqli_query($conn, $sql)) {
-            echo 'dio cane maiale';
             //successo
             header('Location: gestione_blog.php');
         } else {
@@ -61,14 +89,11 @@ if (isset($_POST['submit'])) {
         }
     }
 
-} // fine blog check
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="it">
-
-<!--includo file header-->
-<?php include('header.php'); ?>
 
 <body>
 
@@ -81,10 +106,10 @@ if (isset($_POST['submit'])) {
 
                     <h4 class="card-title text-center">Crea un Blog</h4>
 
-                    <form method="POST" action="crea_blog.php">
+                    <form method="POST" action="crea_blog.php" enctype="multipart/form-data">
 
                         <div class="row">
-
+                            <!-- titolo -->
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="">Titolo</label>
@@ -100,6 +125,7 @@ if (isset($_POST['submit'])) {
                                 </div>
                             </div>
 
+                            <!-- categoria -->
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="">Categoria:</label>
@@ -113,6 +139,7 @@ if (isset($_POST['submit'])) {
                                 </div>
                             </div>
 
+                            <!-- descrizione -->
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="">Descrizione:</label>
@@ -126,11 +153,25 @@ if (isset($_POST['submit'])) {
                                 </div>
                             </div>
 
+                            <!-- media(immagine o video) -->
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="">Carica immagine blog:</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="validatedCustomFile" required
+                                               accept="image/png/jpg" name="blog_banner">
+                                        <label class="custom-file-label" for="validatedCustomFile">Scegli
+                                            file...</label>
+                                        <div class="invalid-feedback">Esempio file non accettato</div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="form-group p-3">
                                 <button type="submit"
                                         value="Crea"
-                                        class="btn btn-secondary float-right"
-                                        name="submit">
+                                        class="btn btn-secondary float-left"
+                                        name="crea_blog_submit">
                                     Crea
                                 </button>
                             </div>

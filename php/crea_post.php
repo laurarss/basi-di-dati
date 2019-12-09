@@ -26,7 +26,7 @@
 
             <div class="card bg-light shadow">
                 <div class="card-body">
-                    <h4 class="card-title text-center">Crea un Post</h4>
+                    <h4 class="card-title text-center">Stai creando un post in (todo:inserire nome blog)</h4>
 
                     <form method="POST" action="crea_blog.php">
 
@@ -40,7 +40,7 @@
                                            class="form-control"
                                            value="<?php ?>"
                                            name="titolo">
-                                    <!--        sopra ho "echo" le variabili vuote nei campi // htmlspecialchars() aggiunto per evitare script maligni-->
+                                    <!-- sopra ho "echo" le variabili vuote nei campi // htmlspecialchars() aggiunto per evitare script maligni -->
                                 </div>
                             </div>
 
@@ -74,17 +74,17 @@
                             </div>
 
 
-                            <!-- media(immagine o video) -->
+                            <!-- media (immagine o video) -->
                             <div class="col-12">
                                 <div class="custom-file">
                                     <label for="">Carica immagine/video:</label>
                                     <input type="file" class="custom-file-input" id="validatedCustomFile" required>
-                                    <label class="custom-file-label" for="validatedCustomFile">Choose file...</label>
-                                    <div class="invalid-feedback">Example invalid custom file feedback</div>
+                                    <label class="custom-file-label" for="validatedCustomFile">Scegli file...</label>
+                                    <div class="invalid-feedback">Esempio file non accettato</div>
                                 </div>
                             </div>
 
-                    <!--   oltre a queste cose dovrei salvare anche il nome del blog di cui fa parte il post-->
+                    <!-- oltre a queste cose dovrei salvare anche il nome del blog di cui fa parte il post -->
 
                             <div class="form-group p-3">
                                 <button type="submit"
