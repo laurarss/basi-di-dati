@@ -86,26 +86,19 @@
 
                             </div>
 
-                            <div class="col-6">
-
+                            <div class="col-6 text-left">
                                 <button type="submit"
-                                        class="btn btn-primary float-right"
+                                        class="btn btn-primary"
                                         name="login_user">
                                     Accedi
                                 </button>
-
                             </div>
 
-                            <div class="col-6 float-left"> <!-- aggiunto qui float-left se no non funge -->
-
-                                <p>
-                                    Non sei ancora registrato?
-                                    <a href="register.php"
-                                       class="btn btn-secondary">
-                                        Registrati
-                                    </a>
-                                </p>
-
+                            <div class="col-6 text-right">
+                                <a href="register.php"
+                                   class="btn btn-secondary">
+                                    Registrati
+                                </a>
                             </div>
 
                         </div>
