@@ -1,9 +1,3 @@
-
-
-<!DOCTYPE html>
-<html lang="it">
-
-<!--includo file header-->
 <?php
 //includo file connessione al db
 include('db_connect.php');
@@ -15,13 +9,17 @@ if (isset($_GET['idBlog'])) {
 
     $idBlog = mysqli_real_escape_string($conn, $_GET['idBlog']);
 
+    // sql codice
+    $sqlBlog = "SELECT idBlog, titolo, autore, categoria FROM blog WHERE idBlog = $idBlog";
+
     //fetch risultato in un array
     $blog = mysqli_fetch_assoc($risBlog); // si usa assoc e non all perchè prendiamo solo una riga della tab risultato
 
 }
 
 ?>
-
+<!DOCTYPE html>
+<html lang="it">
 <body>
 
 <div class="container" style="padding-top: 18vh">
@@ -32,7 +30,7 @@ if (isset($_GET['idBlog'])) {
 
             <div class="card bg-light shadow">
                 <div class="card-body">
-                    <h4 class="card-title text-center">Stai creando un post in (todo:inserire nome blog)</h4>
+                    <h4 class="card-title text-center">Stai creando un post in <?php echo htmlspecialchars($blog['titolo']); ?></h4>
 
                     <form method="POST" action="crea_blog.php">
 
