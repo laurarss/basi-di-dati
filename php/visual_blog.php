@@ -5,8 +5,9 @@
  * Mostra l'elenco di tutti i post al suo interno, con i relativi commenti.
  * Permette di aggiungere/rimuovere post e commenti.
  */
-
+//includo file connessione al db
 include('db_connect.php');
+//includo file header
 include('header.php');
 
 //verifica la richiesta GET del parametro idBlog
@@ -73,16 +74,20 @@ if (isset($_GET['idBlog'])) {
 
             <?php else: ?>
             <?php endif; ?>
+            <div class="col-sm-2 text-left">
+                <a class="btn btn-outline-secondary btn-sm" href="*">
+                    <i class="fa fa-edit"></i>
+                    Cambia sfondo banner
+                </a>
+<!--         TODO implementare procedura cambio sfondo-->
+            </div>
         </div>
     </div>
 </div>
 
 <div class="container">
-
-    <!-- mostra i post del blog:-->
-
+    <!-- mostra i post del blog dal db:-->
     <?php foreach ($posts as $post) { ?>
-
         <!-- riga intestazione post -->
         <div class="row py-2">
             <div class="col-sm-10">
@@ -104,9 +109,20 @@ if (isset($_GET['idBlog'])) {
                 <p><?php echo htmlspecialchars($post['testo']); ?></p>
             </div>
         </div>
-
     <?php } ?>
 
+    <!--Card crea post-->
+    <div class="row py-2">
+        <div class="col-sm-10">
+            <h1 class="lead display-5 font-weight-bold">+ Crea un nuovo post</h1>
+            <p class="text-muted">nuovo post</p>
+        </div>
+        <div class="col-sm-2">
+            <a class="btn btn-outline-primary btn-lg" href="crea_post.php?idBlog=<?php echo $blog['idBlog'] ?>">
+                <i class="fa fa-plus-circle"></i>
+            </a>
+        </div>
+    </div>
 </div>
 
 <?php include('footer.php'); ?>

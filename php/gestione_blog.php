@@ -107,8 +107,8 @@ if (isset($_SESSION['nomeUtente'])) {
                     <!-- card commands row -->
                     <div class="row py-2">
                         <div class="col-12 text-center">
-                            <!--  passa il codice del blog(array che stiamo scorrendo col for) alla pagina visual_blog  -->
-                            <a class="btn btn-primary" href="crea_blog.php"> <i class="fa fa-plus-circle"></i> </a>
+                            <!--  pulsante crea nuovo blog  -->
+                            <a class="btn btn-outline-primary" href="crea_blog.php"> <i class="fa fa-plus-circle"></i> </a>
                         </div>
                     </div>
 

@@ -4,17 +4,23 @@
 <html lang="it">
 
 <!--includo file header-->
-<?php include('header.php'); ?>
+<?php
+//includo file connessione al db
+include('db_connect.php');
+//includo file header
+include('header.php');
 
+//verifica la richiesta GET del parametro idBlog
+if (isset($_GET['idBlog'])) {
 
-<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>-->
-<!--<script>-->
-<!--    $(document).ready(function(){-->
-<!--        $("button").click(function(){-->
-<!--            $("input + div").addClass("invalid-feedback");-->
-<!--        });-->
-<!--    });-->
-<!--</script>-->
+    $idBlog = mysqli_real_escape_string($conn, $_GET['idBlog']);
+
+    //fetch risultato in un array
+    $blog = mysqli_fetch_assoc($risBlog); // si usa assoc e non all perchè prendiamo solo una riga della tab risultato
+
+}
+
+?>
 
 <body>
 
