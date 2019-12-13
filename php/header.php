@@ -1,6 +1,5 @@
 <?php
-
-header('Content-type: text/html; charset=UTF-8');
+//header('Content-type: text/html; charset=UTF-8');
 
 // includes
 include('server.php');
@@ -15,9 +14,7 @@ if (isset($_SESSION['nomeUtente'])) {
 } else {
     include 'nav_unauth.php';
 }
-
 ?>
-
 <head>
     <meta charset="UTF-8">
     <title>BDD App</title>

@@ -29,7 +29,7 @@ if (isset($_GET['idBlog'])) {
 
     //prendo dall'array associativo blog l'id della categoria associata, poi faccio la query che prende la categoria
     $idCategoriaBlog = $blog['categoria'];
-    $sqlCategorie = "SELECT * FROM categorie WHERE codice = $idCategoriaBlog";
+    $sqlCategorie = "SELECT * FROM categorie WHERE idCategoria = $idCategoriaBlog";
     $risCateg = mysqli_query($conn, $sqlCategorie);
     $categoriaBlog = mysqli_fetch_assoc($risCateg);
 
