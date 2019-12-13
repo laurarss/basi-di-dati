@@ -4,8 +4,8 @@ include('nav_unauth.php');
 
 session_start();
 
-// initializing variables
-$nomeUtente = $email = '';
+// inizializzo variabili
+$nomeUtente = $password_1 = $password_2 = $nome = $cognome = $email = '';
 $errors = array();
 
 include('db_connect.php');
@@ -25,15 +25,30 @@ if (isset($_POST['reg_btn'])) {
     // by adding (array_push()) corresponding error unto $errors array
     if (empty($nomeUtente)) {
         array_push($errors, "E' richiesto il nome utente");
-    }
-    if (empty($email)) {
-        array_push($errors, "Email richiesta");
+    } else {
+        $nomeUtente = test_input($_POST["nomeUtente"]);
     }
     if (empty($password_1)) {
         array_push($errors, "Password richiesta");
     }
     if ($password_1 != $password_2) {
         array_push($errors, "Le due password non combaciano");
+    }
+    if (empty($email)) {
+        array_push($errors, "Email richiesta");
+    } else {
+        $email = test_input($_POST["email"]);
+        // check if e-mail address syntax is valid
+        if (!preg_match("/([\w\-]+\@[\w\-]+\.[\w\-]+)/",$email)) {
+            array_push($errors,"formato email non valido");
+        }
+    }
+    if (!empty($nome)) {
+        $nome = test_input($_POST["nome"]);
+        //Checks if name only contains letters and whitespace
+        if (!preg_match("/^[a-zA-Z ]*$/", $firstname)) {
+            array_push($errors, "Only letters and white space allowed");
+        }
     }
 
     // first check the database to make sure
@@ -64,12 +79,21 @@ if (isset($_POST['reg_btn'])) {
     }
 }
 
+/*Each $_POST variable with be checked by the function*/
+function test_input($data) {
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+}
+
 // LOGIN UTENTE
 if (isset($_POST['login_user'])) {
 
     //if login_user is set then do ..
     $nomeUtente = mysqli_real_escape_string($conn, $_POST['nomeUtente']);
     $password = mysqli_real_escape_string($conn, $_POST['password']);
+
 
 //    if (empty($nomeUtente)) {
 //        array_push($errors, "nomeUtente richiesto");
@@ -91,5 +115,4 @@ if (isset($_POST['login_user'])) {
             echo "La query non ha prodotto risultati";
         }
     }
-
 ?>

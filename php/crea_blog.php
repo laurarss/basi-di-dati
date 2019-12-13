@@ -12,21 +12,23 @@ $sqlCategorie = "SELECT * FROM categorie";
 $risCategorie = mysqli_query($conn, $sqlCategorie);
 $categorie = mysqli_fetch_all($risCategorie, MYSQLI_ASSOC);
 
+
+
 if (isset($_POST['crea_blog_submit'])) {
 
     // check titolo
     if (empty($_POST['titolo'])) {
-        $errors['titolo'] = 'Manca un titolo per il tuo blog!';
+        $errors['titolo'] = 'Manca un titolo per il tuo blog!<br>';
     } else {
         $titolo = $_POST['titolo'];
         if (!preg_match('/^[a-zA-Z\s]+$/', $titolo)) {
-            $errors['titolo'] = 'Il titolo deve contenere solo lettere e spazi';
+            $errors['titolo'] = 'Il titolo deve contenere solo lettere e spazi<br>';
         }
     }
 
     //check categoria
     if (empty($_POST['categoria'])) {
-        $errors['categoria'] = 'Manca una categoria per il tuo blog!';
+        $errors['categoria'] = 'Manca una categoria per il tuo blog!<br>';
     } else {
 
         /**
@@ -37,6 +39,10 @@ if (isset($_POST['crea_blog_submit'])) {
 
         $nome_categoria = $_POST['categoria']; // variabili di utility per nome categoria inserito da utente
 
+        if (!preg_match('/^[a-zA-Z\s]+$/', $categoria)) { // la validazione con regex non va bene
+            $errors['categoria'] = 'Categoria deve contenere solo lettere e spazi<br>';
+        }
+
         $trovato = $i = 0;
         while ($i < sizeof($categorie) and !$trovato) {
             if (strtolower($nome_categoria) === $categorie[$i]['nome']) {
@@ -46,7 +52,7 @@ if (isset($_POST['crea_blog_submit'])) {
             $i = $i + 1;
         }
 
-        if (!$trovato) {
+        if (!$trovato && empty($errors)) {
             $sqlInserisciCateg = "INSERT INTO categorie (idCategoria, nome) VALUES('NULL', '$nome_categoria')";
 
             if (mysqli_query($conn, $sqlInserisciCateg)) {
@@ -56,15 +62,11 @@ if (isset($_POST['crea_blog_submit'])) {
             }
             echo "ID della nuova categoria: " . $categoria;
         }
-
-//        if (!preg_match('/^[a-zA-Z\s]+$/', $categoria)) { // la validazione con regex non va bene
-//            $errors['categoria'] = 'Categoria deve contenere solo lettere e spazi';
-//        }
     }
 
     //check descrizione
     if (empty($_POST['descrizione'])) {
-        $errors['descrizione'] = 'Manca una descrizione per il tuo blog!';
+        $errors['descrizione'] = 'Manca una descrizione per il tuo blog!<br>';
     } else {
         $descrizione = $_POST['descrizione'];
 //        if (!preg_match('/^[a-zA-Z\s,]+$/', $descrizione)) { //sistemare espressione regolare per lettere, spazi e PUNTEGGIATURA
@@ -93,8 +95,7 @@ if (isset($_POST['crea_blog_submit'])) {
     $timestamp = date("Y-m-d H:i:s");
 
     if (array_filter($errors)) {
-        echo count($errors) . ' errori nel form';
-        print_r($errors);
+        //se ci sono errori
     } else {
 
         //escape sql chars
@@ -119,6 +120,7 @@ if (isset($_POST['crea_blog_submit'])) {
         }
     }
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -134,6 +136,10 @@ if (isset($_POST['crea_blog_submit'])) {
                 <div class="card-body">
 
                     <h4 class="card-title text-center">Crea un Blog</h4>
+                    <!-- div che fa comparire errori trovati dal js con l'id e dal php -->
+                    <div id="errore">
+                        <?php foreach ($errors as $value) {echo "$value\r\n";} ?>
+                    </div>
 
                     <form method="POST"
                           name="creaBlog"
@@ -144,10 +150,10 @@ if (isset($_POST['crea_blog_submit'])) {
                             <!-- titolo -->
                             <div class="col-12">
                                 <div class="form-group">
-                                    <label for="validation1">Titolo</label>
+                                    <label for="titoloCreaBlog">Titolo</label>
                                     <input type="text" required
                                            class="form-control"
-                                           id="validation1"
+                                           id="titoloCreaBlog"
                                            placeholder="Dai un titolo"
                                            value="<?php echo htmlspecialchars($titolo) ?>"
                                            name="titolo">
@@ -161,10 +167,10 @@ if (isset($_POST['crea_blog_submit'])) {
                             <!-- categoria -->
                             <div class="col-12">
                                 <div class="form-group">
-                                    <label for="validation2">Categoria:</label>
+                                    <label for="categoriaCreaBlog">Categoria:</label>
                                     <input type="text"
                                            class="form-control"
-                                           id="validation2"
+                                           id="categoriaCreaBlog"
                                            placeholder="Dai un nome alla categoria"
                                            value="<?php echo htmlspecialchars($categoria) ?>"
                                            name="categoria">
@@ -177,10 +183,10 @@ if (isset($_POST['crea_blog_submit'])) {
                             <!-- descrizione -->
                             <div class="col-12">
                                 <div class="form-group">
-                                    <label for="validation3">Descrizione:</label>
+                                    <label for="descrizioneCreaBlog">Descrizione:</label>
                                     <input type="text"
                                            class="form-control"
-                                           id="validation3"
+                                           id="descrizioneCreaBlog"
                                            placeholder="Aggiungi una descrizione"
                                            value="<?php echo htmlspecialchars($descrizione) ?>"
                                            name="descrizione">
@@ -223,6 +229,32 @@ if (isset($_POST['crea_blog_submit'])) {
                         </div>
 
                     </form>
+
+                    <script type="text/javascript">
+                        $("form").submit(function (event) {
+                            event.preventDefault();//fa in modo che il form non si refreshi al "submit" ma mi permetta di validare i dati prima di mandarli al server
+
+                            let errore = "";
+
+                            if ($("#titoloCreaBlog").val() === "") { //se il campo è vuoto
+                                errore += "Il è titolo obbligatorio.<br>";
+                            }
+                            if ($("#categoriaCreaBlog").val() === "") { //se il campo è vuoto
+                                errore += "La categoria è obbligatoria.<br>";
+                            }
+                            if ($("#descrizioneCreaBlog").val() === "") { //se il campo è vuoto
+                                errore += "Non hai inserito una descrizione.<br>";
+                            }
+
+                            if (errore !== "") {
+                                $("#errore").html('<div class="alert alert-danger" role="alert"><p><strong>Nel form sono stati trovati i seguenti errori:</strong></p>' + errore + '</div>');
+                            } else {
+                                $("form").unbind('submit').submit();
+                            }
+                        });
+                    </script>
+
+
                 </div>
             </div>
 
