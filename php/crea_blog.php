@@ -4,7 +4,7 @@ include('db_connect.php');
 //includo file header
 include('header.php');
 
-$titolo = $data = $categoria = $descrizione = $banner = ''; //inizializzo le variabili vuote (altrimenti php dà errore quando le uso senza avere mai cliccato submit)
+$titolo = $data = $categoria = $descrizione = $banner = $successMess = ''; //inizializzo le variabili vuote (altrimenti php dà errore quando le uso senza avere mai cliccato submit)
 $errors = array('titolo' => '', 'categoria' => '', 'descrizione' => ''); //array associativo che immagazzina gli errori
 
 // mi prendo le categorie per i controlli sul form
@@ -108,12 +108,10 @@ if (isset($_POST['crea_blog_submit'])) {
         //tabella sql in cui inserire il dato
         $sql = "INSERT INTO blog (idBlog, titolo, autore, data, descrizione, categoria, banner) VALUES('NULL', '$titolo', '$autore', '$data', '$descrizione', '$categoria', '$banner')";
 
-        echo "query eseguita su database blog: " . $sql;
-
         //controlla e salva sul db
         if (mysqli_query($conn, $sql)) {
             //successo
-            header('Location: gestione_blog.php');
+            $successMess = '<div class="alert alert-success" role="alert"><p><strong>Blog inserito! Torna ai <a href="gestione_blog.php">Blog</a> </strong></p></div>';
         } else {
             //errore
             echo 'errore query: ' . mysqli_error($conn);
@@ -138,7 +136,7 @@ if (isset($_POST['crea_blog_submit'])) {
                     <h4 class="card-title text-center">Crea un Blog</h4>
                     <!-- div che fa comparire errori trovati dal js con l'id e dal php -->
                     <div id="errore">
-                        <?php foreach ($errors as $value) {echo "$value\r\n";} ?>
+                        <?php echo $successMess?><? foreach ($errors as $value) {echo "$value\r\n";} ?>
                     </div>
 
                     <form method="POST"

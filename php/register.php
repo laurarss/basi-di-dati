@@ -31,6 +31,7 @@
             <div class="card bg-light shadow">
                 <div class="card-body">
                     <h4 class="card-title text-center">Registrazione</h4>
+                    <div id="errore"></div>
 
                     <form class="was-validated" method="post" action="register.php">
                         <?php include('errors.php'); ?>
@@ -41,10 +42,9 @@
 
                                 <!-- INPUT username -->
                                 <div class="form-group">
-                                    <label for="validationCustomUsername"><strong>Username</strong></label>
+                                    <label for="inputUsername"><strong>Username</strong></label>
                                     <div class="input-group">
-                                        <input id="validationCustomUsername"
-                                               required
+                                        <input id="inputUsername"
                                                type="text"
                                                class="form-control invalid"
                                                aria-describedby="inputGroupPrepend"
@@ -63,10 +63,9 @@
 
                                 <!-- INPUT password 1 -->
                                 <div class="form-group">
-                                    <label for="inputPassword"><strong>Password</strong></label>
-                                    <input id="inputPassword"
+                                    <label for="passwordUtente"><strong>Password</strong></label>
+                                    <input id="passwordUtente"
                                            type="password"
-                                           required
                                            class="form-control"
                                            placeholder="Inserisci la password..."
                                            name="password_1">
@@ -81,10 +80,9 @@
 
                                 <!-- INPUT password 2 -->
                                 <div class="form-group">
-                                    <label for="inputPassword"><strong>Conferma password</strong></label>
-                                    <input id="inputPassword"
+                                    <label for="passwordUtente2"><strong>Conferma password</strong></label>
+                                    <input id="passwordUtente2"
                                            type="password"
-                                           required
                                            class="form-control"
                                            placeholder="Reinserisci la password..."
                                            name="password_2">
@@ -98,7 +96,6 @@
                                 <div class="form-group">
                                     <label for="inputNome"><strong>Nome</strong></label>
                                     <input id="inputNome"
-                                           required
                                            type="text"
                                            class="form-control"
                                            placeholder="Inserisci il tuo nome..."
@@ -140,11 +137,6 @@
 
                         </div>
 
-                        <!--                        <div class="form-check">-->
-                        <!--                            <input type="checkbox" class="form-check-input" id="exampleCheck1">-->
-                        <!--                            <label class="form-check-label" for="exampleCheck1">Check me out</label>-->
-                        <!--                        </div>-->
-
                         <div class="form-group">
                             <button type="submit"
                                     class="btn btn-primary float-right" name="reg_btn">
@@ -156,6 +148,32 @@
                         </p>
 
                     </form>
+
+                    <script type="text/javascript">
+                        $("form").submit(function (event) {
+                            event.preventDefault();//fa in modo che il form non si refreshi al "submit" ma mi permetta di validare i dati prima di mandarli al server
+
+                            let errore = "";
+
+                            if ($("#inputUsername").val() === "") { //se il campo è vuoto
+                                errore += "Username obbligatorio.<br>";
+                            }
+                            if ($("#passwordUtente").val() === "") { //se il campo è vuoto
+                                errore += "Password obbligatoria.<br>";
+                            }
+                            if ($("#passwordUtente").val() !== $("#passwordUtente2").val()) { //se il campo è vuoto
+                                errore += "Le password non combaciano.<br>";
+                            }
+                            if ($("#inputEmail").val() === "") { //se il campo è vuoto
+                                errore += "Email obbligatoria.<br>";
+                            }
+                            if (errore !== "") {
+                                $("#errore").html('<div class="alert alert-danger" role="alert"><p><strong>Nel form sono stati trovati i seguenti errori:</strong></p>' + errore + '</div>');
+                            } else {
+                                $("form").unbind('submit').submit();
+                            }
+                        });
+                    </script>
 
                 </div>
             </div>
