@@ -79,7 +79,7 @@ if (isset($_GET['idBlog'])) {
                     <i class="fa fa-edit"></i>
                     Cambia sfondo banner
                 </a>
-<!--         TODO implementare procedura cambio sfondo-->
+                <!--         TODO implementare procedura cambio sfondo-->
             </div>
         </div>
     </div>
