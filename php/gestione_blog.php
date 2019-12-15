@@ -81,9 +81,8 @@ include 'head.php';
                                    href="visual_blog.php?idBlog=<?php echo $blog['idBlog'] ?>">Apri</a>
                             </div>
                             <div class="col-6">
-                                <button class="btn btn-sm btn-danger">
-                                    Elimina
-                                </button>
+                                <a class="btn btn-sm btn-danger"
+                                   href="cancella_blog.php?idBlog=<?php echo $blog['idBlog'] ?>">Elimina</a>
                                 <!-- todo gestire delete blog con jquery + ajax ! -->
                             </div>
                         </div>

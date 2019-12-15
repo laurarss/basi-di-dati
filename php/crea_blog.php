@@ -23,7 +23,6 @@ if (isset($_POST['crea_blog_submit'])) {
             $errors['titolo'] = 'Il titolo deve contenere solo lettere e spazi<br>';
         }
     }
-
     //check categoria
     if (empty($_POST['categoria'])) {
         $errors['categoria'] = 'Manca una categoria per il tuo blog!<br>';
@@ -34,9 +33,9 @@ if (isset($_POST['crea_blog_submit'])) {
          * se categ esiste già allora assegno a $categoria l'id della categ già persistita
          * se categ non esiste crearla con relativa insert, e prenderne l'id
          */
-
         $nome_categoria = $_POST['categoria']; // variabili di utility per nome categoria inserito da utente
-        if (!preg_match('/^[a-z][a-z\s]*$/', $nome_categoria)) { // la validazione con regex non va bene
+        if (!preg_match('/^[a-z][a-z\s]*$/', $nome_categoria)) {
+            // la validazione con regex non va bene
             $errors['categoria'] = 'Categoria deve contenere solo lettere e spazi<br>';
         }
 
