@@ -1,18 +1,16 @@
 <?php
 //includo file connessione al db
 include('db_connect.php');
-//includo file header
+//includo php header
 include('header.php');
 
-$titolo = $data = $categoria = $descrizione = $banner = $successMess = ''; //inizializzo le variabili vuote (altrimenti php dà errore quando le uso senza avere mai cliccato submit)
+$titolo = $data = $id_categoria = $descrizione = $banner = $idBlog = ''; //inizializzo le variabili vuote (altrimenti php dà errore quando le uso senza avere mai cliccato submit)
 $errors = array('titolo' => '', 'categoria' => '', 'descrizione' => ''); //array associativo che immagazzina gli errori
 
 // mi prendo le categorie per i controlli sul form
 $sqlCategorie = "SELECT * FROM categorie";
 $risCategorie = mysqli_query($conn, $sqlCategorie);
 $categorie = mysqli_fetch_all($risCategorie, MYSQLI_ASSOC);
-
-
 
 if (isset($_POST['crea_blog_submit'])) {
 
@@ -38,29 +36,28 @@ if (isset($_POST['crea_blog_submit'])) {
          */
 
         $nome_categoria = $_POST['categoria']; // variabili di utility per nome categoria inserito da utente
-
-        if (!preg_match('/^[a-zA-Z\s]+$/', $categoria)) { // la validazione con regex non va bene
+        if (!preg_match('/^[a-z][a-z\s]*$/', $nome_categoria)) { // la validazione con regex non va bene
             $errors['categoria'] = 'Categoria deve contenere solo lettere e spazi<br>';
         }
 
         $trovato = $i = 0;
         while ($i < sizeof($categorie) and !$trovato) {
             if (strtolower($nome_categoria) === $categorie[$i]['nome']) {
-                $categoria = $categorie[$i]['idCategoria'];
+                $id_categoria = $categorie[$i]['idCategoria'];
                 $trovato = 1;
             }
             $i = $i + 1;
         }
 
-        if (!$trovato && empty($errors)) {
+        if (!$trovato) {
             $sqlInserisciCateg = "INSERT INTO categorie (idCategoria, nome) VALUES('NULL', '$nome_categoria')";
 
             if (mysqli_query($conn, $sqlInserisciCateg)) {
-                $categoria = mysqli_insert_id($conn);
+                $id_categoria = mysqli_insert_id($conn);
             } else {
                 echo "Inserimento fallito per la nuova categoria";
             }
-            echo "ID della nuova categoria: " . $categoria;
+            echo "ID della nuova categoria: " . $id_categoria;
         }
     }
 
@@ -96,6 +93,8 @@ if (isset($_POST['crea_blog_submit'])) {
 
     if (array_filter($errors)) {
         //se ci sono errori
+        print_r($errors);
+        die();
     } else {
 
         //escape sql chars
@@ -106,12 +105,14 @@ if (isset($_POST['crea_blog_submit'])) {
         $banner = $targetFile;
 
         //tabella sql in cui inserire il dato
-        $sql = "INSERT INTO blog (idBlog, titolo, autore, data, descrizione, categoria, banner) VALUES('NULL', '$titolo', '$autore', '$data', '$descrizione', '$categoria', '$banner')";
+        $sql = "INSERT INTO blog (idBlog, titolo, autore, data, descrizione, categoria, banner) VALUES('NULL', '$titolo', '$autore', '$data', '$descrizione', '$id_categoria', '$banner')";
 
         //controlla e salva sul db
         if (mysqli_query($conn, $sql)) {
             //successo
-            $successMess = '<div class="alert alert-success" role="alert"><p><strong>Blog inserito! Torna ai <a href="gestione_blog.php">Blog</a> </strong></p></div>';
+            //passo id blog appena creato all'url della pagina visual_blog e lo apro(per permettere all'utente di creare subito un nuovo post)
+            $idBlog = mysqli_insert_id($conn);
+            header("Location: visual_blog.php?idBlog=$idBlog");
         } else {
             //errore
             echo 'errore query: ' . mysqli_error($conn);
@@ -123,6 +124,11 @@ if (isset($_POST['crea_blog_submit'])) {
 
 <!DOCTYPE html>
 <html lang="it">
+
+<?php
+//includo file header
+include 'head.php';
+?>
 
 <body>
 
@@ -136,7 +142,9 @@ if (isset($_POST['crea_blog_submit'])) {
                     <h4 class="card-title text-center">Crea un Blog</h4>
                     <!-- div che fa comparire errori trovati dal js con l'id e dal php -->
                     <div id="errore">
-                        <?php echo $successMess?><? foreach ($errors as $value) {echo "$value\r\n";} ?>
+                        <?php foreach ($errors as $value) {
+                            echo "$value\r\n";
+                        } ?>
                     </div>
 
                     <form method="POST"
@@ -170,7 +178,7 @@ if (isset($_POST['crea_blog_submit'])) {
                                            class="form-control"
                                            id="categoriaCreaBlog"
                                            placeholder="Dai un nome alla categoria"
-                                           value="<?php echo htmlspecialchars($categoria) ?>"
+                                           value="<?php echo htmlspecialchars($id_categoria) ?>"
                                            name="categoria">
                                     <div class="form-text invalid-feedback">
                                         Categoria non corretta
@@ -230,12 +238,9 @@ if (isset($_POST['crea_blog_submit'])) {
 
                     <script type="text/javascript">
                         $("form").submit(function (event) {
-                            event.preventDefault();//fa in modo che il form non si refreshi al "submit" ma mi permetta di validare i dati prima di mandarli al server
-
                             let errore = "";
-
                             if ($("#titoloCreaBlog").val() === "") { //se il campo è vuoto
-                                errore += "Il è titolo obbligatorio.<br>";
+                                errore += "Il titolo è obbligatorio.<br>";
                             }
                             if ($("#categoriaCreaBlog").val() === "") { //se il campo è vuoto
                                 errore += "La categoria è obbligatoria.<br>";
@@ -243,11 +248,9 @@ if (isset($_POST['crea_blog_submit'])) {
                             if ($("#descrizioneCreaBlog").val() === "") { //se il campo è vuoto
                                 errore += "Non hai inserito una descrizione.<br>";
                             }
-
                             if (errore !== "") {
+                                event.preventDefault();//fa in modo che il form non si refreshi al "submit" ma mi permetta di validare i dati prima di mandarli al server
                                 $("#errore").html('<div class="alert alert-danger" role="alert"><p><strong>Nel form sono stati trovati i seguenti errori:</strong></p>' + errore + '</div>');
-                            } else {
-                                $("form").unbind('submit').submit();
                             }
                         });
                     </script>

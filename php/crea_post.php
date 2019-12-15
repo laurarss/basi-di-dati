@@ -20,6 +20,10 @@ if (isset($_GET['idBlog'])) {
 ?>
 <!DOCTYPE html>
 <html lang="it">
+<?php
+//includo file header
+include 'head.php';
+?>
 <body>
 
 <div class="container" style="padding-top: 18vh">

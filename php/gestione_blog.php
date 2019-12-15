@@ -42,6 +42,11 @@ if (isset($_SESSION['nomeUtente'])) {
 <!DOCTYPE html>
 <html lang="it">
 
+<?php
+//includo file header
+include 'head.php';
+?>
+
 <div class="container"> <!-- tutte le row e le col di bootstrap devono stare dentro un unico container -->
 
     <div class="row py-2">

@@ -10,6 +10,8 @@ include('db_connect.php');
 //includo file header
 include('header.php');
 
+$blog = $posts = $post = '';
+
 //verifica la richiesta GET del parametro idBlog
 if (isset($_GET['idBlog'])) {
 
@@ -55,6 +57,12 @@ if (isset($_GET['idBlog'])) {
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="it" lang="it">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <meta http-equiv="Content-Language" content="it"/>
+
+<?php
+//includo file header
+include 'head.php';
+?>
+
 <!-- banner -->
 <div class="container-bg" style="background-image: url('<?php echo htmlspecialchars($blog['banner']) ?>');">
     <h1 class="text-capitalize display-3 text-center m-0"><?php echo htmlspecialchars($blog['titolo']); ?></h1>
@@ -79,7 +87,7 @@ if (isset($_GET['idBlog'])) {
                     <i class="fa fa-edit"></i>
                     Cambia sfondo banner
                 </a>
-                <!--         TODO implementare procedura cambio sfondo-->
+                <!-- TODO implementare procedura cambio sfondo -->
             </div>
         </div>
     </div>

@@ -1,6 +1,8 @@
 <!-- connessione al db e caricamento blog -->
 <?php
 include('db_connect.php');
+//header & nav
+include('header.php');
 
 // write query
 $sqlGetBlogData = "SELECT titolo, autore, descrizione FROM blog";
@@ -21,9 +23,10 @@ mysqli_close($conn);
 
 <!DOCTYPE html>
 <html lang="it">
-
-<!--header & nav-->
-<?php include('header.php'); ?>
+<?php
+//includo file header
+include 'head.php';
+?>
 
 <div class="container">
 
