@@ -53,7 +53,6 @@
                         <div class="row">
 
                             <div class="col-12">
-
                                 <!-- INPUT username -->
                                 <div class="form-group">
                                     <label for="validationCustomUsername"><strong>Username</strong></label>
@@ -64,16 +63,11 @@
                                            placeholder="Nome utente"
                                            name="nomeUtente"
                                            value="<?php echo htmlspecialchars($nomeUtente) ?>"/>
-                                    <!-- aggiunte per php -->
                                 </div>
-                                <div class="invalid-feedback">
-                                    Please choose a username.
-                                </div>
-
+                                <div>Scegli un username unico.</div>
                             </div>
 
                             <div class="col-12">
-
                                 <!-- INPUT password -->
                                 <div class="form-group">
                                     <label for="exampleInputPassword"><strong>Password</strong></label>
@@ -83,7 +77,6 @@
                                            placeholder="Password..."
                                            name="password">
                                 </div>
-
                             </div>
 
                             <div class="col-6 text-left">
@@ -102,13 +95,6 @@
                             </div>
 
                         </div>
-
-                        <!--                        <div class="form-check">-->
-                        <!--                            <input type="checkbox" class="form-check-input" id="exampleCheck1">-->
-                        <!--                            <label class="form-check-label" for="exampleCheck1">Check me out</label>-->
-                        <!--                        </div>-->
-
-
                     </form>
                 </div>
 

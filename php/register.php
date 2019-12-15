@@ -33,7 +33,7 @@
                     <h4 class="card-title text-center">Registrazione</h4>
                     <div id="errore"></div>
 
-                    <form class="was-validated" method="post" action="register.php">
+                    <form id="formReg" method="post" action="register.php">
                         <?php include('errors.php'); ?>
 
                         <div class="row">
@@ -43,15 +43,13 @@
                                 <!-- INPUT username -->
                                 <div class="form-group">
                                     <label for="inputUsername"><strong>Username</strong></label>
-                                    <div class="input-group">
-                                        <input id="inputUsername"
-                                               type="text"
-                                               class="form-control invalid"
-                                               aria-describedby="inputGroupPrepend"
-                                               placeholder="Inserisci un nome utente..."
-                                               name="nomeUtente"
-                                               value="<?php echo $nomeUtente; ?>"//roba aggiunta per php >
-                                    </div>
+                                    <input id="inputUsername"
+                                           type="text"
+                                           class="form-control"
+                                           aria-describedby="inputGroupPrepend"
+                                           placeholder="Inserisci un nome utente..."
+                                           name="nomeUtente"
+                                           value="<?php echo $nomeUtente; ?>">
                                     <small id="usernameHelp" class="form-text text-muted">
                                         Il nome utente e' riservato
                                     </small>
@@ -109,7 +107,6 @@
                                 <div class="form-group">
                                     <label for="inputCognome"><strong>Cognome</strong></label>
                                     <input id="inputCognome"
-                                           required
                                            type="text"
                                            class="form-control"
                                            placeholder="Inserisci il tuo cognome... "
@@ -151,12 +148,12 @@
 
                     <script type="text/javascript">
                         $("form").submit(function (event) {
-                            event.preventDefault();//fa in modo che il form non si refreshi al "submit" ma mi permetta di validare i dati prima di mandarli al server
 
                             let errore = "";
 
                             if ($("#inputUsername").val() === "") { //se il campo è vuoto
                                 errore += "Username obbligatorio.<br>";
+                                //$("#inputUsername").css('border-color', 'red;');
                             }
                             if ($("#passwordUtente").val() === "") { //se il campo è vuoto
                                 errore += "Password obbligatoria.<br>";
@@ -167,10 +164,10 @@
                             if ($("#inputEmail").val() === "") { //se il campo è vuoto
                                 errore += "Email obbligatoria.<br>";
                             }
+
                             if (errore !== "") {
+                                event.preventDefault(); // previene il submit di default
                                 $("#errore").html('<div class="alert alert-danger" role="alert"><p><strong>Nel form sono stati trovati i seguenti errori:</strong></p>' + errore + '</div>');
-                            } else {
-                                $("form").unbind('submit').submit();
                             }
                         });
                     </script>

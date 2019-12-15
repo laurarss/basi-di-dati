@@ -25,30 +25,12 @@ if (isset($_POST['reg_btn'])) {
     // by adding (array_push()) corresponding error unto $errors array
     if (empty($nomeUtente)) {
         array_push($errors, "E' richiesto il nome utente");
-    } else {
-        $nomeUtente = test_input($_POST["nomeUtente"]);
     }
     if (empty($password_1)) {
         array_push($errors, "Password richiesta");
     }
     if ($password_1 != $password_2) {
         array_push($errors, "Le due password non combaciano");
-    }
-    if (empty($email)) {
-        array_push($errors, "Email richiesta");
-    } else {
-        $email = test_input($_POST["email"]);
-        // check if e-mail address syntax is valid
-        if (!preg_match("/([\w\-]+\@[\w\-]+\.[\w\-]+)/",$email)) {
-            array_push($errors,"formato email non valido");
-        }
-    }
-    if (!empty($nome)) {
-        $nome = test_input($_POST["nome"]);
-        //Checks if name only contains letters and whitespace
-        if (!preg_match("/^[a-zA-Z ]*$/", $firstname)) {
-            array_push($errors, "Only letters and white space allowed");
-        }
     }
 
     // first check the database to make sure
@@ -71,20 +53,11 @@ if (isset($_POST['reg_btn'])) {
     if (count($errors) == 0) {
         $password = md5($password_1);//encrypt the password before saving in the database
 
-        $query = "INSERT INTO utenti(nomeUtente, password, nome, cognome, email) 
-                      VALUES('$nomeUtente', '$password', '$nome', '$cognome', '$email')";
+        $query = "INSERT INTO utenti(nomeUtente, password, nome, cognome, email) VALUES('$nomeUtente', '$password', '$nome', '$cognome', '$email')";
         mysqli_query($conn, $query);
         $_SESSION['nomeUtente'] = $nomeUtente;
         header('Location: index.php');
     }
-}
-
-/*Each $_POST variable with be checked by the function*/
-function test_input($data) {
-    $data = trim($data);
-    $data = stripslashes($data);
-    $data = htmlspecialchars($data);
-    return $data;
 }
 
 // LOGIN UTENTE
@@ -101,18 +74,18 @@ if (isset($_POST['login_user'])) {
 //    if (empty($password)) {
 //        array_push($errors, "password richiesta");
 //    }
-//
-//    if (count($errors) == 0) {
-        $password = md5($password);
-        $query = "SELECT * FROM utenti WHERE nomeUtente='$nomeUtente' AND password='$password'";
-        $results = mysqli_query($conn, $query);
 
-        if (mysqli_num_rows($results) == 1) {
-            $_SESSION['nomeUtente'] = $nomeUtente;
-            header('Location: index.php');
-        } else {
-            // todo dare avvertimento quando la query non trova risultati
-            echo "La query non ha prodotto risultati";
-        }
+//    if (count($errors) == 0) {
+    $password = md5($password);
+    $query = "SELECT * FROM utenti WHERE nomeUtente='$nomeUtente' AND password='$password'";
+    $results = mysqli_query($conn, $query);
+
+    if (mysqli_num_rows($results) == 1) {
+        $_SESSION['nomeUtente'] = $nomeUtente;
+        header('Location: index.php');
+    } else {
+        // todo dare avvertimento quando la query non trova risultati
+        echo "La query non ha prodotto risultati";
     }
+}
 ?>
