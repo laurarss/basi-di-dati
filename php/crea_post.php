@@ -4,6 +4,9 @@ include('db_connect.php');
 //includo file header
 include('header.php');
 
+//dichiaro variabili
+$titoloPost = $dataPost = $testoPost = $imgPost = '';
+
 //verifica la richiesta GET del parametro idBlog
 if (isset($_GET['idBlog'])) {
 
@@ -13,7 +16,7 @@ if (isset($_GET['idBlog'])) {
     $sqlBlog = "SELECT idBlog, titolo, autore, categoria FROM blog WHERE idBlog = $idBlog";
 
     //fetch risultato in un array
-    $blog = mysqli_fetch_assoc($risBlog); // si usa assoc e non all perchè prendiamo solo una riga della tab risultato
+    $blog = mysqli_fetch_assoc($sqlBlog); // si usa assoc e non all perchè prendiamo solo una riga della tab risultato
 
 }
 
@@ -46,7 +49,7 @@ include 'head.php';
                                     <label for="">Titolo:</label>
                                     <input type="text" required
                                            class="form-control"
-                                           value="<?php ?>"
+                                           value="<?php echo htmlspecialchars($titoloPost) ?>"
                                            name="titolo">
                                     <!-- sopra ho "echo" le variabili vuote nei campi // htmlspecialchars() aggiunto per evitare script maligni -->
                                 </div>
@@ -58,7 +61,7 @@ include 'head.php';
                                     <label for="">Data:</label>
                                     <input type="date"
                                            class="form-control"
-                                           value="<?php  ?>"
+                                           value="<?php echo htmlspecialchars($dataPost) ?>"
                                            name="data">
                                     <div class="form-text invalid-feedback">
                                         <?php  ?>
@@ -73,7 +76,7 @@ include 'head.php';
                                     <label for="">Testo:</label>
                                     <input type="text"
                                            class="form-control"
-                                           value="<?php ?>"
+                                           value="<?php echo htmlspecialchars($testoPost) ?>"
                                            name="descrizione">
                                     <div class="invalid-feedback">
                                         <?php  ?>
@@ -81,14 +84,24 @@ include 'head.php';
                                 </div>
                             </div>
 
-
-                            <!-- media (immagine o video) -->
+                            <!-- media(immagine o video) -->
                             <div class="col-12">
-                                <div class="custom-file">
-                                    <label for="">Carica immagine/video:</label>
-                                    <input type="file" class="custom-file-input" id="validatedCustomFile" required>
-                                    <label class="custom-file-label" for="validatedCustomFile">Scegli file...</label>
-                                    <div class="invalid-feedback">Esempio file non accettato</div>
+                                <div class="form-group">
+                                    <label for="fileInput">Carica immagine blog:</label>
+                                    <div class="custom-file">
+                                        <input type="file"
+                                               class="custom-file-input"
+                                               id="fileInput"
+                                               required
+                                               placeholder="Carica uno sfondo per il blog"
+                                               value="<?php echo htmlspecialchars($imgPost) ?>"
+                                               accept="image/png/jpg"
+                                               name="blog_banner">
+                                        <label class="custom-file-label" for="validatedCustomFile">
+                                            Scegli file...
+                                        </label>
+                                        <div class="invalid-feedback">Esempio file non accettato</div>
+                                    </div>
                                 </div>
                             </div>
 

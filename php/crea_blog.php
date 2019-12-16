@@ -208,8 +208,7 @@ include 'head.php';
                                     <div class="custom-file">
                                         <input type="file"
                                                class="custom-file-input"
-                                               id="fileInput"
-                                               required
+                                               id="fileInput" required
                                                placeholder="Carica uno sfondo per il blog"
                                                value="<?php echo htmlspecialchars($banner) ?>"
                                                accept="image/png/jpg"
