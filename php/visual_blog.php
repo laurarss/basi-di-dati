@@ -32,6 +32,8 @@ if (isset($_GET['idBlog'])) {
     //prendo dall'array associativo blog l'id della categoria associata, poi faccio la query che prende la categoria
     $idCategoriaBlog = $blog['categoria'];
     $sqlCategorie = "SELECT * FROM categorie WHERE idCategoria = $idCategoriaBlog";
+    echo $sqlCategorie;
+
     $risCateg = mysqli_query($conn, $sqlCategorie);
     $categoriaBlog = mysqli_fetch_assoc($risCateg);
 
@@ -126,7 +128,7 @@ include 'head.php';
             <p class="text-muted">nuovo post</p>
         </div>
         <div class="col-sm-2">
-            <a class="btn btn-outline-primary btn-lg" href="crea_post.php?idBlog=<?php echo $blog['idBlog'] ?>">
+            <a class="btn btn-outline-primary btn-lg" href="crea_post.php?idBlog=<?php echo $blog['idBlog']; ?>">
                 <i class="fa fa-plus-circle"></i>
             </a>
         </div>

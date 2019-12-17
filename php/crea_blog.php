@@ -5,7 +5,7 @@ include('db_connect.php');
 include('header.php');
 
 $titolo = $data = $id_categoria = $descrizione = $banner = $idBlog = ''; //inizializzo le variabili vuote (altrimenti php dà errore quando le uso senza avere mai cliccato submit)
-$errors = array('titolo' => '', 'categoria' => '', 'descrizione' => ''); //array associativo che immagazzina gli errori
+$errors = array('titolo' => '', 'categoria' => '', 'descrizione' => '', 'banner'  => ''); //array associativo che immagazzina gli errori
 
 // mi prendo le categorie per i controlli sul form
 $sqlCategorie = "SELECT * FROM categorie";
@@ -14,15 +14,16 @@ $categorie = mysqli_fetch_all($risCategorie, MYSQLI_ASSOC);
 
 if (isset($_POST['crea_blog_submit'])) {
 
-    // check titolo
+    // check titolo blog
     if (empty($_POST['titolo'])) {
         $errors['titolo'] = 'Manca un titolo per il tuo blog!<br>';
     } else {
         $titolo = $_POST['titolo'];
-        if (!preg_match('/^[a-zA-Z\s]+$/', $titolo)) {
+        if (!preg_match('/^[a-z][a-z\s]*$/', $titolo)) {
             $errors['titolo'] = 'Il titolo deve contenere solo lettere e spazi<br>';
         }
     }
+
     //check categoria
     if (empty($_POST['categoria'])) {
         $errors['categoria'] = 'Manca una categoria per il tuo blog!<br>';
@@ -35,7 +36,6 @@ if (isset($_POST['crea_blog_submit'])) {
          */
         $nome_categoria = $_POST['categoria']; // variabili di utility per nome categoria inserito da utente
         if (!preg_match('/^[a-z][a-z\s]*$/', $nome_categoria)) {
-            // la validazione con regex non va bene
             $errors['categoria'] = 'Categoria deve contenere solo lettere e spazi<br>';
         }
 
@@ -65,19 +65,15 @@ if (isset($_POST['crea_blog_submit'])) {
         $errors['descrizione'] = 'Manca una descrizione per il tuo blog!<br>';
     } else {
         $descrizione = $_POST['descrizione'];
-//        if (!preg_match('/^[a-zA-Z\s,]+$/', $descrizione)) { //sistemare espressione regolare per lettere, spazi e PUNTEGGIATURA
-//            $errors['descrizione'] = 'la descrizione deve contenere solo lettere, spazi e virgole';
-//        }
     }
 
     // check immagine
-    $nomeBannerBlog = $_FILES['blog_banner']['name']; // salvo il nome dell'immagine uploadata
+    $nomeBannerBlog = $_FILES['blog_banner']['name']; // salvo il nome dell'immagine
     $targetDir = "../img/";
-    $targetFile = $targetDir . basename($_FILES['blog_banner']['name']);
+    $targetFile = $targetDir . basename($_FILES['blog_banner']['name']); //concateno il path al nome img
 
     // get image file type
     $tipoImg = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
-
     // creo un array di stringhe nei quali scrivo i formati accettati di immagine
     $estensioniAccettate = array("jpg", "png", "jpeg");
 
@@ -87,27 +83,25 @@ if (isset($_POST['crea_blog_submit'])) {
         $errors['banner'] = 'Il formato del banner selezionato non è accettato';
     }
 
-    //retrieve timestamp
+    //recupero data timestamp
     $timestamp = date("Y-m-d H:i:s");
 
     if (array_filter($errors)) {
         //se ci sono errori
         print_r($errors);
-        die();
     } else {
-
         //escape sql chars
         $titolo = mysqli_real_escape_string($conn, $_POST['titolo']);
         $autore = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']); //autore, aggiunto da me (non so se è giusto, deve recuperare l'user della sessione)
         $data = $timestamp;
         $descrizione = mysqli_real_escape_string($conn, $_POST['descrizione']);
-        $banner = $targetFile;
+        $banner = $targetFile; //salvo path immagine
 
         //tabella sql in cui inserire il dato
-        $sql = "INSERT INTO blog (idBlog, titolo, autore, data, descrizione, categoria, banner) VALUES('NULL', '$titolo', '$autore', '$data', '$descrizione', '$id_categoria', '$banner')";
+        $sqlNuovoBlog = "INSERT INTO blog (idBlog, titolo, autore, data, descrizione, categoria, banner) VALUES('NULL', '$titolo', '$autore', '$data', '$descrizione', '$id_categoria', '$banner')";
 
         //controlla e salva sul db
-        if (mysqli_query($conn, $sql)) {
+        if (mysqli_query($conn, $sqlNuovoBlog)) {
             //successo
             //passo id blog appena creato all'url della pagina visual_blog e lo apro(per permettere all'utente di creare subito un nuovo post)
             $idBlog = mysqli_insert_id($conn);
@@ -117,18 +111,21 @@ if (isset($_POST['crea_blog_submit'])) {
             echo 'errore query: ' . mysqli_error($conn);
         }
     }
+    //libera memoria
+    mysqli_free_result($risCategorie);
+
+    //chiudi connessione
+    mysqli_close($conn);
 }
 
 ?>
 
 <!DOCTYPE html>
 <html lang="it">
-
 <?php
 //includo file header
 include 'head.php';
 ?>
-
 <body>
 
 <div class="container">
@@ -155,7 +152,7 @@ include 'head.php';
                             <!-- titolo -->
                             <div class="col-12">
                                 <div class="form-group">
-                                    <label for="titoloCreaBlog">Titolo</label>
+                                    <label for="titoloCreaBlog">Titolo del blog:</label>
                                     <input type="text" required
                                            class="form-control"
                                            id="titoloCreaBlog"
@@ -193,7 +190,7 @@ include 'head.php';
                                            class="form-control"
                                            id="descrizioneCreaBlog"
                                            placeholder="Aggiungi una descrizione"
-                                           value="<?php echo htmlspecialchars($descrizione) ?>"
+                                           value="<?php echo htmlspecialchars($descrizione); ?>"
                                            name="descrizione">
                                     <div class="invalid-feedback">
                                         Descrizione non corretta
@@ -208,7 +205,8 @@ include 'head.php';
                                     <div class="custom-file">
                                         <input type="file"
                                                class="custom-file-input"
-                                               id="fileInput" required
+                                               id="fileInput"
+                                               required
                                                placeholder="Carica uno sfondo per il blog"
                                                value="<?php echo htmlspecialchars($banner) ?>"
                                                accept="image/png/jpg"

@@ -112,7 +112,8 @@ include 'head.php';
                     <div class="row py-2">
                         <div class="col-12 text-center">
                             <!--  pulsante crea nuovo blog  -->
-                            <a class="btn btn-outline-primary" href="crea_blog.php"> <i class="fa fa-plus-circle"></i> </a>
+                            <a class="btn btn-outline-primary" href="crea_blog.php"> <i class="fa fa-plus-circle"></i>
+                            </a>
                         </div>
                     </div>
 

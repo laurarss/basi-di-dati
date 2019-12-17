@@ -5,20 +5,99 @@ include('db_connect.php');
 include('header.php');
 
 //dichiaro variabili
-$titoloPost = $dataPost = $testoPost = $imgPost = '';
-
-//verifica la richiesta GET del parametro idBlog
+$titoloPost = $dataPost = $testoPost = $imgPost = $idBlog = '';
+$errors = array('titoloPost' => '', 'testoPost' => '', 'imgPost' => ''); //array associativo che immagazzina gli errori
+// verifica la richiesta GET del parametro idBlog - entro qui solo la prima volta che visito questa pagina dal blog
 if (isset($_GET['idBlog'])) {
 
+    // id del blog in cui inserire il post
     $idBlog = mysqli_real_escape_string($conn, $_GET['idBlog']);
 
-    // sql codice
-    $sqlBlog = "SELECT idBlog, titolo, autore, categoria FROM blog WHERE idBlog = $idBlog";
+    // sql codice per recuperare titolo blog avendo l'id
+    $sqlIdBlog = "SELECT idBlog, titolo FROM blog WHERE idBlog = $idBlog";
 
-    //fetch risultato in un array
-    $blog = mysqli_fetch_assoc($sqlBlog); // si usa assoc e non all perchè prendiamo solo una riga della tab risultato
+    //risultato query
+    $risIdBlog = mysqli_query($conn, $sqlIdBlog);
+
+    // fetch risultato in un array
+    $blog = mysqli_fetch_assoc($risIdBlog); // si usa assoc e non all perchè prendiamo solo una riga della tab risultato
+
+    $_SESSION['idBlog'] = $idBlog;
+}
+
+// azioni conseguenti a submit
+if (isset($_POST['crea_post_submit'])) {
+
+    $idBlog = $_SESSION['idBlog'];
+    echo $_SESSION['idBlog'];
+
+    // check titolo post
+    if (empty($_POST['titoloPost'])) {
+        $errors['titoloPost'] = 'Manca un titolo per il tuo post!<br>';
+    } else {
+        $titoloPost = $_POST['titoloPost'];
+    }
+
+    //check testo post
+    if (empty($_POST['testoPost'])) {
+        $errors['testoPost'] = 'Manca una descrizione per il tuo blog!<br>';
+    } else {
+        $testoPost = $_POST['testoPost'];
+    }
+
+    // check immagine
+    $nomeImgPost = $_FILES['imgPost']['name']; // salvo il nome dell'immagine uploadata
+    $targetDir = "../img/";
+    $targetFile = $targetDir . basename($_FILES['imgPost']['name']);
+
+    // recupero file type immagine
+    $tipoImg = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+
+    // creo un array di stringhe nei quali scrivo i formati accettati di immagine
+    $estensioniAccettate = array("jpg", "png", "jpeg");
+
+    // controllo se l'estensione e' tra quelle accettate
+    // in caso contrario creo un errore
+    if (!in_array($tipoImg, $estensioniAccettate)) {
+        $errors['imgPost'] = 'Il formato del banner selezionato non è accettato';
+    }
+
+    //retrieve timestamp
+    $timestamp = date("Y-m-d H:i:s");
+
+    if (array_filter($errors)) {
+        //se ci sono errori
+        print_r($errors);
+    } else {
+
+        //escape sql chars
+        $titoloPost = mysqli_real_escape_string($conn, $_POST['titoloPost']);
+        $dataPost = $timestamp;
+        $testoPost = mysqli_real_escape_string($conn, $_POST['testoPost']);
+        $imgPost = $targetFile;
+
+        //query creazione post
+        $sqlNuovoPost = "INSERT INTO `post` (`idPost`, `titolo`, `data`, `testo`, `media`, `idBlog`, `cont_like`) VALUES (NULL, '$titoloPost', '$dataPost', '$testoPost', '$imgPost', '$idBlog', NULL)";
+
+        //controlla e salva sul db
+        if (mysqli_query($conn, $sqlNuovoPost)) {
+            // successo: passo id blog appena creato all'url della pagina visual_blog e lo apro(per permettere all'utente di creare subito un nuovo post)
+            $idBlog = $_SESSION['idBlog'];
+            header("Location: visual_blog.php?idBlog=$idBlog");
+        } else {
+            //errore
+            echo 'errore query: ' . mysqli_error($conn);
+        }
+    }
+
+    //libera memoria (su msqli_query)
+    mysqli_free_result($risIdBlog);
+
+    //chiudi connessione
+    mysqli_close($conn);
 
 }
+
 
 ?>
 <!DOCTYPE html>
@@ -33,101 +112,119 @@ include 'head.php';
 
     <div class="row justify-content-center">
 
-        <div class="col-8">
+        <div class="col-12">
+            <div class="col-sm-2 text-left navbar.fixed-top">
+                <a class="btn btn-outline-secondary btn-sm" href="visual_blog.php?idBlog=<?php echo $blog['idBlog'] ?>">
+                    <i class="fa fa-arrow-left"></i>
+                    Torna al blog
+                </a>
+            </div>
+        </div>
 
-            <div class="card bg-light shadow">
-                <div class="card-body">
-                    <h4 class="card-title text-center">Stai creando un post in <?php echo htmlspecialchars($blog['titolo']); ?></h4>
+        <div class="card bg-light shadow">
+            <div class="card-body">
 
-                    <form method="POST" action="crea_blog.php">
-
-                        <div class="row">
-
-                            <!-- titolo -->
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label for="">Titolo:</label>
-                                    <input type="text" required
-                                           class="form-control"
-                                           value="<?php echo htmlspecialchars($titoloPost) ?>"
-                                           name="titolo">
-                                    <!-- sopra ho "echo" le variabili vuote nei campi // htmlspecialchars() aggiunto per evitare script maligni -->
-                                </div>
-                            </div>
-
-                            <!-- data -->
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label for="">Data:</label>
-                                    <input type="date"
-                                           class="form-control"
-                                           value="<?php echo htmlspecialchars($dataPost) ?>"
-                                           name="data">
-                                    <div class="form-text invalid-feedback">
-                                        <?php  ?>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                            <!-- testo -->
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label for="">Testo:</label>
-                                    <input type="text"
-                                           class="form-control"
-                                           value="<?php echo htmlspecialchars($testoPost) ?>"
-                                           name="descrizione">
-                                    <div class="invalid-feedback">
-                                        <?php  ?>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- media(immagine o video) -->
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label for="fileInput">Carica immagine blog:</label>
-                                    <div class="custom-file">
-                                        <input type="file"
-                                               class="custom-file-input"
-                                               id="fileInput"
-                                               required
-                                               placeholder="Carica uno sfondo per il blog"
-                                               value="<?php echo htmlspecialchars($imgPost) ?>"
-                                               accept="image/png/jpg"
-                                               name="blog_banner">
-                                        <label class="custom-file-label" for="validatedCustomFile">
-                                            Scegli file...
-                                        </label>
-                                        <div class="invalid-feedback">Esempio file non accettato</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                    <!-- oltre a queste cose dovrei salvare anche il nome del blog di cui fa parte il post -->
-
-                            <div class="form-group p-3">
-                                <button type="submit"
-                                        value="Crea"
-                                        class="btn btn-secondary float-right"
-                                        name="submit">
-                                    Crea
-                                </button>
-                            </div>
-
-                        </div>
-                    </form>
-
+                <h4 class="card-title text-center">Stai creando un post in "<?php echo $blog['titolo']; ?>"</h4>
+                <!-- div mostra errori -->
+                <div id="errore">
+                    <?php ?>
                 </div>
+
+                <form enctype="multipart/form-data"
+                      method="POST"
+                      action="crea_post.php">
+
+                    <div class="row">
+
+                        <!-- titolo -->
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="titoloCreaPost">Titolo post:</label>
+                                <input type="text" required
+                                       class="form-control"
+                                       id="titoloCreaPost"
+                                       value="<?php echo htmlspecialchars($titoloPost) ?>"
+                                       name="titoloPost">
+                                <!-- sopra ho "echo" le variabili vuote nei campi // htmlspecialchars() aggiunto per evitare script maligni -->
+                            </div>
+                        </div>
+
+                        <!-- testo -->
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="testoPost">Testo:</label>
+                                <input type="text" required
+                                       class="form-control"
+                                       id="testoPost"
+                                       value="<?php echo htmlspecialchars($testoPost); ?>"
+                                       name="testoPost">
+                                <div class="invalid-feedback">
+                                    Testo post non valido
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- media(immagine o video) -->
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="fileInput">Carica immagine blog:</label>
+                                <div class="custom-file">
+                                    <input type="file"
+                                           required
+                                           class="custom-file-input"
+                                           id="fileInput"
+                                           placeholder="Carica uno sfondo per il blog"
+                                           value="<?php echo htmlspecialchars($imgPost) ?>"
+                                           accept="image/png/jpg"
+                                           name="imgPost">
+                                    <label class="custom-file-label" for="validatedCustomFile">
+                                        Scegli file...
+                                    </label>
+                                    <div class="invalid-feedback">Esempio file non accettato</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- oltre a queste cose dovrei salvare anche il nome del blog di cui fa parte il post -->
+
+                        <div class="form-group p-3">
+                            <button type="submit"
+                                    value="Crea"
+                                    class="btn btn-secondary float-right"
+                                    name="crea_post_submit">
+                                Crea
+                            </button>
+                        </div>
+
+                    </div>
+                </form>
 
             </div>
 
         </div>
+
     </div>
+</div>
 </div>
 
 <?php include('footer.php'); ?>
+
+<!--
+     Script per far apparire il nome del file nel relativo input.
+     L'input file di bootstrap 4 di default non permetteva di far vedere il nome quindi, come spiegato nella documentazione
+     si usa il javascript per ovviare al problema.
+-->
+<script>
+    $('#fileInput').on('change', function () {
+
+        // estraggo il nome del file facendo una substring sul percorso completo del file caricato
+        const filePath = $(this).val();
+        const fileName = filePath.substr(filePath.lastIndexOf('\\') + 1);
+
+        // rimpiazzo la scritta di default con il nome del file
+        $(this).next('.custom-file-label').html(fileName);
+    })
+</script>
 
 </body>
 </html>
