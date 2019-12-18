@@ -15,11 +15,15 @@ $blog = $posts = $post = '';
 //verifica la richiesta GET del parametro idBlog
 if (isset($_GET['idBlog'])) {
 
+    mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
     $idBlog = mysqli_real_escape_string($conn, $_GET['idBlog']);
+    print($idBlog);
 
     // sql codice
     $sqlBlog = "SELECT * FROM blog WHERE idBlog = $idBlog";
     $sqlPost = "SELECT * FROM post WHERE idBlog = $idBlog";
+
 
     //risultato query
     $risBlog = mysqli_query($conn, $sqlBlog);
@@ -37,10 +41,6 @@ if (isset($_GET['idBlog'])) {
     $risCateg = mysqli_query($conn, $sqlCategorie);
     $categoriaBlog = mysqli_fetch_assoc($risCateg);
 
-    //libera memoria
-    mysqli_free_result($risBlog);
-    mysqli_free_result($risPost);
-    mysqli_free_result($risCateg);
 
     //chiudi connessione
     mysqli_close($conn);
@@ -105,9 +105,9 @@ include 'head.php';
                 <p class="text-muted"><?php echo htmlspecialchars($post['data']); ?></p>
             </div>
             <div class="col-sm-2 text-right">
-                <!-- todo gestire delete blog con jquery + ajax ! -->
-                <button class="btn btn-sm btn-danger fa fa-trash">
-                </button>
+                <a class="btn btn-sm btn-danger fa fa-trash"
+                   href="cancella_post.php?idPost=<?php echo $post['idPost'] ?>"></a>
+                <!-- todo gestire delete post con jquery + ajax ! -->
             </div>
         </div>
         <!-- riga immagine descrizione e bottoni post -->
