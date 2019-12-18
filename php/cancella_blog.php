@@ -5,7 +5,6 @@ include('db_connect.php');
 include('header.php');
 include('head.php');
 
-$queryErr = '';
 
 if (isset($_GET['idBlog'])) {
     $nomeUtente = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']);
@@ -41,11 +40,6 @@ if (isset($_GET['idBlog'])) {
 }
 ?>
 
-<div class="alert alert-danger" role="alert">
-    <p>
-        <strong><?php echo $queryErr; ?></strong>
-    </p>
-</div>
 <a class="btn btn-outline-secondary btn-sm" href="gestione_blog.php?nomeUtente=<?php echo $nomeUtente; ?>">
     <i class="fa fa-arrow-left"></i>
     Torna ai blog

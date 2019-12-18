@@ -20,7 +20,7 @@ if (isset($_GET['idPost'])) {
         echo '<div class="alert alert-success" role="alert"><p><strong>' . " Record cancellato" . '</strong></p></div>';
         //header("Location: visual_blog.php?idBlog=$idBlog");
     } else {
-        echo '<div class="alert alert-danger" role="alert"><p><strong>' . "SI è verificato un errore" . '</strong></p></div>';
+        echo '<div class="alert alert-danger" role="alert"><p><strong>' . "Si è verificato un errore" . '</strong></p></div>';
     }
 
     // close connection
