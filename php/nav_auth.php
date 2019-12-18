@@ -12,7 +12,8 @@
         <ul class="navbar-nav mr-auto">
 
             <li class="nav-item">
-                <a class="nav-link" href="gestione_blog.php?nomeUtente=<?php echo $_SESSION['nomeUtente'] ?>">Gestisci blog</a>
+                <a class="nav-link" href="gestione_blog.php?nomeUtente=<?php echo $_SESSION['nomeUtente'] ?>">Gestisci
+                    blog</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="gestione_blog.php">Gestisci commenti</a>
@@ -21,17 +22,6 @@
                 <a class="nav-link" href="gestione_blog.php">Blog che segui</a>
             </li>
 
-            <!-- todo tobet: anche questo e' da rimuovere secondo me -->
-<!--            <li class="nav-item dropdown">-->
-<!--                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"-->
-<!--                   aria-haspopup="true" aria-expanded="false">-->
-<!--                    Post-->
-<!--                </a>-->
-<!--                <div class="dropdown-menu" aria-labelledby="navbarDropdown">-->
-<!--                    <a class="dropdown-item" href="#">Gestisci Blog</a>-->
-<!--                    <a class="dropdown-item" href="#">I tuoi commenti</a>-->
-<!--                </div>-->
-<!--            </li>-->
         </ul>
 
         <ul class="nav navbar-nav ml-auto">
@@ -44,7 +34,7 @@
                 <a class="nav-link" href="user.php"><i class="fa fa-user"></i> Profilo</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="login.php?logout='1'"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                <a class="nav-link" href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </li>
         </ul>
 
