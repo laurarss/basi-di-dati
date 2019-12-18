@@ -1,16 +1,11 @@
 body{
-	margin-top: 73px;
-    padding-top: 10px;
+    padding-top: 4%;
 }
 
 .container-bg {
 	color: white;
-	padding-top: 2%;
-	padding-bottom: 2%;
-	background-repeat: repeat-x;
   	background-attachment: fixed;
- 	background-position: center;
- 	padding: 2rem 1rem;
+ 	padding: 2rem 2rem 2rem 2rem;
  	margin-bottom: 2rem;
   	border-radius: 0.3rem;
   	background-size: cover;

@@ -1,5 +1,5 @@
 <?php
-//header( "Location: visual_blog.php? blog = $blog" );
+
 /**
  * La pagina visualizzazione blog permette di visualizzare un blog dell'utente loggato.
  * Mostra l'elenco di tutti i post al suo interno, con i relativi commenti.
@@ -50,6 +50,8 @@ if (isset($_GET['idBlog'])) {
     //  operazioni sulla data
 //    $dataBlog = DateTIme::createFromFormat('Y-m-d', $blog['data']);
 //    $dataBlogFormatt = $dataBlog->format('d M Y');
+} else {
+    header( "Location: ops.php" );
 }
 ?>
 
