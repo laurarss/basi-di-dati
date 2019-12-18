@@ -19,9 +19,9 @@ if (isset($_POST['crea_blog_submit'])) {
         $errors['titolo'] = 'Manca un titolo per il tuo blog!<br>';
     } else {
         $titolo = $_POST['titolo'];
-        if (!preg_match('/^[a-z][a-z\s]*$/', $titolo)) {
-            $errors['titolo'] = 'Il titolo deve contenere solo lettere e spazi<br>';
-        }
+//        if (!preg_match('/^[a-z][a-z\s]*$/', $titolo)) {
+//            $errors['titolo'] = 'Il titolo deve contenere solo lettere e spazi<br>';
+//        }
     }
 
     //check categoria

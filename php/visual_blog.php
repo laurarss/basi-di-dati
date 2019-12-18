@@ -18,7 +18,6 @@ if (isset($_GET['idBlog'])) {
     mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
     $idBlog = mysqli_real_escape_string($conn, $_GET['idBlog']);
-    print($idBlog);
 
     // sql codice
     $sqlBlog = "SELECT * FROM blog WHERE idBlog = $idBlog";
@@ -36,7 +35,6 @@ if (isset($_GET['idBlog'])) {
     //prendo dall'array associativo blog l'id della categoria associata, poi faccio la query che prende la categoria
     $idCategoriaBlog = $blog['categoria'];
     $sqlCategorie = "SELECT * FROM categorie WHERE idCategoria = $idCategoriaBlog";
-    echo $sqlCategorie;
 
     $risCateg = mysqli_query($conn, $sqlCategorie);
     $categoriaBlog = mysqli_fetch_assoc($risCateg);
