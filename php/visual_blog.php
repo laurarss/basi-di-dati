@@ -51,7 +51,7 @@ if (isset($_GET['idBlog'])) {
 //    $dataBlog = DateTIme::createFromFormat('Y-m-d', $blog['data']);
 //    $dataBlogFormatt = $dataBlog->format('d M Y');
 } else {
-    header( "Location: ops.php" );
+    header("Location: ops.php");
 }
 ?>
 
@@ -122,7 +122,7 @@ include 'head.php';
     <?php } ?>
 
     <!--Card crea post-->
-    <div class="row py-2">
+    <div class="row py-2" id="daNascondere">
         <div class="col-sm-10">
             <h1 class="lead display-5 font-weight-bold">+ Crea un nuovo post</h1>
             <p class="text-muted">nuovo post</p>
@@ -137,4 +137,10 @@ include 'head.php';
 
 <?php include('footer.php'); ?>
 
+<?php if (!isset($_SESSION['nomeUtente'])): ?>
+    <script type="text/javascript">
+        $('.btn').hide();
+        $('#daNascondere').hide();
+    </script>
+<?php endif; ?>
 </html>

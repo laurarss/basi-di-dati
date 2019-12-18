@@ -5,7 +5,7 @@ include('db_connect.php');
 include('header.php');
 
 // write query
-$sqlGetBlogData = "SELECT titolo, autore, descrizione FROM blog";
+$sqlGetBlogData = "SELECT * FROM `blog`";
 
 // get the result set (set of rows)
 $resultBlogData = mysqli_query($conn, $sqlGetBlogData);
@@ -46,7 +46,6 @@ include 'head.php';
 
     <div class="container">
         <div class="row">
-
             <?php foreach ($blogs as $blog) { ?>
 
                 <div class="col-sm-4 py-3">
@@ -62,7 +61,6 @@ include 'head.php';
                 </div>
 
             <?php } ?>
-
         </div>
 
     </div>

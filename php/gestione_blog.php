@@ -11,7 +11,6 @@
 include('db_connect.php');
 include('header.php');
 
-
 if (isset($_SESSION['nomeUtente'])) {
 
     $nomeUtente = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']);
