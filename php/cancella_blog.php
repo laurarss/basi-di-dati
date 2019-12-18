@@ -30,9 +30,10 @@ if (isset($_GET['idBlog'])) {
 
     if ($conn->query($cancBlog) === TRUE) {
         //se la query è andata a buon fine
-        header("Location: gestione_blog.php?nomeUtente=$nomeUtente ?>");
+        /*        header("Location: gestione_blog.php?nomeUtente=$nomeUtente ?>");*/
+        echo '<div class="alert alert-success" role="alert"><p><strong>' . " Record cancellato" . '</strong></p></div>';
     } else {
-        echo $queryErr = "Errore nel cancellare il record: " . $conn->error;
+        echo '<div class="alert alert-danger" role="alert"><p><strong>' . "Si è verificato un errore:" . $conn->error . '</strong></p></div>';
     }
 
     // close connection
