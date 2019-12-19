@@ -28,6 +28,8 @@ if (isset($_POST['reg_btn'])) {
     }
     if (empty($password_1)) {
         array_push($errors, "Password richiesta");
+    } else if (strlen(trim($password)) > 8) {
+        array_push($errors, "La password deve essere almeno di 8 caratteri");
     }
     if ($password_1 != $password_2) {
         array_push($errors, "Le due password non combaciano");

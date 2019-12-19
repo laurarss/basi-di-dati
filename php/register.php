@@ -20,7 +20,6 @@ include 'head.php';
 
                     <form id="formReg" method="post" action="register.php">
                         <?php include('errors.php'); ?>
-
                         <div class="row">
 
                             <div class="col-12">
@@ -100,7 +99,6 @@ include 'head.php';
                             </div>
 
                             <div class="col-12">
-
                                 <!-- INPUT email -->
                                 <div class="form-group">
                                     <label for="inputEmail"><strong>Email</strong></label>
@@ -128,12 +126,10 @@ include 'head.php';
                         <p>
                             Sei già iscritto? Vai al <a href="login.php">Log in</a>
                         </p>
-
                     </form>
 
                     <script type="text/javascript">
                         $("form").submit(function (event) {
-
                             let errore = "";
 
                             if ($("#inputUsername").val() === "") { //se il campo è vuoto
@@ -142,6 +138,8 @@ include 'head.php';
                             }
                             if ($("#passwordUtente").val() === "") { //se il campo è vuoto
                                 errore += "Password obbligatoria.<br>";
+                            } else if ($("#passwordUtente").val().length <= 8) {
+                                errore += "La password deve essere almeno di 8 caratteri<br>";
                             }
                             if ($("#passwordUtente").val() !== $("#passwordUtente2").val()) { //se il campo è vuoto
                                 errore += "Le password non combaciano.<br>";
@@ -149,7 +147,6 @@ include 'head.php';
                             if ($("#inputEmail").val() === "") { //se il campo è vuoto
                                 errore += "Email obbligatoria.<br>";
                             }
-
                             if (errore !== "") {
                                 event.preventDefault(); // previene il submit di default
                                 $("#errore").html('<div class="alert alert-danger" role="alert"><p><strong>Nel form sono stati trovati i seguenti errori:</strong></p>' + errore + '</div>');

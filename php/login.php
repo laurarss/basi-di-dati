@@ -75,6 +75,26 @@ include 'head.php';
 
                         </div>
                     </form>
+                    <!-- validazione form -->
+                    <script type="text/javascript">
+                        $("form").submit(function (event) {
+                            let errore = "";
+
+                            if ($("#inputUsername").val() === "") { //se il campo è vuoto
+                                errore += "Username obbligatorio.<br>";
+                                //$("#inputUsername").css('border-color', 'red;');
+                            }
+                            if ($("#passwordUtente").val() === "") { //se il campo è vuoto
+                                errore += "Password obbligatoria.<br>";
+                            } else if ($("#passwordUtente").val().length <= 8) {
+                                errore += "La password deve essere almeno di 8 caratteri<br>";
+                            }
+                            if (errore !== "") {
+                                event.preventDefault(); // previene il submit di default
+                                $("#errore").html('<div class="alert alert-danger" role="alert"><p><strong>Nel form sono stati trovati i seguenti errori:</strong></p>' + errore + '</div>');
+                            }
+                        });
+                    </script>
                 </div>
 
             </div>
