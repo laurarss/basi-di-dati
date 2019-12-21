@@ -1,22 +1,20 @@
+<!-- collegamento al file server.php, qui c'è il codice che accoglie i dati inseriti in questa pagina -->
+<?php include('server.php') ?>
+
 <!DOCTYPE html>
 <html lang="it">
 
+<?php
+//includo file header
+include 'head.php';
+?>
+
 <body>
-<div class="container col-12">
-    <?php
-    //includo file header
-    include 'head.php';
-    include('server.php');
-    ?>
-</div>
-
 <!-- IMPLEMENTAZIONE LOGIN CON BOOTSTRAP -->
-
 <div class="container" style="padding-top: 18vh;">
     <div class="row justify-content-center">
         <div class="col-sm-6">
             <div id="accessoF">
-                <!-- collegamento al file server.php, qui c'è il codice che accoglie i dati inseriti in questa pagina-->
                 <?php echo $accessoF; ?>
             </div>
             <div class="card bg-light shadow">
@@ -77,6 +75,7 @@
                     <!-- validazione form -->
                     <script type="text/javascript">
                         $("form").submit(function (event) {
+                            //nasconde l'avviso errore query quando reinserisco nuovi dati
                             $('#accessoF').hide();
                             let errore = "";
 

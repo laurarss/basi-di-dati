@@ -10,12 +10,15 @@ include 'head.php';
 ?>
 
 <body>
+<!-- IMPLEMENTAZIONE REGISTRAZIONE CON BOOTSTRAP -->
 <div class="container" style="padding-top: 18vh;">
     <div class="row justify-content-center">
-        <div class="col-6">
+        <div class="col-sm-6">
             <div class="card bg-light shadow">
                 <div class="card-body">
                     <h4 class="card-title text-center">Registrazione</h4>
+
+                    <!-- div mostra errori da js -->
                     <div id="errore"></div>
 
                     <form id="formReg" method="post" action="register.php">
@@ -37,11 +40,9 @@ include 'head.php';
                                         Il nome utente e' riservato
                                     </small>
                                 </div>
-
                             </div>
 
                             <div class="col-12">
-
                                 <!-- INPUT password 1 -->
                                 <div class="form-group">
                                     <label for="passwordUtente"><strong>Password</strong></label>
@@ -54,11 +55,9 @@ include 'head.php';
                                         La tua password deve essere minimo di 8 caratteri.
                                     </small>
                                 </div>
-
                             </div>
 
                             <div class="col-12">
-
                                 <!-- INPUT password 2 -->
                                 <div class="form-group">
                                     <label for="passwordUtente2"><strong>Conferma password</strong></label>
@@ -68,11 +67,9 @@ include 'head.php';
                                            placeholder="Reinserisci la password..."
                                            name="password_2">
                                 </div>
-
                             </div>
 
                             <div class="col-6">
-
                                 <!-- INPUT nome -->
                                 <div class="form-group">
                                     <label for="inputNome"><strong>Nome</strong></label>
@@ -85,7 +82,6 @@ include 'head.php';
                             </div>
 
                             <div class="col-6">
-
                                 <!-- INPUT cognome -->
                                 <div class="form-group">
                                     <label for="inputCognome"><strong>Cognome</strong></label>
@@ -111,7 +107,6 @@ include 'head.php';
                                         Non condivideremo la tua email con nessun'altro.
                                     </small>
                                 </div>
-
                             </div>
 
                         </div>
@@ -133,18 +128,32 @@ include 'head.php';
 
                             if ($("#inputUsername").val() === "") { //se il campo è vuoto
                                 errore += "Username obbligatorio.<br>";
-                                //$("#inputUsername").css('border-color', 'red;');
+                                $("#inputUsername").css('border-color', '#b32d39');
+                            } else {
+                                $("#inputUsername").css('border-color', '#28a745');
                             }
-                            if ($("#passwordUtente").val() === "") { //se il campo è vuoto
+                            if ($("#passwordUtente").val() === "" || $("#passwordUtente2").val() === "") { //se il campo è vuoto
                                 errore += "Password obbligatoria.<br>";
+                                $("#passwordUtente").css('border-color', '#b32d39');
                             } else if ($("#passwordUtente").val().length <= 8) {
                                 errore += "La password deve essere almeno di 8 caratteri<br>";
+                                $("#passwordUtente").css('border-color', '#b32d39');
+                            } else {
+                                $("#passwordUtente").css('border-color', '#28a745');
                             }
                             if ($("#passwordUtente").val() !== $("#passwordUtente2").val()) { //se il campo è vuoto
                                 errore += "Le password non combaciano.<br>";
+                                $("#passwordUtente").css('border-color', '#b32d39');
+                                $("#passwordUtente2").css('border-color', '#b32d39');
+                            } else {
+                                $("#passwordUtente").css('border-color', '#28a745');
+                                $("#passwordUtente2").css('border-color', '#28a745');
                             }
                             if ($("#inputEmail").val() === "") { //se il campo è vuoto
                                 errore += "Email obbligatoria.<br>";
+                                $("#inputEmail").css('border-color', '#b32d39');
+                            } else {
+                                $("#inputEmail").css('border-color', '#28a745');
                             }
                             if (errore !== "") {
                                 event.preventDefault(); // previene il submit di default
@@ -152,7 +161,6 @@ include 'head.php';
                             }
                         });
                     </script>
-
                 </div>
             </div>
         </div>
