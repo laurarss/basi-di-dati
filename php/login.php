@@ -1,28 +1,33 @@
-<!-- collegamento al file server.php, qui c'è il codice che accoglie i dati inseriti in questa pagina -->
-<?php include('server.php') ?>
-
 <!DOCTYPE html>
 <html lang="it">
 
-<?php
-//includo file header
-include 'head.php';
-?>
-
 <body>
+<div class="container col-12">
+    <?php
+    //includo file header
+    include 'head.php';
+    include('server.php');
+    ?>
+</div>
 
 <!-- IMPLEMENTAZIONE LOGIN CON BOOTSTRAP -->
 
 <div class="container" style="padding-top: 18vh;">
     <div class="row justify-content-center">
-        <div class="col-6">
+        <div class="col-sm-6">
+            <div id="accessoF">
+                <!-- collegamento al file server.php, qui c'è il codice che accoglie i dati inseriti in questa pagina-->
+                <?php echo $accessoF; ?>
+            </div>
             <div class="card bg-light shadow">
                 <div class="card-body">
                     <h4 class="card-title text-center">Login</h4>
-                    <div id="errore"></div>
+                    <div id="errore">
+                        <?php include('errors.php'); ?>
+                    </div>
 
                     <form id="formLogin" method="post" action="login.php">
-                        <?php include('errors.php'); ?>
+
                         <div class="row">
 
                             <div class="col-12">
@@ -72,16 +77,20 @@ include 'head.php';
                     <!-- validazione form -->
                     <script type="text/javascript">
                         $("form").submit(function (event) {
+                            $('#accessoF').hide();
                             let errore = "";
 
                             if ($("#loginUsername").val() === "") { //se il campo è vuoto
                                 errore += "Username obbligatorio.<br>";
-                                //$("#inputUsername").css('border-color', 'red;');
+                                $("#loginUsername").css('border-color', '#b32d39');
+                            } else {
+                                $("#loginUsername").css('border-color', '#28a745');
                             }
                             if ($("#loginPassword").val() === "") { //se il campo è vuoto
                                 errore += "Password obbligatoria.<br>";
-                            } else if ($("#passwordUtente").val().length <= 8) {
-                                errore += "La password deve essere almeno di 8 caratteri<br>";
+                                $("#loginPassword").css('border-color', '#b32d39');
+                            } else {
+                                $("#loginPassword").css('border-color', '#28a745');
                             }
                             if (errore !== "") {
                                 event.preventDefault(); // previene il submit di default

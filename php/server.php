@@ -7,6 +7,7 @@ session_start();
 // inizializzo variabili
 $nomeUtente = $password_1 = $password_2 = $nome = $cognome = $email = '';
 $errors = array();
+$accessoF = '';
 
 include('db_connect.php');
 
@@ -75,19 +76,19 @@ if (isset($_POST['login_user'])) {
     if (empty($password)) {
         array_push($errors, "password richiesta");
     }
-    print_r($errors);
 
-//    if (count($errors) == 0) {
-    $password = md5($password);
-    $query = "SELECT * FROM utenti WHERE nomeUtente='$nomeUtente' AND password='$password'";
-    $results = mysqli_query($conn, $query);
+    if (count($errors) == 0) {
+        $password = md5($password);
+        $query = "SELECT * FROM utenti WHERE nomeUtente='$nomeUtente' AND password='$password'";
+        $results = mysqli_query($conn, $query);
 
-    if (mysqli_num_rows($results) == 1) {
-        $_SESSION['nomeUtente'] = $nomeUtente;
-        header('Location: index.php');
-    } else {
-        // todo dare avvertimento quando la query non trova risultati
-        echo "La query non ha prodotto risultati";
+        if (mysqli_num_rows($results) == 1) {
+            $_SESSION['nomeUtente'] = $nomeUtente;
+            header('Location: index.php');
+        } else {
+            // todo dare avvertimento quando la query non trova risultati
+            $accessoF = '<br><div class="alert alert-danger" role="alert"><p><strong>' . "La query non ha prodotto risultati" . '</strong></p></div>';
+        }
     }
 }
 ?>

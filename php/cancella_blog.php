@@ -5,6 +5,7 @@ include('db_connect.php');
 include('header.php');
 include('head.php');
 
+$esito = '';
 
 if (isset($_GET['idBlog'])) {
     $nomeUtente = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']);
@@ -30,17 +31,20 @@ if (isset($_GET['idBlog'])) {
     if ($conn->query($cancBlog) === TRUE) {
         //se la query è andata a buon fine
         /*        header("Location: gestione_blog.php?nomeUtente=$nomeUtente ?>");*/
-        echo '<div class="alert alert-success" role="alert"><p><strong>' . " Record cancellato" . '</strong></p></div>';
+        $esito = '<br><div class="alert alert-success" role="alert"><p><strong>' . " Record cancellato" . '</strong></p></div>';
     } else {
-        echo '<div class="alert alert-danger" role="alert"><p><strong>' . "Si è verificato un errore:" . $conn->error . '</strong></p></div>';
+        $esito = '<br><div class="alert alert-danger" role="alert"><p><strong>' . "Si è verificato un errore:" . $conn->error . '</strong></p></div>';
     }
 
     // close connection
     $conn->close();
 }
 ?>
-
-<a class="btn btn-outline-secondary btn-sm" href="gestione_blog.php?nomeUtente=<?php echo $nomeUtente; ?>">
-    <i class="fa fa-arrow-left"></i>
-    Torna ai blog
-</a>
+<div class="col-sm-3">
+    <br>
+    <?php echo $esito; ?>
+    <a class="btn btn-outline-secondary btn-sm" href="gestione_blog.php?nomeUtente=<?php echo $nomeUtente; ?>">
+        <i class="fa fa-arrow-left"></i>
+        Torna ai blog
+    </a>
+</div>
