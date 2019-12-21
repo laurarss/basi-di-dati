@@ -69,13 +69,13 @@ if (isset($_POST['login_user'])) {
     $nomeUtente = mysqli_real_escape_string($conn, $_POST['nomeUtente']);
     $password = mysqli_real_escape_string($conn, $_POST['password']);
 
-
-//    if (empty($nomeUtente)) {
-//        array_push($errors, "nomeUtente richiesto");
-//    }
-//    if (empty($password)) {
-//        array_push($errors, "password richiesta");
-//    }
+    if (empty($nomeUtente)) {
+        array_push($errors, "nomeUtente richiesto");
+    }
+    if (empty($password)) {
+        array_push($errors, "password richiesta");
+    }
+    print_r($errors);
 
 //    if (count($errors) == 0) {
     $password = md5($password);

@@ -23,7 +23,6 @@ include 'head.php';
                         <div class="row">
 
                             <div class="col-12">
-
                                 <!-- INPUT username -->
                                 <div class="form-group">
                                     <label for="inputUsername"><strong>Username</strong></label>
