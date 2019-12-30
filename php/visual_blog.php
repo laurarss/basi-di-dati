@@ -23,34 +23,34 @@ if (isset($_GET['idBlog'])) {
     $sqlBlog = "SELECT * FROM blog WHERE idBlog = $idBlog";
     $sqlPost = "SELECT * FROM post WHERE idBlog = $idBlog";
 
-//risultato query
+// risultato query
     $risBlog = mysqli_query($conn, $sqlBlog);
     $risPost = mysqli_query($conn, $sqlPost);
 
-//fetch risultato in un array
+// fetch risultato in un array
     $blog = mysqli_fetch_assoc($risBlog); // si usa assoc e non all perchè prendiamo solo una riga della tab risultato
     $posts = mysqli_fetch_all($risPost, MYSQLI_ASSOC);
 
-//prendo dall'array associativo blog l'id della categoria associata, poi faccio la query che prende la categoria
+// prendo dall'array associativo blog l'id della categoria associata, poi faccio la query che prende la categoria
     $idCategoriaBlog = $blog['categoria'];
     $sqlCategorie = "SELECT * FROM categorie WHERE idCategoria = $idCategoriaBlog";
 
     $risCateg = mysqli_query($conn, $sqlCategorie);
     $categoriaBlog = mysqli_fetch_assoc($risCateg);
 
-//serve a "segui"
+// serve a pulsante "segui"
     $utenteSession = $_SESSION['nomeUtente'];
     $sqlFollower = "SELECT * FROM follower WHERE idUtente != '$utenteSession' AND idBlog = '$idBlog'";
     $risFollow = mysqli_query($conn, $sqlFollower);
     $followers = mysqli_fetch_all($risFollow);
-
+    // se trovo il record nel db follower
     if (mysqli_num_rows($risFollow) === 1) {
         $segui = "Stai seguendo";
-    } else{
+    } else {
         $segui = "Segui";
     }
 
-    //chiudi connessione
+// chiudi connessione
     mysqli_close($conn);
 
     // debug
@@ -91,6 +91,7 @@ include 'head.php';
 
             <?php else: ?>
             <?php endif; ?>
+            <!-- pulsante segui -->
             <a class="segui btn btn-outline-primary btn-sm" href="*">
                 <i class="fa fa-edit"></i>
                 <?php echo $segui; ?>
