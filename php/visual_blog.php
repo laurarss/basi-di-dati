@@ -10,7 +10,7 @@ include('db_connect.php');
 //includo file header
 include('header.php');
 
-$blog = $posts = $post = '';
+$blog = $posts = $post = $followers = $segui = '';
 
 //verifica la richiesta GET del parametro idBlog
 if (isset($_GET['idBlog'])) {
@@ -19,26 +19,36 @@ if (isset($_GET['idBlog'])) {
 
     $idBlog = mysqli_real_escape_string($conn, $_GET['idBlog']);
 
-    // sql codice
+// sql codice
     $sqlBlog = "SELECT * FROM blog WHERE idBlog = $idBlog";
     $sqlPost = "SELECT * FROM post WHERE idBlog = $idBlog";
 
-
-    //risultato query
+//risultato query
     $risBlog = mysqli_query($conn, $sqlBlog);
     $risPost = mysqli_query($conn, $sqlPost);
 
-    //fetch risultato in un array
+//fetch risultato in un array
     $blog = mysqli_fetch_assoc($risBlog); // si usa assoc e non all perchè prendiamo solo una riga della tab risultato
     $posts = mysqli_fetch_all($risPost, MYSQLI_ASSOC);
 
-    //prendo dall'array associativo blog l'id della categoria associata, poi faccio la query che prende la categoria
+//prendo dall'array associativo blog l'id della categoria associata, poi faccio la query che prende la categoria
     $idCategoriaBlog = $blog['categoria'];
     $sqlCategorie = "SELECT * FROM categorie WHERE idCategoria = $idCategoriaBlog";
 
     $risCateg = mysqli_query($conn, $sqlCategorie);
     $categoriaBlog = mysqli_fetch_assoc($risCateg);
 
+//serve a "segui"
+    $utenteSession = $_SESSION['nomeUtente'];
+    $sqlFollower = "SELECT * FROM follower WHERE idUtente != '$utenteSession' AND idBlog = '$idBlog'";
+    $risFollow = mysqli_query($conn, $sqlFollower);
+    $followers = mysqli_fetch_all($risFollow);
+
+    if (mysqli_num_rows($risFollow) === 1) {
+        $segui = "Stai seguendo";
+    } else{
+        $segui = "Segui";
+    }
 
     //chiudi connessione
     mysqli_close($conn);
@@ -47,9 +57,6 @@ if (isset($_GET['idBlog'])) {
 //    print_r($posts);
 //    print_r($categoria);
 
-    //  operazioni sulla data
-//    $dataBlog = DateTIme::createFromFormat('Y-m-d', $blog['data']);
-//    $dataBlogFormatt = $dataBlog->format('d M Y');
 } else {
     header("Location: ops.php");
 }
@@ -84,8 +91,13 @@ include 'head.php';
 
             <?php else: ?>
             <?php endif; ?>
-            <div class="col-sm-2 text-left">
-                <a class="btn btn-outline-secondary btn-sm" href="*">
+            <a class="segui btn btn-outline-primary btn-sm" href="*">
+                <i class="fa fa-edit"></i>
+                <?php echo $segui; ?>
+                <!-- la visual cambia in base all'esito della query sul db "follower" -->
+            </a>
+            <div class="text-left">
+                <a class="daNascondere btn btn-outline-secondary btn-sm" href="*">
                     <i class="fa fa-edit"></i>
                     Cambia sfondo banner
                 </a>
@@ -105,7 +117,7 @@ include 'head.php';
                 <p class="text-muted"><?php echo htmlspecialchars($post['data']); ?></p>
             </div>
             <div class="col-sm-2 text-right">
-                <a class="btn btn-sm btn-danger fa fa-trash"
+                <a class="daNascondere btn btn-sm btn-danger fa fa-trash"
                    href="cancella_post.php?idPost=<?php echo $post['idPost'] ?>"></a>
                 <!-- todo gestire delete post con jquery + ajax ! -->
             </div>
@@ -122,7 +134,7 @@ include 'head.php';
     <?php } ?>
 
     <!--Card crea post-->
-    <div class="row py-2" id="daNascondere">
+    <div class="daNascondere row py-2">
         <div class="col-sm-10">
             <h1 class="lead display-5 font-weight-bold">+ Crea un nuovo post</h1>
             <p class="text-muted">nuovo post</p>
@@ -137,10 +149,27 @@ include 'head.php';
 
 <?php include('footer.php'); ?>
 
+<!-- nasconde tutti i bottoni blog(con la classe daNascondere) a chi non è loggato -->
 <?php if (!isset($_SESSION['nomeUtente'])): ?>
     <script type="text/javascript">
-        $('.btn').hide();
-        $('#daNascondere').hide();
+        $('.daNascondere').hide();
+        $('.segui').hide();
     </script>
+
+<?php elseif ($_SESSION['nomeUtente'] !== $blog['autore']): ?>
+    <!-- nasconde pulsanti di un blog di un utente diverso dal visualizzatore, ma mostrare segui -->
+    <script type="text/javascript">
+        $('.daNascondere').hide();
+        $('.segui').show();
+    </script>
+
+<?php else: ?>
+    <!-- se visualizzo uno dei miei blog vedo tutti i pulsanti tranne il segui -->
+    <script type="text/javascript">
+        $('.daNascondere').show();
+        $('.segui').hide();
+    </script>
+
 <?php endif; ?>
+
 </html>
