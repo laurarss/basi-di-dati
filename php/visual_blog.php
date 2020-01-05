@@ -10,7 +10,7 @@ include('db_connect.php');
 //includo file header
 include('header.php');
 
-$blog = $posts = $post = $followers = $segui = '';
+$blog = $posts = $followers = $segui = $utenteSession = '';
 
 //verifica la richiesta GET del parametro idBlog
 if (isset($_GET['idBlog'])) {
@@ -38,17 +38,24 @@ if (isset($_GET['idBlog'])) {
     $risCateg = mysqli_query($conn, $sqlCategorie);
     $categoriaBlog = mysqli_fetch_assoc($risCateg);
 
-// serve a pulsante "segui"
-    $utenteSession = $_SESSION['nomeUtente'];
-    $sqlFollower = "SELECT * FROM follower WHERE idUtente != '$utenteSession' AND idBlog = '$idBlog'";
-    $risFollow = mysqli_query($conn, $sqlFollower);
-    $followers = mysqli_fetch_all($risFollow);
-    // se trovo il record nel db follower
-    if (mysqli_num_rows($risFollow) === 1) {
-        $segui = "Stai seguendo";
-    } else {
-        $segui = "Segui";
+    // serve a pulsante "segui"
+    if (isset($_SESSION['nomeUtente'])) {
+        $utenteSession = $_SESSION['nomeUtente'];
     }
+
+    // query per cercare nella tab follower l'utente attualmente loggato
+    // la risposta sarà un array di un elemento, ne caso venga trovato, o vuoto in caso contrario
+    $sqlFollower = "SELECT * FROM follower WHERE idBlog = '$idBlog' AND idUtente = '$utenteSession'";
+    $risFollow = mysqli_query($conn, $sqlFollower);
+    $followers = mysqli_fetch_all($risFollow, MYSQLI_ASSOC);
+
+    // se trovo il record nel db follower
+    if (mysqli_num_rows($risFollow) === 1 AND $followers[0]['idUtente'] == $utenteSession) {
+        $segui = '<a class="btn btn-primary btn-sm" href="*"><i class="fa fa-rss-square"></i>' . " Stai seguendo" . '</a>';
+    } else {
+        $segui = '<a class="btn btn-outline-primary btn-sm" href="*"><i class="fa fa-rss"></i>' . " Segui" . '</a>';
+    }
+
 
 // chiudi connessione
     mysqli_close($conn);
@@ -91,12 +98,11 @@ include 'head.php';
 
             <?php else: ?>
             <?php endif; ?>
+
             <!-- pulsante segui -->
-            <a class="segui btn btn-outline-primary btn-sm" href="*">
-                <i class="fa fa-edit"></i>
-                <?php echo $segui; ?>
-                <!-- la visual cambia in base all'esito della query sul db "follower" -->
-            </a>
+            <!-- la visual cambia in base all'esito della query sul db "follower" -->
+            <div class="segui text-center"> <?php echo $segui; ?> </div>
+
             <div class="text-left">
                 <a class="daNascondere btn btn-outline-secondary btn-sm" href="*">
                     <i class="fa fa-edit"></i>
@@ -172,5 +178,19 @@ include 'head.php';
     </script>
 
 <?php endif; ?>
+
+
+<!-- ajax bottone segui -->
+<script>
+    document.getElementsByClassName("segui").click(function(){
+        $.ajax({
+            type: "POST",
+            url: "add_delete_follower.php",
+            success: function(msg){
+                $("#span-list").html(msg);
+            }
+        })
+    })
+</script>
 
 </html>
