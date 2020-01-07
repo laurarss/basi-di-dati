@@ -186,7 +186,7 @@ include 'head.php';
         $('#follow').click(function () {
             $.ajax({    //creo richiesta ajax
                 type: "POST",
-                url: "add_follower.php?idBlog=<?php echo $blog['idBlog'] ?>",
+                url: "crea_follower.php?idBlog=<?php echo $blog['idBlog'] ?>",
                 dataType: "html",   //la richiesta ritorna del codice html
                 success: function (response) {
                     $(".segui").html(response);
@@ -198,7 +198,7 @@ include 'head.php';
         $('#following').click(function () {
             $.ajax({
                 type: "POST",
-                url: "delete_follower.php?idBlog=<?php echo $blog['idBlog'] ?>",
+                url: "cancella_follower.php?idBlog=<?php echo $blog['idBlog'] ?>",
                 dataType: "html",
                 success: function (response) {
                     $(".segui").html(response);

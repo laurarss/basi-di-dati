@@ -8,7 +8,9 @@
 
 // todo valutare se possibile inserire analitics con i dati dei propri blog (i.e. mi piace ricevuti, top blog eccetera)
 
+//includo file connessione al db
 include('db_connect.php');
+//includo file header
 include('header.php');
 
 if (isset($_SESSION['nomeUtente'])) {

@@ -19,7 +19,7 @@
                 <a class="nav-link" href="gestione_blog.php">Gestisci commenti</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="gestione_blog.php">Blog che segui</a>
+                <a class="nav-link" href="blog_seguiti.php">Blog che segui</a>
             </li>
 
         </ul>
