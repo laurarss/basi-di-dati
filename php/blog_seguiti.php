@@ -66,15 +66,10 @@ include 'head.php';
 
                         <!-- card commands row -->
                         <div class="row py-2">
-                            <div class="col-6">
+                            <div class="col-12">
                                 <!--  passa il codice del blog(array che stiamo scorrendo col for) alla pagina visual_blog  -->
                                 <a class="btn btn-sm btn-primary"
                                    href="visual_blog.php?idBlog=<?php echo $followedBlog['idBlog'] ?>">Apri</a>
-                            </div>
-                            <div class="col-6">
-                                <a class="btn btn-sm btn-danger"
-                                   href="cancella_blog.php?idBlog=<?php echo $followedBlog['idBlog'] ?>">Elimina</a>
-                                <!-- todo gestire delete blog con jquery + ajax ! -->
                             </div>
                         </div>
 
