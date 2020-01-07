@@ -40,7 +40,7 @@ if (isset($_GET['idBlog'])) {
 
     // serve a pulsante "segui"
     if (isset($_SESSION['nomeUtente'])) {
-        $utenteSession = $_SESSION['nomeUtente'];
+        $utenteSession = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']);
     }
 
     // query per cercare nella tab follower l'utente attualmente loggato
@@ -51,9 +51,9 @@ if (isset($_GET['idBlog'])) {
 
     // se trovo il record nel db follower
     if (mysqli_num_rows($risFollow) === 1 AND $followers[0]['idUtente'] == $utenteSession) {
-        $segui = '<a class="btn btn-primary btn-sm" href="*"><i class="fa fa-rss-square"></i>' . " Stai seguendo" . '</a>';
+        $segui = '<a class="btn btn-primary btn-sm" id="following" value="following"><i class="fa fa-rss-square"></i>' . " Stai seguendo" . '</a>';
     } else {
-        $segui = '<a class="btn btn-outline-primary btn-sm" href="*"><i class="fa fa-rss"></i>' . " Segui" . '</a>';
+        $segui = '<a class="btn btn-outline-primary btn-sm" id="follow" value="follow"><i class="fa fa-rss"></i>' . " Segui" . '</a>';
     }
 
 
@@ -101,7 +101,9 @@ include 'head.php';
 
             <!-- pulsante segui -->
             <!-- la visual cambia in base all'esito della query sul db "follower" -->
-            <div class="segui text-center"> <?php echo $segui; ?> </div>
+            <div class="segui text-center">
+                <?php echo $segui; ?>
+            </div>
 
             <div class="text-left">
                 <a class="daNascondere btn btn-outline-secondary btn-sm" href="*">
@@ -162,35 +164,48 @@ include 'head.php';
         $('.daNascondere').hide();
         $('.segui').hide();
     </script>
-
 <?php elseif ($_SESSION['nomeUtente'] !== $blog['autore']): ?>
     <!-- nasconde pulsanti di un blog di un utente diverso dal visualizzatore, ma mostrare segui -->
     <script type="text/javascript">
         $('.daNascondere').hide();
         $('.segui').show();
     </script>
-
 <?php else: ?>
     <!-- se visualizzo uno dei miei blog vedo tutti i pulsanti tranne il segui -->
     <script type="text/javascript">
         $('.daNascondere').show();
         $('.segui').hide();
     </script>
-
 <?php endif; ?>
 
-
-<!-- ajax bottone segui -->
-<script>
-    document.getElementsByClassName("segui").click(function(){
-        $.ajax({
-            type: "POST",
-            url: "add_delete_follower.php",
-            success: function(msg){
-                $("#span-list").html(msg);
-            }
-        })
-    })
+<!-- pulsante segui -->
+<script type="text/javascript">
+    $(document).ready(function () {
+    // SEGUI
+// se il pulsante ha id "follow" NON sto seguendo e devo aggiungere il record dal db
+        $('#follow').click(function () {
+            $.ajax({    //creo richiesta ajax
+                type: "POST",
+                url: "add_follower.php?idBlog=<?php echo $blog['idBlog'] ?>",
+                dataType: "html",   //la richiesta ritorna del codice html
+                success: function (response) {
+                    $(".segui").html(response);
+                }
+            });
+        });
+    // NON SEGUIRE PIU'
+// se il pulsante ha id "following" sto già seguendo e devo rimuovere il record dal db
+        $('#following').click(function () {
+            $.ajax({
+                type: "POST",
+                url: "delete_follower.php?idBlog=<?php echo $blog['idBlog'] ?>",
+                dataType: "html",
+                success: function (response) {
+                    $(".segui").html(response);
+                }
+            });
+        });
+    });
 </script>
 
 </html>
