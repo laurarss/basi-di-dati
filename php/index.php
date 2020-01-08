@@ -32,39 +32,83 @@ include 'head.php';
 
     <!--alert grigio di benvenuto utente -->
     <?php if (isset($_SESSION['nomeUtente'])) : ?>
-        <div class="alert alert-secondary col-sm-3" role="alert">
-            <!--  apre gestione blog memorizzando il nomeUtente della sessione-->
-            Benvenuto <strong><?php echo $_SESSION['nomeUtente']; ?></strong>
-        </div>
-        <div class="row py-2">
-            <div class="col-6">
-                <a class="btn btn-sm btn-primary"
-                   href="gestione_blog.php?nomeUtente=<?php echo $_SESSION['nomeUtente'] ?>">Gestisci i tuoi blog</a>
-            </div>
-        </div>
-    <?php endif ?>
-
-    <div class="container">
-        <div class="row">
-            <?php foreach ($blogs as $blog) { ?>
-
-                <div class="col-sm-4 py-3">
-                    <div class="card h-100 z-depth-0">
-                        <div class="card-body text-center">
-                            <h5 class="card-title"><?php echo htmlspecialchars($blog['titolo']); ?></h5>
-                            <h6 class="card-title"><?php echo htmlspecialchars($blog['autore']); ?></h6>
-                            <div class="card-text"><?php echo htmlspecialchars($blog['descrizione']); ?></div>
-                            <a class="card-link" href="visual_blog.php?idBlog=<?php echo $blog['idBlog'] ?>">more
-                                info</a>
-                        </div>
-                    </div>
-                </div>
-
-            <?php } ?>
+    <div class="alert alert-secondary col-sm-3" role="alert">
+        <!--  apre gestione blog memorizzando il nomeUtente della sessione-->
+        Benvenuto <strong><?php echo $_SESSION['nomeUtente']; ?></strong>
+    </div>
+    <div class="row py-2">
+        <div class="col-8">
+            <a class="btn btn-sm btn-primary"
+               href="gestione_blog.php?nomeUtente=<?php echo $_SESSION['nomeUtente'] ?>">Gestisci i tuoi blog</a>
         </div>
 
+        <?php endif ?>
+
+        <!--form ricerca-->
+        <div class="form-inline my-2 my-lg-0 col-4">
+            <input id="titoloCercato" name="titoloCercato" type="text" class="form-control mr-sm-2" placeholder="Cerca blog per titolo..">
+        </div>
     </div>
 
-    <?php include('footer.php') ?>
+    <div class="row" id="titoliTrovati">
+        <?php foreach ($blogs as $blog) { ?>
+
+            <div class="col-sm-4 py-3">
+                <div class="card h-100 z-depth-0">
+                    <div class="card-body text-center">
+                        <h5 class="card-title"><?php echo htmlspecialchars($blog['titolo']); ?></h5>
+                        <h6 class="card-title"><?php echo htmlspecialchars($blog['autore']); ?></h6>
+                        <div class="card-text"><?php echo htmlspecialchars($blog['descrizione']); ?></div>
+                        <a class="card-link" href="visual_blog.php?idBlog=<?php echo $blog['idBlog'] ?>">more info</a>
+                    </div>
+                </div>
+            </div>
+
+        <?php } ?>
+    </div>
+
+<!--    <div class="row">-->
+<!--        --><?php //foreach ($blogs as $blog) { ?>
+<!---->
+<!--            <div class="col-sm-4 py-3">-->
+<!--                <div class="card h-100 z-depth-0">-->
+<!--                    <div class="card-body text-center">-->
+<!--                        <h5 class="card-title">--><?php //echo htmlspecialchars($blog['titolo']); ?><!--</h5>-->
+<!--                        <h6 class="card-title">--><?php //echo htmlspecialchars($blog['autore']); ?><!--</h6>-->
+<!--                        <div class="card-text">--><?php //echo htmlspecialchars($blog['descrizione']); ?><!--</div>-->
+<!--                        <a class="card-link" href="visual_blog.php?idBlog=--><?php //echo $blog['idBlog'] ?><!--">more info</a>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!---->
+<!--        --><?php //} ?>
+<!--    </div>-->
+
+</div> <!-- fine container -->
+
+<?php include('footer.php') ?>
+
+<!-- ricerca live jquery -->
+<!--<script src="jquery.min.js"></script>-->
+<!--<script src="e-search.min.js"></script>-->
+
+<script>
+    $(document).ready(function(){
+        $('#titoloCercato').keyup(function(){
+            var txt = $(this).val();
+            if(txt != ''){
+                $.ajax({
+                    url: "cerca_blog.php",
+                    method: "post",
+                    data:{search:txt},
+                    dataType: "text",
+                    success:function(data){
+                        $('#titoliTrovati').html(data);
+                    }
+                });
+            }
+        });
+    });
+</script>
 
 </html>

@@ -26,7 +26,7 @@
 
         <ul class="nav navbar-nav ml-auto">
             <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search" placeholder="" aria-label="">
+                <input class="form-control mr-sm-2 search-item" type="search" placeholder="Cerca per titolo.." aria-label="">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Cerca</button>
             </form>
 

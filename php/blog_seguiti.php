@@ -38,7 +38,8 @@ WHERE `idUtente` = '$nomeUtente'";
 include 'head.php';
 ?>
 
-<div class="container"> <!-- tutte le row e le col di bootstrap devono stare dentro un unico container -->
+<div class="container">
+<!-- tutte le row e le col di bootstrap devono stare dentro un unico container -->
 
     <div class="row py-2">
         <h3 class="text-left grey-text">Blog seguiti da <?php echo $nomeUtente; ?></h3>
@@ -69,7 +70,7 @@ include 'head.php';
                             <div class="col-12">
                                 <!--  passa il codice del blog(array che stiamo scorrendo col for) alla pagina visual_blog  -->
                                 <a class="btn btn-sm btn-primary"
-                                   href="visual_blog.php?idBlog=<?php echo $followedBlog['idBlog'] ?>">Apri</a>
+                                   href="visual_blog.php?idBlog=<?php echo htmlspecialchars($followedBlog['idBlog']); ?>">Apri</a>
                             </div>
                         </div>
 
