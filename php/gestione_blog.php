@@ -51,29 +51,24 @@ include 'head.php';
 <div class="container"> <!-- tutte le row e le col di bootstrap devono stare dentro un unico container -->
 
     <div class="row py-2">
-        <h3 class="text-left grey-text">Gestione Blogs</h3>
+        <h3 class="text-left grey-text">Gestisci i tuoi blog, <?php echo $nomeUtente ?></h3>
     </div>
 
 
     <div class="row">
         <!--- mostra le card con i blog dell'utente -->
         <?php foreach ($blogs as $blog) { ?>
-
             <div class="col-sm-3">
                 <div class="card h-100 z-depth-0">
-
                     <div class="card-header">
                         <?php echo htmlspecialchars($blog['titolo']); ?>
                     </div>
-
                     <div class="card-body text-center">
-
                         <div class="row py-2">
                             <div class="col-12">
                                 <div class="card-text"><?php echo htmlspecialchars($blog['descrizione']); ?></div>
                             </div>
                         </div>
-
                         <!-- card commands row -->
                         <div class="row py-2">
                             <div class="col-6">
@@ -87,7 +82,6 @@ include 'head.php';
                                 <!-- todo gestire delete blog con jquery + ajax ! -->
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
