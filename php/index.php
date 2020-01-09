@@ -34,18 +34,20 @@ include 'head.php';
 ?>
 
 <div class="container">
-    <!--alert grigio di benvenuto utente -->
-    <?php if (isset($nomeUtente)) : ?>
-    <div id="benvenuto" class="alert alert-secondary col-sm-3" role="alert">
-        <!--  apre gestione blog memorizzando il nomeUtente della sessione-->
-        Benvenuto <strong><?php echo $nomeUtente; ?></strong>
-    </div>
-    <div class="row py-2">
-        <div class="col-8">
-            <a class="btn btn-sm btn-primary"
-               href="gestione_blog.php?nomeUtente=<?php echo $nomeUtente; ?>">Gestisci i tuoi blog</a>
+    <!--alert grigio di benvenuto utente (solo se utente loggato)-->
+    <?php if (!empty($nomeUtente)) : ?>
+        <div id="benvenuto" class="alert alert-secondary col-sm-3" role="alert">
+            <!--  apre gestione blog memorizzando il nomeUtente della sessione-->
+            Benvenuto <strong><?php echo $nomeUtente; ?></strong>
         </div>
-        <?php endif ?>
+        <div class="row py-2">
+            <div class="col-8">
+                <a class="btn btn-sm btn-primary"
+                   href="gestione_blog.php?nomeUtente=<?php echo $nomeUtente; ?>">Gestisci i tuoi blog</a>
+            </div>
+        </div>
+    <?php endif ?>
+    <div class="row py-2">
         <!--form ricerca-->
         <div class="form-inline my-2 my-lg-0 col-4">
             <input id="titoloCercato" name="titoloCercato" type="text" class="form-control mr-sm-2"
@@ -140,17 +142,6 @@ include 'head.php';
                 }
             })
 
-            // if (txt !== '') {
-            //     $.ajax({
-            //         url: "cerca_blog.php",
-            //         method: "post",
-            //         data: {search: txt},
-            //         dataType: "text",
-            //         success: function (data) {
-            //             $('#titoliTrovati').html(data);
-            //         }
-            //     });
-            // }
         });
     });
 </script>
