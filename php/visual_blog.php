@@ -20,16 +20,19 @@ if (isset($_GET['idBlog'])) {
     $idBlog = mysqli_real_escape_string($conn, $_GET['idBlog']);
 
 // sql codice
-    $sqlBlog = "SELECT * FROM blog WHERE idBlog = $idBlog";
-    $sqlPost = "SELECT * FROM post WHERE idBlog = $idBlog";
+    $sqlBlog = "SELECT * FROM `blog` WHERE idBlog = $idBlog";
+    $sqlPost = "SELECT * FROM `post` WHERE idBlog = $idBlog";
+    $sqlCommenti = "SELECT * FROM `commenti` ORDER BY data DESC";
 
-// risultato query
+// risultato righe query
     $risBlog = mysqli_query($conn, $sqlBlog);
     $risPost = mysqli_query($conn, $sqlPost);
+    $risCommenti = mysqli_query($conn, $sqlCommenti);
 
-// fetch risultato in un array
+// fetch righe risultato in un array
     $blog = mysqli_fetch_assoc($risBlog); // si usa assoc e non all perchè prendiamo solo una riga della tab risultato
     $posts = mysqli_fetch_all($risPost, MYSQLI_ASSOC);
+    $commenti = mysqli_fetch_all($risCommenti, MYSQLI_ASSOC);
 
 // prendo dall'array associativo blog l'id della categoria associata, poi faccio la query che prende la categoria
     $idCategoriaBlog = $blog['categoria'];
@@ -123,12 +126,11 @@ include 'head.php';
         <div class="row py-2">
             <div class="col-sm-10">
                 <h1 class="lead display-5 font-weight-bold"><?php echo htmlspecialchars($post['titolo']); ?></h1>
-                <p class="text-muted"><?php echo htmlspecialchars($post['data']); ?></p>
+                <small class="text-muted"><?php echo date_format(new DateTime($post['data']), 'd M Y H:i:s'); ?></small>
             </div>
             <div class="col-sm-2 text-right">
                 <a class="daNascondere btn btn-sm btn-danger fa fa-trash"
                    href="cancella_post.php?idPost=<?php echo $post['idPost'] ?>"></a>
-                <!-- todo gestire delete post con jquery + ajax ! -->
             </div>
         </div>
         <!-- riga immagine descrizione e bottoni post -->
@@ -140,6 +142,21 @@ include 'head.php';
                 <p><?php echo htmlspecialchars($post['testo']); ?></p>
             </div>
         </div>
+
+        <!-- commenti -->
+        <?php foreach ($commenti as $commento) {
+            if ($commento['idPost'] === $post['idPost']) { ?>
+                <div class="row py-2 pl-5">
+                    <div class="col-1 pt-4"><i class="far fa-comment-alt fa-2x"></i></div>
+                    <div class="col-11">
+                        <h6><?php echo htmlspecialchars($commento['autore']); ?></h6>
+                        <small class="text-muted"><?php echo date_format(new DateTime($commento['data']), 'd M Y H:i:s'); ?></small>
+                        <p><?php echo htmlspecialchars($commento['nota']); ?></p>
+                    </div>
+                </div>
+            <?php } ?>
+        <?php } ?>
+
     <?php } ?>
 
     <!--Card crea post-->
@@ -181,7 +198,7 @@ include 'head.php';
 <!-- pulsante segui -->
 <script type="text/javascript">
     $(document).ready(function () {
-    // SEGUI
+        // SEGUI
 // se il pulsante ha id "follow" NON sto seguendo e devo aggiungere il record dal db
         $('#follow').click(function () {
             $.ajax({    //creo richiesta ajax
@@ -193,7 +210,7 @@ include 'head.php';
                 }
             });
         });
-    // NON SEGUIRE PIU'
+        // NON SEGUIRE PIU'
 // se il pulsante ha id "following" sto già seguendo e devo rimuovere il record dal db
         $('#following').click(function () {
             $.ajax({

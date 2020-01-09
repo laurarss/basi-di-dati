@@ -1,27 +1,40 @@
-<!-- connessione al db e caricamento blog -->
 <?php
+
+/**
+ * La pagina index è la prima pagina che compare a chiunque visiti il sito.
+ * gli utenti sloggati vedranno l'elenco dei blog a sx e l'elenco delle categorie a dx.
+ * per tutti è possibile visionare blog cercati per titolo o elencati per categoria.
+ */
+
+//connessione al db
 include('db_connect.php');
 //header & nav
 include('header.php');
 
 $nomeUtente = '';
 if (isset($_SESSION['nomeUtente'])) {
+    // recupero nome utente dalla sessione
     $nomeUtente = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']);
 }
 
-// write query
+// sql blog
 $sqlGetBlogData = "SELECT * FROM `blog`";
+// sql categorie
+$sqlCategorie = "SELECT * FROM `categorie`";
 
-// get the result set (set of rows)
+// righe risultato
 $resultBlogData = mysqli_query($conn, $sqlGetBlogData);
+$resultCategorie = mysqli_query($conn, $sqlCategorie);
 
-// fetch the resulting rows as an array
+// righe risultato "fetchate" in array
 $blogs = mysqli_fetch_all($resultBlogData, MYSQLI_ASSOC);
+$categorie = mysqli_fetch_all($resultCategorie, MYSQLI_ASSOC);
 
-// free the $result from memory (good practise)
+// libero memoria
 mysqli_free_result($resultBlogData);
+mysqli_free_result($resultCategorie);
 
-// close connection
+// chiusura connessione al db
 mysqli_close($conn);
 
 ?>
@@ -55,31 +68,47 @@ include 'head.php';
         </div>
     </div>
 
-    <div class="row" id="containerBlogs">
+    <div class="row">
+        <div class="col-10">
+            <div class="row" id="containerBlogs">
 
-        <?php foreach ($blogs as $blog) { ?>
+                <?php foreach ($blogs as $blog) { ?>
 
-            <!-- assegno alla colonna di bootstrap l'id del blog come id del tag -->
-            <div id="<?php echo $blog['idBlog']; ?>" class="col-sm-4 py-3">
-                <div class="card h-100 z-depth-0">
-                    <div class="card-header text-center">
-                        <?php echo htmlspecialchars($blog['titolo']); ?>
-                    </div>
-                    <div class="card-body text-center">
-                        <h6 class="card-title"> autore: <?php echo htmlspecialchars($blog['autore']); ?></h6>
-                        <div class="card-text"><?php echo htmlspecialchars($blog['descrizione']); ?></div>
-                        <!-- card commands row -->
-                        <div class="row py-2">
-                            <div class="col-12">
-                                <!--  passa il codice del blog(array che stiamo scorrendo col for) alla pagina visual_blog  -->
-                                <a class="btn btn-sm btn-primary"
-                                   href="visual_blog.php?idBlog=<?php echo $blog['idBlog']; ?>">Apri</a>
+                    <!-- assegno alla colonna di bootstrap l'id del blog come id del tag -->
+                    <div id="<?php echo $blog['idBlog']; ?>" class="col-lg-4 py-3">
+                        <div class="card h-100 z-depth-0">
+                            <div class="card-header text-center">
+                                <?php echo htmlspecialchars($blog['titolo']); ?>
+                            </div>
+                            <div class="card-body text-center">
+                                <h6 class="card-title"> autore: <?php echo htmlspecialchars($blog['autore']); ?></h6>
+                                <div class="card-text">
+                                    categoria: <?php echo htmlspecialchars($blog['categoria']); ?></div>
+                                <div class="card-text"><?php echo htmlspecialchars($blog['descrizione']); ?></div>
+                                <!-- card commands row -->
+                                <div class="row py-2">
+                                    <div class="col-12">
+                                        <!--  passa il codice del blog(array che stiamo scorrendo col for) alla pagina visual_blog  -->
+                                        <a class="btn btn-md btn-primary"
+                                           href="visual_blog.php?idBlog=<?php echo $blog['idBlog']; ?>">Apri</a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                <?php } ?>
             </div>
-        <?php } ?>
+        </div>
+
+        <div class="col-2">
+            <ul id="listaCateg" class="list-group list-group-flush">
+                <?php foreach ($categorie as $categoria) { ?>
+                    <!-- assegno al li di bootstrap l'id della cateoria come id del tag -->
+                    <a href="*" id="<?php echo $categoria['idCategoria']; ?>"
+                       class="list-group-item"><?php echo htmlspecialchars($categoria['nome']); ?></a>
+                <?php } ?>
+            </ul>
+        </div>
     </div>
 </div> <!-- fine container -->
 
@@ -94,7 +123,7 @@ include 'head.php';
     }
 </script>
 
-<!-- ricerca blog per titolo jquery/ajax -->
+<!-- ricerca blog per titolo jquery -->
 <script type="text/javascript">
 
     // al caricamento dello script mi salvo la lista di blog caricata
@@ -140,7 +169,38 @@ include 'head.php';
                     // versione ottimizzata per il codice
                     // this['hidden'] = !oggettoBlog['titolo'].includes(titoloCercato);
                 }
-            })
+            });
+
+        });
+    });
+
+    //ricerca per categorie
+    $(document).ready(function () {
+        $('#listaCateg').on("click", "a", function (event) {
+
+            // assegno ad una variabile la categoria cliccata
+            const idCategCliccata = this['id'];
+
+            // ciclo tutti i blog html che sono nel dom
+            $('#containerBlogs').children().each(function () {
+                // console.log('elemento div sul quale sto ciclando con la filter: ', this);
+                // console.log('id elementi div sul quale sto ciclando:', this['id']);
+
+                // assegno l'id del div del blog sul quale sto ciclando per usarlo dentro la find
+                // senza questa variabile avrei avuto problemi di scope con la keyword "this" dentro la funzione "find"
+                const idBlogDiv = this['id'];
+
+                // recupero l'oggetto blog a partire dall'id della categoria cliccata
+                const oggettoBlog = blogList.find(function (blog) {
+                    return blog['categoria'] === idCategCliccata;
+                });
+
+               if (oggettoBlog) { // se oggettoBlog return true
+                    this['hidden'] = false;
+                } else {
+                    this['hidden'] = true;
+                }
+            });
 
         });
     });

@@ -14,28 +14,22 @@ include('db_connect.php');
 include('header.php');
 
 if (isset($_SESSION['nomeUtente'])) {
-
+    // recupero nome utente dalla sessione
     $nomeUtente = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']);
-    // write query
-    $sqlUtenti = "SELECT * FROM utenti WHERE nomeUtente = '$nomeUtente'";
-    $risUtente = mysqli_query($conn, $sqlUtenti);
-    $utente = mysqli_fetch_assoc($risUtente);
 
-    $autore = $utente['nomeUtente'];
+    // sql blog creati dall'utente loggato
+    $sqlGetBlogsByAutore = "SELECT * FROM `blog` WHERE autore = '$nomeUtente'";
 
-    //$sqlGetAllBlogs = "SELECT idBlog, titolo, descrizione FROM blog";
-    $sqlGetBlogsByAutore = "SELECT * FROM blog WHERE autore = '$autore'";
-
-    // get the result set (set of rows)
+    // righe risultato
     $result = mysqli_query($conn, $sqlGetBlogsByAutore);
 
-    // fetch the resulting rows as an array
+    // righe risultato "fetchate" in array
     $blogs = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-    // free the $result from memory (good practise)
+    // libero memoria
     mysqli_free_result($result);
 
-    // close connection
+    // chiusura connessione al db
     mysqli_close($conn);
 }
 ?>
@@ -58,7 +52,7 @@ include 'head.php';
     <div class="row">
         <!--- mostra le card con i blog dell'utente -->
         <?php foreach ($blogs as $blog) { ?>
-            <div class="col-sm-3">
+            <div class="col-lg-3 py-3">
                 <div class="card h-100 z-depth-0">
                     <div class="card-header">
                         <?php echo htmlspecialchars($blog['titolo']); ?>
@@ -66,6 +60,7 @@ include 'head.php';
                     <div class="card-body text-center">
                         <div class="row py-2">
                             <div class="col-12">
+                                <h6 class="card-title"> autore: <?php echo htmlspecialchars($blog['autore']); ?></h6>
                                 <div class="card-text"><?php echo htmlspecialchars($blog['descrizione']); ?></div>
                             </div>
                         </div>
@@ -88,7 +83,7 @@ include 'head.php';
         <?php } ?>
 
         <!--aggiunta card di crea blog-->
-        <div class="col-sm-3">
+        <div class="col-lg-3 py-3">
             <div class="card h-100 z-depth-0">
 
                 <div class="card-header">
