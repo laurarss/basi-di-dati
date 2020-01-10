@@ -101,9 +101,9 @@ include 'head.php';
                 <p class="lead text-muted display-5">Ultima modifica
                     il: <?php echo date_format(new DateTime($blog['data']), 'd M Y H:i:s'); ?></p>
                 <p class="lead text text-muted display-5">
-                    Categoria: <?php echo htmlspecialchars($categoriaBlog['nome']); //prende nome categoria da tab categorie?></p>
+                    Categoria: <?php echo ucwords(htmlspecialchars($categoriaBlog['nomeCategoria'])); //prende nome categoria da tab categorie?></p>
 
-                <p class="lead display-5"><?php echo htmlspecialchars($blog['descrizione']); ?></p>
+                <p class="lead display-5"><?php echo ucfirst(htmlspecialchars($blog['descrizione'])); ?></p>
 
             <?php else: ?>
             <?php endif; ?>

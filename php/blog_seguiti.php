@@ -47,20 +47,18 @@ include 'head.php';
 
 
     <div class="row">
-        <!--- mostra le card con i blog dell'utente -->
+        <!--- mostra le card con i blog seguiti dall'utente -->
         <?php foreach ($followedBlogs as $followedBlog) { ?>
 
             <div class="col-sm-3">
                 <div class="card h-100 z-depth-0">
-
-                    <div class="card-header">
+                    <div class="card-header card-header-bg" style="background-image: url(<?php echo htmlspecialchars($followedBlog['banner']); ?>">
                         <?php echo htmlspecialchars($followedBlog['titolo']); ?>
                     </div>
-
                     <div class="card-body text-center">
-
                         <div class="row py-2">
                             <div class="col-12">
+                                <h6 class="card-title"> autore: <?php echo htmlspecialchars($followedBlog['autore']); ?></h6>
                                 <div class="card-text"><?php echo htmlspecialchars($followedBlog['descrizione']); ?></div>
                             </div>
                         </div>

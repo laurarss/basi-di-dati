@@ -41,7 +41,7 @@ if (isset($_POST['crea_blog_submit'])) {
 
         $trovato = $i = 0;
         while ($i < sizeof($categorie) and !$trovato) {
-            if (strtolower($nome_categoria) === $categorie[$i]['nome']) {
+            if (strtolower($nome_categoria) === $categorie[$i]['nomeCategoria']) {
                 $id_categoria = $categorie[$i]['idCategoria'];
                 $trovato = 1;
             }
@@ -49,7 +49,7 @@ if (isset($_POST['crea_blog_submit'])) {
         }
 
         if (!$trovato) {
-            $sqlInserisciCateg = "INSERT INTO categorie (idCategoria, nome) VALUES('NULL', '$nome_categoria')";
+            $sqlInserisciCateg = "INSERT INTO categorie (idCategoria, nomeCategoria) VALUES('NULL', '$nome_categoria')";
 
             if (mysqli_query($conn, $sqlInserisciCateg)) {
                 $id_categoria = mysqli_insert_id($conn);

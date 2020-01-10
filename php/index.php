@@ -18,7 +18,9 @@ if (isset($_SESSION['nomeUtente'])) {
 }
 
 // sql blog
-$sqlGetBlogData = "SELECT * FROM `blog`";
+$sqlGetBlogData = "SELECT blog.idBlog, blog.titolo, blog.autore, categorie.nomeCategoria, blog.data, blog.descrizione, blog.categoria, blog.banner
+FROM categorie , blog
+WHERE  categorie.idCategoria = blog.categoria";
 // sql categorie
 $sqlCategorie = "SELECT * FROM `categorie`";
 
@@ -85,9 +87,9 @@ include 'head.php';
                                 <?php echo ucfirst(htmlspecialchars($blog['titolo'])); ?>
                             </div>
                             <div class="card-body text-center">
-                                <h6 class="card-title">Autore: <?php echo ucfirst(htmlspecialchars($blog['autore'])); ?></h6>
-                                <div class="card-text">
-                                    Categoria: <?php echo htmlspecialchars($blog['categoria']); ?></div>
+                                <h6 class="card-title"><small>Autore: </small><?php echo ucfirst(htmlspecialchars($blog['autore'])); ?></h6>
+                                <small class="card-text">
+                                    Categoria: <?php echo htmlspecialchars($blog['nomeCategoria']); ?></small>
                                 <div class="card-text"><?php echo htmlspecialchars($blog['descrizione']); ?></div>
                                 <!-- card commands row -->
                                 <div class="row py-2">
@@ -105,11 +107,12 @@ include 'head.php';
         </div>
 
         <div class="col-2">
+            <h6 class="lead display-6">Categorie</h6>
             <ul id="listaCateg" class="list-group list-group-flush">
                 <?php foreach ($categorie as $categoria) { ?>
                     <!-- assegno al li di bootstrap l'id della cateoria come id del tag -->
                     <a href="*" id="<?php echo $categoria['idCategoria']; ?>"
-                       class="list-group-item"><?php echo htmlspecialchars($categoria['nome']); ?></a>
+                       class="list-group-item"><?php echo ucwords(htmlspecialchars($categoria['nomeCategoria'])); ?></a>
                 <?php } ?>
             </ul>
         </div>

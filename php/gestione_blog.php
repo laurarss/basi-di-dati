@@ -18,16 +18,25 @@ if (isset($_SESSION['nomeUtente'])) {
     $nomeUtente = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']);
 
     // sql blog creati dall'utente loggato
-    $sqlGetBlogsByAutore = "SELECT * FROM `blog` WHERE autore = '$nomeUtente'";
+    $sqlGetBlogsByAutore = "SELECT blog.idBlog, blog.titolo, blog.autore, categorie.nomeCategoria, blog.data, blog.descrizione, blog.categoria, blog.banner
+FROM categorie , blog
+WHERE  categorie.idCategoria = blog.categoria
+AND blog.autore = '$nomeUtente'";
+
+    // sql categorie
+    $sqlCategorie = "SELECT * FROM `categorie`";
 
     // righe risultato
     $result = mysqli_query($conn, $sqlGetBlogsByAutore);
+    $resultCategorie = mysqli_query($conn, $sqlCategorie);
 
     // righe risultato "fetchate" in array
     $blogs = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    $categorie = mysqli_fetch_all($resultCategorie, MYSQLI_ASSOC);
 
     // libero memoria
     mysqli_free_result($result);
+    mysqli_free_result($resultCategorie);
 
     // chiusura connessione al db
     mysqli_close($conn);
@@ -61,8 +70,9 @@ include 'head.php';
                     <div class="card-body text-center">
                         <div class="row py-2">
                             <div class="col-12">
-                                <h6 class="card-title"> autore: <?php echo htmlspecialchars($blog['autore']); ?></h6>
-                                <div class="card-text"><?php echo htmlspecialchars($blog['descrizione']); ?></div>
+                                <small class="card-title"> autore: <?php echo htmlspecialchars($blog['autore']); ?></small>
+                                <small class="card-title"> categoria: <?php echo ucwords(htmlspecialchars($blog['nomeCategoria'])); ?></small>
+                                <div class="card-text"><?php echo ucfirst(htmlspecialchars($blog['descrizione'])); ?></div>
                             </div>
                         </div>
                         <!-- card commands row -->
