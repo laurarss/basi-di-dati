@@ -49,65 +49,91 @@ include 'head.php';
 ?>
 <body>
 <div class="container">
+
     <!--alert grigio di benvenuto utente (solo se utente loggato)-->
     <?php if (!empty($nomeUtente)) : ?>
-        <div id="benvenuto" class="alert alert-secondary col-sm-3" role="alert">
-            <!--  apre gestione blog memorizzando il nomeUtente della sessione-->
-            Benvenuto <strong><?php echo ucfirst($nomeUtente); ?></strong>
-        </div>
-        <div class="row py-2">
-            <h3 class="text-left grey-text">Esplora blog</h3>
-        </div>
-        <div class="row py-2">
-            <div class="col-8">
-                <a class="btn btn-sm btn-primary"
-                   href="gestione_blog.php?nomeUtente=<?php echo $nomeUtente; ?>">Gestisci i tuoi blog</a>
-            </div>
-        </div>
-    <?php endif ?>
+
+    <div id="benvenuto" class="alert alert-secondary col-sm-3" role="alert">
+        <!--  apre gestione blog memorizzando il nomeUtente della sessione-->
+        Benvenuto <strong><?php echo ucfirst($nomeUtente); ?></strong>
+    </div>
+    <?php endif; ?>
+
     <div class="row py-2">
-        <!--form ricerca-->
-        <div class="form-inline my-2 my-lg-0 col-4">
-            <input id="titoloCercato" name="titoloCercato" type="text" class="form-control mr-sm-2"
-                   placeholder="Cerca blog per titolo..">
+        <div class="col-12">
+            <h3 class="text-left grey-text">Esplora blog</h3>
         </div>
     </div>
 
-    <div class="row">
+    <div class="row py-2">
+
         <div class="col-10">
-            <div class="row" id="containerBlogs">
 
-                <?php foreach ($blogs as $blog) { ?>
+            <div class="row">
+                <div class="col-3">
+                    <a class="btn btn-sm btn-primary"
+                       href="gestione_blog.php?nomeUtente=<?php if (!empty($nomeUtente)){ echo $nomeUtente; } ?>">
+                        Gestisci i tuoi blog
+                    </a>
+                </div>
 
-                    <!-- assegno alla colonna di bootstrap l'id del blog come id del tag -->
-                    <div id="<?php echo $blog['idBlog']; ?>" class="col-lg-4 py-3">
-                        <div class="card card-bg text-white h-100 z-depth-0"
-                             style="background-image: url('<?php echo htmlspecialchars($blog['banner']) ?>');">
-                            <div class="card-header text-cente h-50r">
-                                <?php echo ucfirst(htmlspecialchars($blog['titolo'])); ?>
-                            </div>
-                            <div class="card-body text-center">
-                                <h6 class="card-title"><small>Autore: </small><?php echo ucfirst(htmlspecialchars($blog['autore'])); ?></h6>
-                                <small class="card-text">
-                                    Categoria: <?php echo htmlspecialchars($blog['nomeCategoria']); ?></small>
-                                <div class="card-text"><?php echo htmlspecialchars($blog['descrizione']); ?></div>
-                                <!-- card commands row -->
-                                <div class="row py-2">
-                                    <div class="col-12">
-                                        <!--  passa il codice del blog(array che stiamo scorrendo col for) alla pagina visual_blog  -->
-                                        <a class="btn btn-md btn-primary"
-                                           href="visual_blog.php?idBlog=<?php echo $blog['idBlog']; ?>">Apri</a>
+
+                <div class="col-9">
+                    <!--form ricerca-->
+                    <div class="form-inline my-2 my-lg-0 float-right">
+                        <input id="titoloCercato"
+                               name="titoloCercato"
+                               type="text"
+                               class="form-control mr-sm-2"
+                               placeholder="Cerca blog per titolo..">
+                    </div>
+                </div>
+            </div>
+
+            <!-- lista dei blog -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="row" id="containerBlogs">
+
+                        <?php foreach ($blogs as $blog) { ?>
+
+                            <!-- assegno alla colonna di bootstrap l'id del blog come id del tag -->
+                            <div id="<?php echo $blog['idBlog']; ?>" class="col-lg-4 py-3">
+                                <div class="card card-bg text-white h-100 z-depth-0"
+                                     style="background-image: url('<?php echo htmlspecialchars($blog['banner']) ?>');">
+                                    <div class="card-header text-center h-50r">
+                                        <?php echo ucfirst(htmlspecialchars($blog['titolo'])); ?>
+                                    </div>
+                                    <div class="card-body text-center">
+                                        <h6 class="card-title">
+                                            <small>Autore: </small><?php echo ucfirst(htmlspecialchars($blog['autore'])); ?>
+                                        </h6>
+                                        <small class="card-text">
+                                            Categoria: <?php echo htmlspecialchars($blog['nomeCategoria']); ?></small>
+                                        <div class="card-text"><?php echo htmlspecialchars($blog['descrizione']); ?></div>
+                                        <!-- card commands row -->
+                                        <div class="row py-2">
+                                            <div class="col-12">
+                                                <!--  passa il codice del blog(array che stiamo scorrendo col for) alla pagina visual_blog  -->
+                                                <a class="btn btn-md btn-primary"
+                                                   href="visual_blog.php?idBlog=<?php echo $blog['idBlog']; ?>">Apri</a>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        <?php } ?>
                     </div>
-                <?php } ?>
+                </div>
             </div>
+
         </div>
 
+        <!-- colonna delle categorie -->
         <div class="col-2">
+
             <h6 class="lead display-6">Categorie</h6>
+
             <ul id="listaCateg" class="list-group list-group-flush">
                 <?php foreach ($categorie as $categoria) { ?>
                     <!-- assegno al li di bootstrap l'id della cateoria come id del tag -->
@@ -115,7 +141,9 @@ include 'head.php';
                        class="list-group-item"><?php echo ucwords(htmlspecialchars($categoria['nomeCategoria'])); ?></a>
                 <?php } ?>
             </ul>
+
         </div>
+
     </div>
 </div> <!-- fine container -->
 

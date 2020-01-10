@@ -62,19 +62,21 @@ include 'head.php';
     <div class="row">
         <!--- mostra le card con i blog dell'utente -->
         <?php foreach ($blogs as $blog) { ?>
+
             <div class="col-lg-3 py-3">
                 <div class="card h-100 z-depth-0">
-                    <div class="card-header card-header-bg" style="background-image: url(<?php echo htmlspecialchars($blog['banner']); ?>">
+                    <div class="card-header card-header-bg text-center"
+                         style="background-image: url(<?php echo htmlspecialchars($blog['banner']); ?>">
                         <?php echo htmlspecialchars($blog['titolo']); ?>
                     </div>
                     <div class="card-body text-center">
-                        <div class="row py-2">
-                            <div class="col-12">
-                                <small class="card-title"> autore: <?php echo htmlspecialchars($blog['autore']); ?></small>
-                                <small class="card-title"> categoria: <?php echo ucwords(htmlspecialchars($blog['nomeCategoria'])); ?></small>
-                                <div class="card-text"><?php echo ucfirst(htmlspecialchars($blog['descrizione'])); ?></div>
-                            </div>
-                        </div>
+                        <h6 class="card-text">
+                            <small>Autore: </small>
+                            <?php echo htmlspecialchars($blog['autore']); ?>
+                        </h6>
+                        <small class="card-text"><small>Categoria: </small><?php echo ucwords(htmlspecialchars($blog['nomeCategoria'])); ?>
+                        </small>
+                        <div class="card-text"><?php echo ucfirst(htmlspecialchars($blog['descrizione'])); ?></div>
                         <!-- card commands row -->
                         <div class="row py-2">
                             <div class="col-6">
