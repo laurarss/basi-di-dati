@@ -11,7 +11,6 @@ body{
   	background-size: cover;
 }
 
-
 .container-post{
 	background-color: #F5F5F5;
 	padding-top: 20px;
@@ -21,3 +20,31 @@ body{
  	background-position: center;
  	width: 40%;
 }
+
+
+/*personalizzazioni*/
+/*card*/
+.card-bg{
+	background-size: cover;
+	opacity: 0.9;
+}
+.card-opac{
+	opacity: 0.7;
+}
+
+/*testo*/
+.text-white{
+	color: white;
+}
+.text-black{
+	color: black;
+}
+
+/*body*/
+.bg-dark{
+	background-color: #000000;
+}
+.bg-white{
+	background-color: #FFFFFF;
+}
+

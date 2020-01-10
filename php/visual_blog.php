@@ -69,11 +69,10 @@ if (isset($_GET['idBlog'])) {
 
 } else {
     header("Location: ops.php");
-}
-?>
+} ?>
 
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="it" lang="it">
+<body xmlns="http://www.w3.org/1999/xhtml" xml:lang="it" lang="it">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <meta http-equiv="Content-Language" content="it"/>
 
@@ -109,7 +108,7 @@ include 'head.php';
             </div>
 
             <div class="text-left">
-                <a class="daNascondere btn btn-outline-secondary btn-sm" href="*">
+                <a class="daNascondere btn btn-outline-secondary btn-sm" href="cambio_banner.php?idBlog=<?php echo $blog['idBlog']; ?>">
                     <i class="fa fa-edit"></i>
                     Cambia sfondo banner
                 </a>
@@ -174,6 +173,7 @@ include 'head.php';
 </div>
 
 <?php include('footer.php'); ?>
+</body>
 
 <!-- nasconde tutti i bottoni blog(con la classe daNascondere) a chi non è loggato -->
 <?php if (!isset($_SESSION['nomeUtente'])): ?>

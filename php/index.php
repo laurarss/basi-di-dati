@@ -45,7 +45,7 @@ mysqli_close($conn);
 //includo file header
 include 'head.php';
 ?>
-
+<body>
 <div class="container">
     <!--alert grigio di benvenuto utente (solo se utente loggato)-->
     <?php if (!empty($nomeUtente)) : ?>
@@ -76,8 +76,9 @@ include 'head.php';
 
                     <!-- assegno alla colonna di bootstrap l'id del blog come id del tag -->
                     <div id="<?php echo $blog['idBlog']; ?>" class="col-lg-4 py-3">
-                        <div class="card h-100 z-depth-0">
-                            <div class="card-header text-center">
+                        <div class="card card-bg text-white h-100 z-depth-0"
+                             style="background-image: url('<?php echo htmlspecialchars($blog['banner']) ?>');">
+                            <div class="card-header text-cente h-50r">
                                 <?php echo htmlspecialchars($blog['titolo']); ?>
                             </div>
                             <div class="card-body text-center">
@@ -113,6 +114,7 @@ include 'head.php';
 </div> <!-- fine container -->
 
 <?php include('footer.php') ?>
+</body>
 
 <!-- script che fa scomparire msg di benvenuto dopo alcuni sec -->
 <script type="text/javascript">
@@ -135,6 +137,7 @@ include 'head.php';
      * in base al loro titolo
      */
     $(document).ready(function () {
+
         $('#titoloCercato').keyup(function () {
 
             // assegno ad una variabile il testo scritto nel box di ricerca
@@ -195,7 +198,7 @@ include 'head.php';
                     return blog['categoria'] === idCategCliccata;
                 });
 
-               if (oggettoBlog) { // se oggettoBlog return true
+                if (oggettoBlog) { // se oggettoBlog return true
                     this['hidden'] = false;
                 } else {
                     this['hidden'] = true;

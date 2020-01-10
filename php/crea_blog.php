@@ -198,7 +198,7 @@ include 'head.php';
                                 </div>
                             </div>
 
-                            <!-- media(immagine o video) -->
+                            <!-- banner immagine -->
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="fileInput">Carica immagine blog:</label>

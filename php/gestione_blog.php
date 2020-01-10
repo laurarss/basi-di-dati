@@ -31,6 +31,8 @@ if (isset($_SESSION['nomeUtente'])) {
 
     // chiusura connessione al db
     mysqli_close($conn);
+} else {
+    header("Location: ops.php");
 }
 ?>
 
