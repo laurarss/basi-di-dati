@@ -50,13 +50,12 @@ include 'head.php';
         <h3 class="text-left grey-text">Gestisci i tuoi blog, <?php echo $nomeUtente ?></h3>
     </div>
 
-
     <div class="row">
         <!--- mostra le card con i blog dell'utente -->
         <?php foreach ($blogs as $blog) { ?>
             <div class="col-lg-3 py-3">
                 <div class="card h-100 z-depth-0">
-                    <div class="card-header">
+                    <div class="card-header card-header-bg" style="background-image: url(<?php echo htmlspecialchars($blog['banner']); ?>">
                         <?php echo htmlspecialchars($blog['titolo']); ?>
                     </div>
                     <div class="card-body text-center">

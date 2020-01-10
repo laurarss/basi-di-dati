@@ -1,50 +1,69 @@
-body{
+body {
     padding-top: 90px;
 }
 
 .container-bg {
-	color: white;
-  	background-attachment: fixed;
- 	padding: 2rem 2rem 2rem 2rem;
- 	margin-bottom: 2rem;
-  	border-radius: 0.3rem;
-  	background-size: cover;
+    color: white;
+    background-attachment: fixed;
+    padding: 2rem 2rem 2rem 2rem;
+    margin-bottom: 2rem;
+    border-radius: 0.3rem;
+    background-size: cover;
 }
 
-.container-post{
-	background-color: #F5F5F5;
-	padding-top: 20px;
-	padding-bottom: 20px;
-  	background-repeat: repeat-x;
-  	background-attachment: fixed;
- 	background-position: center;
- 	width: 40%;
+.container-post {
+    background-color: #F5F5F5;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    background-repeat: repeat-x;
+    background-attachment: fixed;
+    background-position: center;
+    width: 40%;
 }
 
 
 /*personalizzazioni*/
 /*card*/
-.card-bg{
+.card-bg {
+    background-size: cover;
+    opacity: 0.9;
+}
+.card-header-bg{
 	background-size: cover;
 	opacity: 0.9;
+	color: white;
 }
-.card-opac{
-	opacity: 0.7;
+
+.card-opac {
+    opacity: 0.7;
 }
 
 /*testo*/
-.text-white{
-	color: white;
-}
-.text-black{
-	color: black;
+.text-white {
+    color: white;
 }
 
-/*body*/
-.bg-dark{
-	background-color: #000000;
-}
-.bg-white{
-	background-color: #FFFFFF;
+.text-black {
+    color: black;
 }
 
+/*body background*/
+.bg-dark {
+    background-color: #000000;
+}
+
+.bg-white {
+    background-color: #FFFFFF;
+}
+
+.bg-blue {
+    background-color: #aed6f1;
+}
+
+.bg-pink {
+    background-color: #FFC0CB;
+}
+
+.bg-green {
+	background-color: #9FFFA7;
+}

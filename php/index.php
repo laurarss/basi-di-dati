@@ -51,7 +51,10 @@ include 'head.php';
     <?php if (!empty($nomeUtente)) : ?>
         <div id="benvenuto" class="alert alert-secondary col-sm-3" role="alert">
             <!--  apre gestione blog memorizzando il nomeUtente della sessione-->
-            Benvenuto <strong><?php echo $nomeUtente; ?></strong>
+            Benvenuto <strong><?php echo ucfirst($nomeUtente); ?></strong>
+        </div>
+        <div class="row py-2">
+            <h3 class="text-left grey-text">Esplora blog</h3>
         </div>
         <div class="row py-2">
             <div class="col-8">
@@ -79,12 +82,12 @@ include 'head.php';
                         <div class="card card-bg text-white h-100 z-depth-0"
                              style="background-image: url('<?php echo htmlspecialchars($blog['banner']) ?>');">
                             <div class="card-header text-cente h-50r">
-                                <?php echo htmlspecialchars($blog['titolo']); ?>
+                                <?php echo ucfirst(htmlspecialchars($blog['titolo'])); ?>
                             </div>
                             <div class="card-body text-center">
-                                <h6 class="card-title"> autore: <?php echo htmlspecialchars($blog['autore']); ?></h6>
+                                <h6 class="card-title">Autore: <?php echo ucfirst(htmlspecialchars($blog['autore'])); ?></h6>
                                 <div class="card-text">
-                                    categoria: <?php echo htmlspecialchars($blog['categoria']); ?></div>
+                                    Categoria: <?php echo htmlspecialchars($blog['categoria']); ?></div>
                                 <div class="card-text"><?php echo htmlspecialchars($blog['descrizione']); ?></div>
                                 <!-- card commands row -->
                                 <div class="row py-2">
