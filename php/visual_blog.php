@@ -20,19 +20,22 @@ if (isset($_GET['idBlog'])) {
     $idBlog = mysqli_real_escape_string($conn, $_GET['idBlog']);
 
 // sql codice
-    $sqlBlog = "SELECT * FROM `blog` WHERE idBlog = $idBlog";
-    $sqlPost = "SELECT * FROM `post` WHERE idBlog = $idBlog";
-    $sqlCommenti = "SELECT * FROM `commenti` ORDER BY data DESC";
+    $sqlBlog = "SELECT * FROM `blog` WHERE idBlog = $idBlog"; //dati blog
+    $sqlPost = "SELECT * FROM `post` WHERE idBlog = $idBlog"; //elenco post
+    $sqlCommenti = "SELECT * FROM `commenti` ORDER BY data DESC"; //commenti per post
+    $sqlPersonaliz = "SELECT * FROM `personalizzazioni` WHERE idBlog = $idBlog"; //personalizzazioni blog
 
 // risultato righe query
     $risBlog = mysqli_query($conn, $sqlBlog);
     $risPost = mysqli_query($conn, $sqlPost);
     $risCommenti = mysqli_query($conn, $sqlCommenti);
+    $risPersonaliz = mysqli_query($conn, $sqlPersonaliz);
 
 // fetch righe risultato in un array
     $blog = mysqli_fetch_assoc($risBlog); // si usa assoc e non all perchè prendiamo solo una riga della tab risultato
     $posts = mysqli_fetch_all($risPost, MYSQLI_ASSOC);
     $commenti = mysqli_fetch_all($risCommenti, MYSQLI_ASSOC);
+    $personaliz = mysqli_fetch_all($risPersonaliz, MYSQLI_ASSOC);
 
 // prendo dall'array associativo blog l'id della categoria associata, poi faccio la query che prende la categoria
     $idCategoriaBlog = $blog['categoria'];
@@ -72,7 +75,11 @@ if (isset($_GET['idBlog'])) {
 } ?>
 
 <!DOCTYPE html>
-<body xmlns="http://www.w3.org/1999/xhtml" xml:lang="it" lang="it">
+<!-- classe per personalizz al body -->
+<body
+        xmlns="http://www.w3.org/1999/xhtml" xml:lang="it" lang="it"
+        class="<?php foreach ($personaliz as $classe){ echo htmlspecialchars($classe['nome'] . " "); } ?>">
+
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <meta http-equiv="Content-Language" content="it"/>
 
@@ -108,11 +115,11 @@ include 'head.php';
             </div>
 
             <div class="text-left">
+                <!-- implementata procedura cambio sfondo con nuova pag php -->
                 <a class="daNascondere btn btn-outline-secondary btn-sm" href="cambio_banner.php?idBlog=<?php echo $blog['idBlog']; ?>">
                     <i class="fa fa-edit"></i>
                     Cambia sfondo banner
                 </a>
-                <!-- TODO implementare procedura cambio sfondo -->
             </div>
         </div>
     </div>

@@ -167,7 +167,7 @@ include 'head.php';
                         <!-- media(immagine o video) -->
                         <div class="col-12">
                             <div class="form-group">
-                                <label for="fileInput">Carica immagine blog:</label>
+                                <label for="fileInput">Carica immagine post:</label>
                                 <div class="custom-file">
                                     <input type="file"
                                            required
