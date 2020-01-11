@@ -78,7 +78,9 @@ if (isset($_GET['idBlog'])) {
 <!-- classe per personalizz al body -->
 <body
         xmlns="http://www.w3.org/1999/xhtml" xml:lang="it" lang="it"
-        class="<?php foreach ($personaliz as $classe){ echo htmlspecialchars($classe['nome'] . " "); } ?>">
+        class="<?php foreach ($personaliz as $classe) {
+            echo htmlspecialchars($classe['nome'] . " ");
+        } ?>">
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <meta http-equiv="Content-Language" content="it"/>
@@ -116,7 +118,8 @@ include 'head.php';
 
             <div class="text-left">
                 <!-- implementata procedura cambio sfondo con nuova pag php -->
-                <a class="daNascondere btn btn-outline-secondary btn-sm" href="cambio_banner.php?idBlog=<?php echo $blog['idBlog']; ?>">
+                <a class="daNascondere btn btn-outline-secondary btn-sm"
+                   href="cambio_banner.php?idBlog=<?php echo $blog['idBlog']; ?>">
                     <i class="fa fa-edit"></i>
                     Cambia sfondo banner
                 </a>
@@ -163,7 +166,33 @@ include 'head.php';
             <?php } ?>
         <?php } ?>
 
+        <!--Card crea commento-->
+        <form enctype="multipart/form-data"
+              method="POST"
+              action="crea_commento.php">
+            <div class="row pl-5">
+                <h5 class="display-5">+ aggiungi un commento:</h5>
+            </div>
+            <div class="row py-2 pl-md-5 text-center">
+                <div class="col-sm-1 pt-4 pb-2">
+                    <i class="fas fa-comment-alt fa-2x"></i>
+                </div>
+                <div class="col-sm-9">
+                    <label class="sr-only" for="commentoFormInput">Nuovo Commento</label>
+                    <textarea class="form-control mb-2 mr-sm-2" id="nuovoCommentoTextarea" rows="3"
+                              placeholder="Scrivi un commento"></textarea>
+                </div>
+                <div class="col-sm-2">
+                    <button type="submit" class="btn btn-outline-primary btn-lg mb-2"
+                            href="crea_post.php?idBlog=<?php echo $blog['idBlog']; ?>">
+                        <i class="fa fa-plus-circle"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+
     <?php } ?>
+
 
     <!--Card crea post-->
     <div class="daNascondere row py-2">
@@ -177,6 +206,7 @@ include 'head.php';
             </a>
         </div>
     </div>
+</div>
 </div>
 
 <?php include('footer.php'); ?>
