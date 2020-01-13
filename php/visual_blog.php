@@ -98,14 +98,19 @@ include 'head.php';
     <div class="row">
         <div class="col s6 md3 text-center">
             <?php if ($blog): ?>
-                <p class="lead display-5">Creato da: <?php echo htmlspecialchars($blog['autore']); ?></p>
 
-                <p class="lead text-muted display-5">Ultima modifica
-                    il: <?php echo date_format(new DateTime($blog['data']), 'd M Y H:i:s'); ?></p>
+                <p class="lead display-5">
+                    Creato da: <?php echo htmlspecialchars($blog['autore']); ?>
+                </p>
+                <p class="lead text-muted display-5">
+                    Ultima modifica il: <?php echo date_format(new DateTime($blog['data']), 'd M Y H:i:s'); ?>
+                </p>
                 <p class="lead text text-muted display-5">
-                    Categoria: <?php echo ucwords(htmlspecialchars($categoriaBlog['nomeCategoria'])); //prende nome categoria da tab categorie?></p>
-
-                <p class="lead display-5"><?php echo ucfirst(htmlspecialchars($blog['descrizione'])); ?></p>
+                    Categoria: <?php echo ucwords(htmlspecialchars($categoriaBlog['nomeCategoria'])); //prende nome categoria da tab categorie?>
+                </p>
+                <p class="lead display-5">
+                    <?php echo ucfirst(htmlspecialchars($blog['descrizione'])); ?>
+                </p>
 
             <?php else: ?>
             <?php endif; ?>
@@ -169,7 +174,7 @@ include 'head.php';
         <!--Card crea commento-->
         <form enctype="multipart/form-data"
               method="POST"
-              action="crea_commento.php">
+              action="inser_commento.php?idBlog=<?php echo $post['idPost'] ?>">
             <div class="row pl-5">
                 <h5 class="display-5">+ aggiungi un commento:</h5>
             </div>
@@ -179,12 +184,12 @@ include 'head.php';
                 </div>
                 <div class="col-sm-9">
                     <label class="sr-only" for="commentoFormInput">Nuovo Commento</label>
-                    <textarea class="form-control mb-2 mr-sm-2" id="nuovoCommentoTextarea" rows="3"
+                    <textarea class="form-control mb-2 mr-sm-2" id="nuovoCommentoTextarea" rows="2"
                               placeholder="Scrivi un commento"></textarea>
                 </div>
                 <div class="col-sm-2">
-                    <button type="submit" class="btn btn-outline-primary btn-lg mb-2"
-                            href="crea_post.php?idBlog=<?php echo $blog['idBlog']; ?>">
+                    <button id="crea_commento" type="submit" class="btn btn-outline-primary btn-lg mb-2"
+                            href="crea_post.php?idPost=<?php echo $post['idPost']; ?>">
                         <i class="fa fa-plus-circle"></i>
                     </button>
                 </div>
@@ -258,6 +263,20 @@ include 'head.php';
                     $(".segui").html(response);
                 }
             });
+        });
+    });
+</script>
+<!--crea commento-->
+<script>
+    $(document).on('click','#crea_commento',function(e) {
+        var data = $("#nuovoCommentoTextarea").serialize();
+        $.ajax({
+            data: data,
+            type: "post",
+            url: "inser_commento.php?idBlog=<?php echo $blog['idBlog'] ?>",
+            success: function(data){
+                alert("Data Save: " + data);
+            }
         });
     });
 </script>

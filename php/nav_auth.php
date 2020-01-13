@@ -28,7 +28,7 @@
             </form>
 
             <li class="nav-item">
-                <a class="nav-link" href="user.php"><i class="fa fa-user"></i> Profilo</a>
+                <a class="nav-link" href="profilo.php"><i class="fa fa-user"></i> Profilo</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>

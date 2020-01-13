@@ -18,7 +18,7 @@ if (isset($_SESSION['nomeUtente'])) {
 }
 
 // sql blog
-$sqlGetBlogData = "SELECT blog.idBlog, blog.titolo, blog.autore, categorie.nomeCategoria, blog.data, blog.descrizione, blog.categoria, blog.banner
+$sqlGetBlogData = "SELECT blog.idBlog, blog.titolo, blog.autore, categorie.idCategoria, categorie.nomeCategoria, blog.data, blog.descrizione, blog.categoria, blog.banner
 FROM categorie , blog
 WHERE  categorie.idCategoria = blog.categoria";
 // sql categorie
@@ -137,7 +137,7 @@ include 'head.php';
             <ul id="listaCateg" class="list-group list-group-flush">
                 <?php foreach ($categorie as $categoria) { ?>
                     <!-- assegno al li di bootstrap l'id della cateoria come id del tag -->
-                    <a href="*" id="<?php echo $categoria['idCategoria']; ?>"
+                    <a id="<?php echo $categoria['idCategoria']; ?>"
                        class="list-group-item"><?php echo ucwords(htmlspecialchars($categoria['nomeCategoria'])); ?></a>
                 <?php } ?>
             </ul>
@@ -167,7 +167,7 @@ include 'head.php';
 
     /**
      * Listener evento keyup su text box per ricerca blog per titolo
-     * Lo usiamo per rimuove e aggiungere elementi html blog dal container di blog
+     * Lo usiamo per rimuovere e aggiungere elementi html blog dal container di blog
      * in base al loro titolo
      */
     $(document).ready(function () {
@@ -215,7 +215,7 @@ include 'head.php';
     $(document).ready(function () {
         $('#listaCateg').on("click", "a", function (event) {
 
-            // assegno ad una variabile la categoria cliccata
+            // assegno ad una variabile id della categoria cliccata
             const idCategCliccata = this['id'];
 
             // ciclo tutti i blog html che sono nel dom
@@ -229,7 +229,7 @@ include 'head.php';
 
                 // recupero l'oggetto blog a partire dall'id della categoria cliccata
                 const oggettoBlog = blogList.find(function (blog) {
-                    return blog['categoria'] === idCategCliccata;
+                    return this['idCategoria'] === idCategCliccata;
                 });
 
                 if (oggettoBlog) { // se oggettoBlog return true
