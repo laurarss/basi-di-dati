@@ -53,10 +53,10 @@ include 'head.php';
     <!--alert grigio di benvenuto utente (solo se utente loggato)-->
     <?php if (!empty($nomeUtente)) : ?>
 
-    <div id="benvenuto" class="alert alert-secondary col-sm-3" role="alert">
-        <!--  apre gestione blog memorizzando il nomeUtente della sessione-->
-        Benvenuto <strong><?php echo ucfirst($nomeUtente); ?></strong>
-    </div>
+        <div id="benvenuto" class="alert alert-secondary col-sm-3" role="alert">
+            <!--  apre gestione blog memorizzando il nomeUtente della sessione-->
+            Benvenuto <strong><?php echo ucfirst($nomeUtente); ?></strong>
+        </div>
     <?php endif; ?>
 
     <div class="row py-2">
@@ -72,7 +72,9 @@ include 'head.php';
             <div class="row">
                 <div class="col-3">
                     <a class="btn btn-sm btn-primary"
-                       href="gestione_blog.php?nomeUtente=<?php if (!empty($nomeUtente)){ echo $nomeUtente; } ?>">
+                       href="gestione_blog.php?nomeUtente=<?php if (!empty($nomeUtente)) {
+                           echo $nomeUtente;
+                       } ?>">
                         Gestisci i tuoi blog
                     </a>
                 </div>
@@ -135,10 +137,15 @@ include 'head.php';
             <h6 class="lead display-6">Categorie</h6>
 
             <ul id="listaCateg" class="list-group list-group-flush">
+
+                <li id="allCategorie" class="list-group-item">Tutte</li>
+
                 <?php foreach ($categorie as $categoria) { ?>
                     <!-- assegno al li di bootstrap l'id della cateoria come id del tag -->
-                    <a id="<?php echo $categoria['idCategoria']; ?>"
-                       class="list-group-item"><?php echo ucwords(htmlspecialchars($categoria['nomeCategoria'])); ?></a>
+                    <li style="cursor: pointer"
+                        id="<?php echo $categoria['idCategoria']; ?>"
+                        class="list-group-item"><?php echo ucwords(htmlspecialchars($categoria['nomeCategoria'])); ?>
+                    </li>
                 <?php } ?>
             </ul>
 
@@ -211,15 +218,25 @@ include 'head.php';
         });
     });
 
-    //ricerca per categorie
+    // ricerca per categorie
     $(document).ready(function () {
-        $('#listaCateg').on("click", "a", function (event) {
+        $('#listaCateg').on("click", "li", function (event) {
+
+            if (this['id'] === 'allCategorie') {
+
+                $('#containerBlogs').children().each(function () {
+                    this['hidden'] = false;
+                });
+
+                return;
+            }
 
             // assegno ad una variabile id della categoria cliccata
             const idCategCliccata = this['id'];
 
             // ciclo tutti i blog html che sono nel dom
             $('#containerBlogs').children().each(function () {
+
                 // console.log('elemento div sul quale sto ciclando con la filter: ', this);
                 // console.log('id elementi div sul quale sto ciclando:', this['id']);
 
@@ -229,16 +246,39 @@ include 'head.php';
 
                 // recupero l'oggetto blog a partire dall'id della categoria cliccata
                 const oggettoBlog = blogList.find(function (blog) {
-                    return this['idCategoria'] === idCategCliccata;
+                    return idBlogDiv === blog['idBlog'];
                 });
 
                 if (oggettoBlog) { // se oggettoBlog return true
-                    this['hidden'] = false;
+
+                    if (oggettoBlog['idCategoria'] === idCategCliccata) {
+                        this['hidden'] = false;
+                    } else {
+                        this['hidden'] = true;
+                    }
+
                 } else {
-                    this['hidden'] = true;
+                    console.error('Errore durante il filtro per categorie');
                 }
             });
 
+            // controllo se tutti i blog sono nascosti
+            // creo la variabile areAllBlogHidden dando per assunto che siano tutti nascosti
+            // poi ciclo i div dei blog: se ne trovo uno non nascosto invalido la variabile di controllo e interrompo il ciclo
+            let areAllBlogHidden = true;
+             $('#containerBlogs').children().each(function () {
+                 if(this['hidden'] === false) {
+                     areAllBlogHidden = false;
+                     return;
+                 }
+            });
+
+             // se tutti i blog sono nascosti aggiungo un messaggio al container dei blog
+            if(areAllBlogHidden) {
+                $('#containerBlogs').append("<h1 class=\"col-12 text-center \">Nessun blog presente</h1>");
+            } else {
+                $('#containerBlogs').children().remove('h1') // rimuove il messaggio nel caso fosse stato inserito
+            }
         });
     });
 </script>

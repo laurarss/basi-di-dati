@@ -2,6 +2,12 @@ body {
     padding-top: 90px;
 }
 
+/* stili filtri categoria index.php */
+
+#listaCateg > li {
+    cursor: pointer;
+}
+
 .container-bg {
     color: white;
     background-attachment: fixed;
@@ -28,10 +34,11 @@ body {
     background-size: cover;
     opacity: 0.9;
 }
-.card-header-bg{
-	background-size: cover;
-	opacity: 0.9;
-	color: white;
+
+.card-header-bg {
+    background-size: cover;
+    opacity: 0.9;
+    color: white;
 }
 
 .card-opac {
@@ -65,5 +72,5 @@ body {
 }
 
 .bg-green {
-	background-color: #9FFFA7;
+    background-color: #9FFFA7;
 }
