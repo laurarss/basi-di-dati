@@ -8,6 +8,7 @@ body {
     cursor: pointer;
 }
 
+ /*container con sfondo*/
 .container-bg {
     color: white;
     background-attachment: fixed;
@@ -15,8 +16,14 @@ body {
     margin-bottom: 2rem;
     border-radius: 0.3rem;
     background-size: cover;
+    background-color: #ffffff;
+    opacity: 0.6;
 }
-
+.blackHover{
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 2rem 2rem 2rem 2rem;
+}
+/*container dei post*/
 .container-post {
     background-color: #F5F5F5;
     padding-top: 20px;
@@ -26,7 +33,10 @@ body {
     background-position: center;
     width: 40%;
 }
-
+/*styling errori dal server*/
+.error {
+    border-color: #b32d39;
+}
 
 /*personalizzazioni*/
 /*card*/

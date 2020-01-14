@@ -19,10 +19,12 @@ include 'head.php';
                     <h4 class="card-title text-center">Registrazione</h4>
 
                     <!-- div mostra errori da js -->
-                    <div id="errore"></div>
+                    <div id="errore">
+                        <?php include('errors.php'); ?>
+                    </div>
 
                     <form id="formReg" method="post" action="register.php">
-                        <?php include('errors.php'); ?>
+
                         <div class="row">
 
                             <div class="col-12">
@@ -50,7 +52,8 @@ include 'head.php';
                                            type="password"
                                            class="form-control"
                                            placeholder="Inserisci la password..."
-                                           name="password_1">
+                                           name="password_1"
+                                           value="<?php echo $password_1; ?>">
                                     <small id="pwHelp" class="form-text text-muted">
                                         La tua password deve essere minimo di 8 caratteri.
                                     </small>
@@ -65,7 +68,8 @@ include 'head.php';
                                            type="password"
                                            class="form-control"
                                            placeholder="Reinserisci la password..."
-                                           name="password_2">
+                                           name="password_2"
+                                           value="<?php echo $password_2; ?>">
                                 </div>
                             </div>
 
@@ -77,7 +81,8 @@ include 'head.php';
                                            type="text"
                                            class="form-control"
                                            placeholder="Inserisci il tuo nome..."
-                                           name="nome">
+                                           name="nome"
+                                           value="<?php echo $nome; ?>">
                                 </div>
                             </div>
 
@@ -89,7 +94,8 @@ include 'head.php';
                                            type="text"
                                            class="form-control"
                                            placeholder="Inserisci il tuo cognome... "
-                                           name="cognome">
+                                           name="cognome"
+                                           value="<?php echo $cognome; ?>">
                                 </div>
                             </div>
 

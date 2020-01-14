@@ -35,13 +35,14 @@ if (isset($_POST['crea_blog_submit'])) {
          * se categ non esiste crearla con relativa insert, e prenderne l'id
          */
         $nome_categoria = $_POST['categoria']; // variabili di utility per nome categoria inserito da utente
-        if (!preg_match('/^[a-z][a-z\s]*$/', $nome_categoria)) {
+        if (!preg_match('/^\p{Latin}+$/', $nome_categoria)) {
             $errors['categoria'] = 'Categoria deve contenere solo lettere e spazi<br>';
+            echo $_POST['categoria'];
         }
 
         $trovato = $i = 0;
         while ($i < sizeof($categorie) and !$trovato) {
-            if (strtolower($nome_categoria) === $categorie[$i]['nomeCategoria']) {
+            if (strtolower($nome_categoria) === strtolower($categorie[$i]['nomeCategoria'])) {
                 $id_categoria = $categorie[$i]['idCategoria'];
                 $trovato = 1;
             }

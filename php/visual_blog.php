@@ -92,42 +92,44 @@ include 'head.php';
 
 <!-- banner -->
 <div class="container-bg" style="background-image: url('<?php echo htmlspecialchars($blog['banner']) ?>');">
-    <h1 class="text-capitalize display-3 text-center m-0"><?php echo htmlspecialchars($blog['titolo']); ?></h1>
+    <div class="blackHover">
+        <h1 class="text-capitalize display-3 text-center m-0"><?php echo htmlspecialchars($blog['titolo']); ?></h1>
 
-    <!-- intestazione blog -->
-    <div class="row">
-        <div class="col s6 md3 text-center">
-            <?php if ($blog): ?>
+        <!-- intestazione blog -->
+        <div class="row">
+            <div class="col s6 md3 text-center">
+                <?php if ($blog): ?>
 
-                <p class="lead display-5">
-                    Creato da: <?php echo htmlspecialchars($blog['autore']); ?>
-                </p>
-                <p class="lead text-muted display-5">
-                    Ultima modifica il: <?php echo date_format(new DateTime($blog['data']), 'd M Y H:i:s'); ?>
-                </p>
-                <p class="lead text text-muted display-5">
-                    Categoria: <?php echo ucwords(htmlspecialchars($categoriaBlog['nomeCategoria'])); //prende nome categoria da tab categorie?>
-                </p>
-                <p class="lead display-5">
-                    <?php echo ucfirst(htmlspecialchars($blog['descrizione'])); ?>
-                </p>
+                    <p class="lead display-5">
+                        Creato da: <?php echo htmlspecialchars($blog['autore']); ?>
+                    </p>
+                    <p class="lead text-muted display-5">
+                        Ultima modifica il: <?php echo date_format(new DateTime($blog['data']), 'd M Y H:i:s'); ?>
+                    </p>
+                    <p class="lead text text-muted display-5">
+                        Categoria: <?php echo ucwords(htmlspecialchars($categoriaBlog['nomeCategoria'])); //prende nome categoria da tab categorie?>
+                    </p>
+                    <p class="lead display-5">
+                        <?php echo ucfirst(htmlspecialchars($blog['descrizione'])); ?>
+                    </p>
 
-            <?php else: ?>
-            <?php endif; ?>
+                <?php else: ?>
+                <?php endif; ?>
 
-            <!-- pulsante segui -->
-            <!-- la visual cambia in base all'esito della query sul db "follower" -->
-            <div class="segui text-center">
-                <?php echo $segui; ?>
-            </div>
+                <!-- pulsante segui -->
+                <!-- la visual cambia in base all'esito della query sul db "follower" -->
+                <div class="segui text-center">
+                    <?php echo $segui; ?>
+                </div>
 
-            <div class="text-left">
-                <!-- implementata procedura cambio sfondo con nuova pag php -->
-                <a class="daNascondere btn btn-outline-secondary btn-sm"
-                   href="cambio_banner.php?idBlog=<?php echo $blog['idBlog']; ?>">
-                    <i class="fa fa-edit"></i>
-                    Cambia sfondo banner
-                </a>
+                <div class="text-left">
+                    <!-- implementata procedura cambio sfondo con nuova pag php -->
+                    <a class="daNascondere btn btn-outline-secondary btn-sm"
+                       href="cambio_banner.php?idBlog=<?php echo $blog['idBlog']; ?>">
+                        <i class="fa fa-edit"></i>
+                        Cambia sfondo banner
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -268,13 +270,13 @@ include 'head.php';
 </script>
 <!--crea commento-->
 <script>
-    $(document).on('click','#crea_commento',function(e) {
+    $(document).on('click', '#crea_commento', function (e) {
         var data = $("#nuovoCommentoTextarea").serialize();
         $.ajax({
             data: data,
             type: "post",
             url: "inser_commento.php?idBlog=<?php echo $blog['idBlog'] ?>",
-            success: function(data){
+            success: function (data) {
                 alert("Data Save: " + data);
             }
         });

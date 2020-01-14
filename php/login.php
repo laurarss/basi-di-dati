@@ -14,12 +14,15 @@ include 'head.php';
 <div class="container" style="padding-top: 18vh;">
     <div class="row justify-content-center">
         <div class="col-sm-6">
+            <!-- errore accesso non andato a buon fine -->
             <div id="accessoF">
                 <?php echo $accessoF; ?>
             </div>
             <div class="card bg-light shadow">
                 <div class="card-body">
                     <h4 class="card-title text-center">Login</h4>
+
+                    <!-- div mostra errori da js -->
                     <div id="errore">
                         <?php include('errors.php'); ?>
                     </div>

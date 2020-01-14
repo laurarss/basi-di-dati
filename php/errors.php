@@ -1,7 +1,7 @@
 <?php  if (count($errors) > 0) : ?>
-    <div class="error">
+    <div class="error alert alert-danger" role="alert">
         <?php foreach ($errors as $error) : ?>
-            <p><?php echo $error ?></p>
+            <p><strong><?php echo $error ?></strong></p>
         <?php endforeach ?>
     </div>
 <?php  endif ?>

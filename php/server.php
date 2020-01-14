@@ -29,26 +29,25 @@ if (isset($_POST['reg_btn'])) {
     }
     if (empty($password_1)) {
         array_push($errors, "Password richiesta");
-    } else if (strlen(trim($password)) > 8) {
+    } else if (strlen(trim($password_2)) < 8) {
         array_push($errors, "La password deve essere almeno di 8 caratteri");
     }
     if ($password_1 != $password_2) {
         array_push($errors, "Le due password non combaciano");
     }
 
-    // first check the database to make sure
-    // a user does not already exist with the same nomeUtente and/or email
+    // controllo il db per essere sicura che lo stesso utente non esista già
     $user_check_query = "SELECT * FROM utenti WHERE nomeUtente='$nomeUtente' OR email='$email' LIMIT 1";
     $result = mysqli_query($conn, $user_check_query);
     $user = mysqli_fetch_assoc($result);
 
     if ($user) { // if user exists
         if ($user['nomeUtente'] === $nomeUtente) {
-            array_push($errors, "nome utente already exists");
+            array_push($errors, "Il nome utente esiste già");
         }
 
         if ($user['email'] === $email) {
-            array_push($errors, "email already exists");
+            array_push($errors, "La mail esiste già");
         }
     }
 
@@ -71,10 +70,10 @@ if (isset($_POST['login_user'])) {
     $password = mysqli_real_escape_string($conn, $_POST['password']);
 
     if (empty($nomeUtente)) {
-        array_push($errors, "nomeUtente richiesto");
+        array_push($errors, "Nome utente richiesto");
     }
     if (empty($password)) {
-        array_push($errors, "password richiesta");
+        array_push($errors, "Password richiesta");
     }
 
     if (count($errors) == 0) {
@@ -85,9 +84,13 @@ if (isset($_POST['login_user'])) {
         if (mysqli_num_rows($results) == 1) {
             $_SESSION['nomeUtente'] = $nomeUtente;
             header('Location: index.php');
+        } else if(mysqli_num_rows($results) == 0){
+            //la query non trova risultati
+            $accessoF = '<br><div class="alert alert-danger" role="alert"><p><strong>' . "Username o password errati" . '</strong></p></div>';
+
         } else {
-            // todo dare avvertimento quando la query non trova risultati
-            $accessoF = '<br><div class="alert alert-danger" role="alert"><p><strong>' . "La query non ha prodotto risultati" . '</strong></p></div>';
+            //la query produce più di una riga di risultato(difetto db)
+            header('Location: ops.php');
         }
     }
 }
