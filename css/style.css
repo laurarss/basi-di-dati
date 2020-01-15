@@ -17,7 +17,6 @@ body {
     border-radius: 0.3rem;
     background-size: cover;
     background-color: #ffffff;
-    opacity: 0.6;
 }
 .blackHover{
     background-color: rgba(0, 0, 0, 0.3);

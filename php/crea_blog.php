@@ -5,7 +5,7 @@ include('db_connect.php');
 include('header.php');
 
 $titolo = $data = $id_categoria = $descrizione = $banner = $idBlog = ''; //inizializzo le variabili vuote (altrimenti php dà errore quando le uso senza avere mai cliccato submit)
-$errors = array('titolo' => '', 'categoria' => '', 'descrizione' => '', 'banner'  => ''); //array associativo che immagazzina gli errori
+$errors = array('titolo' => '', 'categoria' => '', 'descrizione' => '', 'banner' => ''); //array associativo che immagazzina gli errori
 
 // mi prendo le categorie per i controlli sul form
 $sqlCategorie = "SELECT * FROM categorie";
@@ -19,6 +19,7 @@ if (isset($_POST['crea_blog_submit'])) {
         $errors['titolo'] = 'Manca un titolo per il tuo blog!<br>';
     } else {
         $titolo = $_POST['titolo'];
+
 //        if (!preg_match('/^[a-z][a-z\s]*$/', $titolo)) {
 //            $errors['titolo'] = 'Il titolo deve contenere solo lettere e spazi<br>';
 //        }
@@ -57,7 +58,6 @@ if (isset($_POST['crea_blog_submit'])) {
             } else {
                 echo "Inserimento fallito per la nuova categoria";
             }
-            echo "ID della nuova categoria: " . $id_categoria;
         }
     }
 
@@ -70,11 +70,13 @@ if (isset($_POST['crea_blog_submit'])) {
 
     // check immagine
     $nomeBannerBlog = $_FILES['blog_banner']['name']; // salvo il nome dell'immagine
-    $targetDir = "../img/";
-    $targetFile = $targetDir . basename($_FILES['blog_banner']['name']); //concateno il path al nome img
+    $nomeBannerBlog_tmp = $_FILES['blog_banner']['tmp_name'];
+    $targetDir = "../img/user_upload/";
+    $targetFile = $targetDir . basename($nomeBannerBlog); // concateno il path al nome img
 
     // get image file type
     $tipoImg = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+
     // creo un array di stringhe nei quali scrivo i formati accettati di immagine
     $estensioniAccettate = array("jpg", "png", "jpeg");
 
@@ -84,13 +86,30 @@ if (isset($_POST['crea_blog_submit'])) {
         $errors['banner'] = 'Il formato del banner selezionato non è accettato';
     }
 
+    // copio il file dalla locazione temporanea alla mia cartella upload
+    if (move_uploaded_file($nomeBannerBlog_tmp, $targetDir . $nomeBannerBlog)) {
+
+        //Se buon fine...
+        print " inviato con successo. Alcune informazioni:\n";
+        print_r($_FILES);
+    } else { //Se fallita...
+
+        print "Upload NON valido! Alcune informazioni:\n";
+
+        print_r($_FILES);
+        print_r($_FILES['blog_banner']['error']);
+        print_r($_FILES['blog_banner']['size']);
+    }
+
     //recupero data timestamp
     $timestamp = date("Y-m-d H:i:s");
 
     if (array_filter($errors)) {
+
         //se ci sono errori
         print_r($errors);
     } else {
+
         //escape sql chars
         $titolo = mysqli_real_escape_string($conn, $_POST['titolo']);
         $autore = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']); //autore, aggiunto da me (non so se è giusto, deve recuperare l'user della sessione)
@@ -204,6 +223,7 @@ include 'head.php';
                                 <div class="form-group">
                                     <label for="fileInput">Carica immagine blog:</label>
                                     <div class="custom-file">
+                                        <!--                                        <input type="hidden" name="MAX_FILE_SIZE" value=16000/>-->
                                         <input type="file"
                                                class="custom-file-input"
                                                id="fileInput"
@@ -211,7 +231,8 @@ include 'head.php';
                                                placeholder="Carica uno sfondo per il blog"
                                                value="<?php echo htmlspecialchars($banner) ?>"
                                                accept="image/png/jpg"
-                                               name="blog_banner">
+                                               name="blog_banner"/>
+
                                         <label class="custom-file-label" for="validatedCustomFile">
                                             Scegli file...
                                         </label>
