@@ -10,23 +10,15 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
         <ul class="navbar-nav mr-auto">
-
             <li class="nav-item">
-                <a class="nav-link" href="gestione_blog.php?nomeUtente=<?php echo $_SESSION['nomeUtente'] ?>">Gestisci
-                    blog</a>
+                <a class="nav-link" href="gestione_blog.php?nomeUtente=<?php echo $_SESSION['nomeUtente'] ?>">Gestisci blog</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="blog_seguiti.php">Blog che segui</a>
             </li>
-
         </ul>
 
         <ul class="nav navbar-nav ml-auto">
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2 search-item" type="search" placeholder="Cerca per titolo.." aria-label="">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Cerca</button>
-            </form>
-
             <li class="nav-item">
                 <a class="nav-link" href="profilo.php"><i class="fa fa-user"></i> Profilo</a>
             </li>

@@ -1,0 +1,12 @@
+/*background*/
+.user-bg{
+    background-color: #000000;
+}
+/*testo*/
+.user-text {
+    color: white;
+}
+/*font*/
+.user-font{
+    font-family: Montserrat, Helvetica, sans-serif;
+}

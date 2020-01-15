@@ -2,13 +2,12 @@ body {
     padding-top: 90px;
 }
 
-/* stili filtri categoria index.php */
-
+/*cursore su categorie index*/
 #listaCateg > li {
     cursor: pointer;
 }
 
- /*container con sfondo*/
+/*container con sfondo*/
 .container-bg {
     color: white;
     background-attachment: fixed;
@@ -18,10 +17,13 @@ body {
     background-size: cover;
     background-color: #ffffff;
 }
+
+/*banner blog*/
 .blackHover{
     background-color: rgba(0, 0, 0, 0.3);
     padding: 2rem 2rem 2rem 2rem;
 }
+
 /*container dei post*/
 .container-post {
     background-color: #F5F5F5;
@@ -32,12 +34,12 @@ body {
     background-position: center;
     width: 40%;
 }
+
 /*styling errori dal server*/
 .error {
     border-color: #b32d39;
 }
 
-/*personalizzazioni*/
 /*card*/
 .card-bg {
     background-size: cover;
@@ -50,27 +52,7 @@ body {
     color: white;
 }
 
-.card-opac {
-    opacity: 0.7;
-}
-
-/*testo*/
-.text-white {
-    color: white;
-}
-
-.text-black {
-    color: black;
-}
-
 /*body background*/
-.bg-dark {
-    background-color: #000000;
-}
-
-.bg-white {
-    background-color: #FFFFFF;
-}
 
 .bg-blue {
     background-color: #aed6f1;

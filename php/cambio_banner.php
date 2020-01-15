@@ -23,8 +23,9 @@ if (isset($_GET['idBlog'])) {
     if (isset($_POST['carica_banner_submit'])) {
         // check immagine
         $nomeBannerBlog = $_FILES['blog_banner']['name']; // salvo il nome dell'immagine
-        $targetDir = "../img/";
-        $targetFile = $targetDir . basename($_FILES['blog_banner']['name']); //concateno il path al nome img
+        $nomeBannerBlog_tmp = $_FILES['blog_banner']['tmp_name'];
+        $targetDir = "../img/user_upload/";
+        $targetFile = $targetDir . basename($nomeBannerBlog); //concateno il path al nome img
 
         // get image file type
         $tipoImg = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
@@ -36,12 +37,27 @@ if (isset($_GET['idBlog'])) {
         if (!in_array($tipoImg, $estensioniAccettate)) {
             $errore = 'Il formato del banner selezionato non è accettato';
         }
+
         if ($errore) {
             //se ci sono errori
             print($errore);
         } else {
             $banner = $targetFile; //salvo path immagine
             $sqlNuovoBanner = "UPDATE `blog` SET `banner` = '$banner' WHERE `blog`.`idBlog` = '$idBlog' ";
+        }
+
+        // copio il file dalla locazione temporanea alla mia cartella upload
+        if (move_uploaded_file($nomeBannerBlog_tmp, $targetDir . $nomeBannerBlog)) {
+            //Se buon fine...
+            print " inviato con successo. Alcune informazioni:\n";
+            print_r($_FILES);
+        } else {
+            //Se fallita...
+            print "Upload NON valido! Alcune informazioni:\n";
+
+            print_r($_FILES);
+            print_r($_FILES['blog_banner']['error']);
+            print_r($_FILES['blog_banner']['size']);
         }
 
         //controlla e salva sul db

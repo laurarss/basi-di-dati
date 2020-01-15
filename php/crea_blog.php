@@ -92,8 +92,9 @@ if (isset($_POST['crea_blog_submit'])) {
         //Se buon fine...
         print " inviato con successo. Alcune informazioni:\n";
         print_r($_FILES);
-    } else { //Se fallita...
+    } else {
 
+        //Se fallita...
         print "Upload NON valido! Alcune informazioni:\n";
 
         print_r($_FILES);

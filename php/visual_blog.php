@@ -23,19 +23,16 @@ if (isset($_GET['idBlog'])) {
     $sqlBlog = "SELECT * FROM `blog` WHERE idBlog = $idBlog"; //dati blog
     $sqlPost = "SELECT * FROM `post` WHERE idBlog = $idBlog"; //elenco post
     $sqlCommenti = "SELECT * FROM `commenti` ORDER BY data DESC"; //commenti per post
-    $sqlPersonaliz = "SELECT * FROM `personalizzazioni` WHERE idBlog = $idBlog"; //personalizzazioni blog
 
 // risultato righe query
     $risBlog = mysqli_query($conn, $sqlBlog);
     $risPost = mysqli_query($conn, $sqlPost);
     $risCommenti = mysqli_query($conn, $sqlCommenti);
-    $risPersonaliz = mysqli_query($conn, $sqlPersonaliz);
 
 // fetch righe risultato in un array
     $blog = mysqli_fetch_assoc($risBlog); // si usa assoc e non all perchè prendiamo solo una riga della tab risultato
     $posts = mysqli_fetch_all($risPost, MYSQLI_ASSOC);
     $commenti = mysqli_fetch_all($risCommenti, MYSQLI_ASSOC);
-    $personaliz = mysqli_fetch_all($risPersonaliz, MYSQLI_ASSOC);
 
 // prendo dall'array associativo blog l'id della categoria associata, poi faccio la query che prende la categoria
     $idCategoriaBlog = $blog['categoria'];
@@ -72,15 +69,15 @@ if (isset($_GET['idBlog'])) {
 
 } else {
     header("Location: ops.php");
-} ?>
+}
+?>
 
 <!DOCTYPE html>
-<!-- classe per personalizz al body -->
-<body
-        xmlns="http://www.w3.org/1999/xhtml" xml:lang="it" lang="it"
-        class="<?php foreach ($personaliz as $classe) {
-            echo htmlspecialchars($classe['nome'] . " ");
-        } ?>">
+
+<!-- Link css custom personalizz blog-->
+<link href="../css/temi_blog/<?php echo $blog['tema']; ?>.css" rel="stylesheet" type="text/css"/>
+
+<body xmlns="http://www.w3.org/1999/xhtml" xml:lang="it" lang="it" class="user-bg user-text user-font">
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <meta http-equiv="Content-Language" content="it"/>
@@ -191,7 +188,7 @@ include 'head.php';
                 </div>
                 <div class="col-sm-9">
                     <label class="sr-only" for="commentoFormInput">Nuovo Commento</label>
-                    <textarea name="nuovoCommentoTextarea" class="form-control mb-2 mr-sm-2 nuovoCommentoTextarea"
+                    <textarea name="nuovoCommentoTextarea" class="form-control mb-2 mr-sm-2 nuovoCommentoTextarea user-bg user-text"
                               rows="2"
                               placeholder="Scrivi un commento"></textarea>
                 </div>
