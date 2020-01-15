@@ -164,10 +164,14 @@ include 'head.php';
             if ($commento['idPost'] === $post['idPost']) { ?>
                 <div class="row py-2 pl-5">
                     <div class="col-1 pt-4"><i class="far fa-comment-alt fa-2x"></i></div>
-                    <div class="col-11">
+                    <div class="col-10">
                         <h6><?php echo htmlspecialchars($commento['autore']); ?></h6>
                         <small class="text-muted"><?php echo date_format(new DateTime($commento['data']), 'd M Y H:i:s'); ?></small>
                         <p><?php echo htmlspecialchars($commento['nota']); ?></p>
+                    </div>
+                    <div class="col-sm-1 text-right">
+                        <a class="btn btn-sm btn-danger fa fa-trash"
+                           href="canc_commento.php?idCommento=<?php echo $commento['idCommento'] ?>&idBlog=<?php echo $blog['idBlog'] ?>"></a>
                     </div>
                 </div>
             <?php } ?>
@@ -177,7 +181,7 @@ include 'head.php';
         <form enctype="multipart/form-data"
               class="formCreaCommento"
               method="POST"
-              action="inser_commento.php?idBlog=<?php echo $post['idPost'] ?>">
+              action="inser_commento.php?idPost=<?php echo $post['idPost'] ?>&idBlog=<?php echo $blog['idBlog'] ?>">
             <div class="row pl-5">
                 <h5 class="display-5">+ aggiungi un commento:</h5>
             </div>
@@ -187,7 +191,8 @@ include 'head.php';
                 </div>
                 <div class="col-sm-9">
                     <label class="sr-only" for="commentoFormInput">Nuovo Commento</label>
-                    <textarea name="nuovoCommentoTextarea" class="form-control mb-2 mr-sm-2 nuovoCommentoTextarea" rows="2"
+                    <textarea name="nuovoCommentoTextarea" class="form-control mb-2 mr-sm-2 nuovoCommentoTextarea"
+                              rows="2"
                               placeholder="Scrivi un commento"></textarea>
                 </div>
                 <div class="col-sm-2">
@@ -272,15 +277,19 @@ include 'head.php';
 </script>
 <!--crea commento-->
 <script>
-    $(document).on('click', '#crea_commento', function (e) {
-        var data = $("#nuovoCommentoTextarea").serialize();
-        $.ajax({
-            data: data,
-            type: "post",
-            url: "inser_commento.php?idBlog=<?php echo $blog['idBlog'] ?>",
-            success: function (data) {
-                alert("Data Save: " + data);
-            }
+    $(document).ready(function () {
+        $('#crea_commento').click( function () {
+            var testoCommento = $("#nuovoCommentoTextarea").serialize();
+            $.ajax({
+                data: testoCommento,
+                type: "post",
+                url: "inser_commento.php?idPost=<?php echo $post['idPost'] ?>",
+                dataType: "text",
+                success: function () {
+                    debugger;
+                    location.reload();
+                }
+            });
         });
     });
 </script>

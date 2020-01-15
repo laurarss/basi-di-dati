@@ -6,7 +6,6 @@ include('header.php');
 include('head.php');
 
 $idBlog = $_SESSION['idBlog'];
-$queryTF = '';
 
 if (isset($_GET['idPost'])) {
     $nomeUtente = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']);
