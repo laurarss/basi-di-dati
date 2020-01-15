@@ -47,8 +47,9 @@ if (isset($_POST['crea_post_submit'])) {
 
     // check immagine
     $nomeImgPost = $_FILES['imgPost']['name']; // salvo il nome dell'immagine uploadata
-    $targetDir = "../img/";
-    $targetFile = $targetDir . basename($_FILES['imgPost']['name']);
+    $nomeImgPost_tmp = $_FILES['imgPost']['tmp_name'];
+    $targetDir = "../img/user_upload/";
+    $targetFile = $targetDir . basename($_FILES['imgPost']['name']); // concateno il path al nome img
 
     // recupero estensione dell'img caricata
     $tipoImg = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
@@ -63,7 +64,7 @@ if (isset($_POST['crea_post_submit'])) {
     }
 
     // copio il file dalla locazione temporanea alla mia cartella upload
-    if (move_uploaded_file($nomeBannerBlog_tmp, $targetDir . $nomeBannerBlog)) {
+    if (move_uploaded_file($nomeImgPost_tmp, $targetDir . $nomeImgPost)) {
 
         //Se buon fine...
         print " inviato con successo. Alcune informazioni:\n";
