@@ -50,7 +50,7 @@ if (isset($_POST['crea_post_submit'])) {
     $targetDir = "../img/";
     $targetFile = $targetDir . basename($_FILES['imgPost']['name']);
 
-    // recupero file type immagine
+    // recupero estensione dell'img caricata
     $tipoImg = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
 
     // creo un array di stringhe nei quali scrivo i formati accettati di immagine
@@ -59,7 +59,22 @@ if (isset($_POST['crea_post_submit'])) {
     // controllo se l'estensione e' tra quelle accettate
     // in caso contrario creo un errore
     if (!in_array($tipoImg, $estensioniAccettate)) {
-        $errors['imgPost'] = 'Il formato del banner selezionato non è accettato';
+        $errors['imgPost'] = 'Il formato del file selezionato non è accettato';
+    }
+
+    // copio il file dalla locazione temporanea alla mia cartella upload
+    if (move_uploaded_file($nomeBannerBlog_tmp, $targetDir . $nomeBannerBlog)) {
+
+        //Se buon fine...
+        print " inviato con successo. Alcune informazioni:\n";
+        print_r($_FILES);
+    } else {
+
+        //Se fallita...
+        print "Upload NON valido! Alcune informazioni:\n";
+        print_r($_FILES);
+        print_r($_FILES['blog_banner']['error']);
+        print_r($_FILES['blog_banner']['size']);
     }
 
     //retrieve timestamp
@@ -170,10 +185,10 @@ include 'head.php';
                                 <label for="fileInput">Carica immagine post:</label>
                                 <div class="custom-file">
                                     <input type="file"
-                                           required
                                            class="custom-file-input"
                                            id="fileInput"
-                                           placeholder="Carica uno sfondo per il blog"
+                                           required
+                                           placeholder="Carica un'immagine per il post"
                                            value="<?php echo htmlspecialchars($imgPost) ?>"
                                            accept="image/png/jpg"
                                            name="imgPost">
@@ -184,8 +199,6 @@ include 'head.php';
                                 </div>
                             </div>
                         </div>
-
-                        <!-- oltre a queste cose dovrei salvare anche il nome del blog di cui fa parte il post -->
 
                         <div class="form-group p-3">
                             <button type="submit"

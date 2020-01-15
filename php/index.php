@@ -52,18 +52,16 @@ include 'head.php';
 
     <!--alert grigio di benvenuto utente (solo se utente loggato)-->
     <?php if (!empty($nomeUtente)) : ?>
+        <div class="row py-2">
+            <div class="col-12">
 
-        <div id="benvenuto" class="alert alert-secondary col-sm-3" role="alert">
-            <!--  apre gestione blog memorizzando il nomeUtente della sessione-->
-            Benvenuto <strong><?php echo ucfirst($nomeUtente); ?></strong>
+                <a class="btn btn-sm btn-primary"
+                   href="gestione_blog.php?nomeUtente=<?php echo $nomeUtente; ?>">
+                    Gestisci i tuoi blog, <?php echo ucfirst($nomeUtente); ?>
+                </a>
+            </div>
         </div>
     <?php endif; ?>
-
-    <div class="row py-2">
-        <div class="col-12">
-            <h3 class="text-left grey-text">Esplora blog</h3>
-        </div>
-    </div>
 
     <div class="row py-2">
 
@@ -71,12 +69,7 @@ include 'head.php';
 
             <div class="row">
                 <div class="col-3">
-                    <a class="btn btn-sm btn-primary"
-                       href="gestione_blog.php?nomeUtente=<?php if (!empty($nomeUtente)) {
-                           echo $nomeUtente;
-                       } ?>">
-                        Gestisci i tuoi blog
-                    </a>
+                    <h3 class="text-left grey-text">Esplora blog</h3>
                 </div>
 
 
@@ -266,15 +259,15 @@ include 'head.php';
             // creo la variabile areAllBlogHidden dando per assunto che siano tutti nascosti
             // poi ciclo i div dei blog: se ne trovo uno non nascosto invalido la variabile di controllo e interrompo il ciclo
             let areAllBlogHidden = true;
-             $('#containerBlogs').children().each(function () {
-                 if(this['hidden'] === false) {
-                     areAllBlogHidden = false;
-                     return;
-                 }
+            $('#containerBlogs').children().each(function () {
+                if (this['hidden'] === false) {
+                    areAllBlogHidden = false;
+                    return;
+                }
             });
 
-             // se tutti i blog sono nascosti aggiungo un messaggio al container dei blog
-            if(areAllBlogHidden) {
+            // se tutti i blog sono nascosti aggiungo un messaggio al container dei blog
+            if (areAllBlogHidden) {
                 $('#containerBlogs').append("<h1 class=\"col-12 text-center \">Nessun blog presente</h1>");
             } else {
                 $('#containerBlogs').children().remove('h1') // rimuove il messaggio nel caso fosse stato inserito

@@ -56,7 +56,7 @@ include 'head.php';
 <div class="container"> <!-- tutte le row e le col di bootstrap devono stare dentro un unico container -->
 
     <div class="row py-2">
-        <h3 class="text-left grey-text">Gestisci i tuoi blog, <?php echo $nomeUtente ?></h3>
+        <h3 class="text-left grey-text">Gestisci i tuoi blog, <?php echo ucfirst($nomeUtente); ?></h3>
     </div>
 
     <div class="row">

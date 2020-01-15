@@ -74,13 +74,13 @@ if (isset($_POST['crea_blog_submit'])) {
     $targetDir = "../img/user_upload/";
     $targetFile = $targetDir . basename($nomeBannerBlog); // concateno il path al nome img
 
-    // get image file type
+    // recupero estensione dell'img caricata
     $tipoImg = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
 
     // creo un array di stringhe nei quali scrivo i formati accettati di immagine
     $estensioniAccettate = array("jpg", "png", "jpeg");
 
-    // controllo se l'estensione e' tra quelle accettate
+    // controllo se l'estensione del banner e' tra quelle accettate
     // in caso contrario creo un errore
     if (!in_array($tipoImg, $estensioniAccettate)) {
         $errors['banner'] = 'Il formato del banner selezionato non è accettato';
@@ -223,7 +223,6 @@ include 'head.php';
                                 <div class="form-group">
                                     <label for="fileInput">Carica immagine blog:</label>
                                     <div class="custom-file">
-                                        <!--                                        <input type="hidden" name="MAX_FILE_SIZE" value=16000/>-->
                                         <input type="file"
                                                class="custom-file-input"
                                                id="fileInput"

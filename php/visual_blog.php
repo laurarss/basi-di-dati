@@ -175,6 +175,7 @@ include 'head.php';
 
         <!--Card crea commento-->
         <form enctype="multipart/form-data"
+              class="formCreaCommento"
               method="POST"
               action="inser_commento.php?idBlog=<?php echo $post['idPost'] ?>">
             <div class="row pl-5">
@@ -186,11 +187,11 @@ include 'head.php';
                 </div>
                 <div class="col-sm-9">
                     <label class="sr-only" for="commentoFormInput">Nuovo Commento</label>
-                    <textarea class="form-control mb-2 mr-sm-2" id="nuovoCommentoTextarea" rows="2"
+                    <textarea name="nuovoCommentoTextarea" class="form-control mb-2 mr-sm-2 nuovoCommentoTextarea" rows="2"
                               placeholder="Scrivi un commento"></textarea>
                 </div>
                 <div class="col-sm-2">
-                    <button id="crea_commento" type="submit" class="btn btn-outline-primary btn-lg mb-2"
+                    <button name="crea_commento" type="submit" class="btn btn-outline-primary btn-lg mb-2 crea_commento"
                             href="crea_post.php?idPost=<?php echo $post['idPost']; ?>">
                         <i class="fa fa-plus-circle"></i>
                     </button>
@@ -224,6 +225,7 @@ include 'head.php';
     <script type="text/javascript">
         $('.daNascondere').hide();
         $('.segui').hide();
+        $('.formCreaCommento').hide();//nasconde crea commenti ai non loggati
     </script>
 <?php elseif ($_SESSION['nomeUtente'] !== $blog['autore']): ?>
     <!-- nasconde pulsanti di un blog di un utente diverso dal visualizzatore, ma mostrare segui -->
