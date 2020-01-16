@@ -4,24 +4,31 @@ include('db_connect.php');
 //includo file header
 include('header.php');
 
-$datiUtente = $risUtente = '';
+$datiUtente = $risUtente = $risBlog = $numBlog = '';
 if (isset($_SESSION['nomeUtente'])) {
 
     $nomeUtente = $_SESSION['nomeUtente'];
 
     // sql codice
     $sqlUtente = "SELECT * FROM `utenti` WHERE nomeUtente = '$nomeUtente'"; //dati utente
+    $sqlBlog = "SELECT COUNT(*) as contBlog FROM `blog` WHERE autore = '$nomeUtente'"; //conteggio blog per autore
 
     if (!$sqlUtente) {
         echo "Errore nell'sql inerente all'utente";
         return;
     }
+    if (!$sqlBlog) {
+        echo "Errore nell'sql inerente al conteggio blog";
+        return;
+    }
 
     // risultato righe query
     $risUtente = mysqli_query($conn, $sqlUtente);
+    $risBlog = mysqli_query($conn, $sqlBlog);
 
     // fetch righe risultato in un array
     $datiUtente = mysqli_fetch_all($risUtente, MYSQLI_ASSOC); // si usa assoc e non all perchè prendiamo solo una riga della tab risultato
+    $numBlog = mysqli_fetch_assoc($risBlog); // si usa assoc e non all perchè prendiamo solo una riga della tab risultato
 
 //    printf("Select returned %d rows.\n", $risUtente->num_rows);
 //    print_r($datiUtente);
@@ -41,22 +48,32 @@ if (isset($_SESSION['nomeUtente'])) {
 include 'head.php';
 ?>
 <div class="container">
-    <div class="row justify-content-center">
+    <div class="row py-2 justify-content-center">
         <div class="col-8">
 
             <div class="card bg-light shadow">
                 <div class="card-body">
 
                     <h4 class="card-title text-center">Il tuo profilo, <?php echo $nomeUtente; ?></h4>
-                    <div class="row">
+                    <div class="row py-2 px-4">
 
                         <!-- titolo -->
                         <div class="col-6 text-left">
                             <p class="lead">Nome utente:</p>
+                            <p class="lead">Nome:</p>
+                            <p class="lead">Cognome:</p>
+                            <p class="lead">email:</p>
+                            <p class="lead">Tipo utente:</p>
+                            <p class="lead">Blog creati:</p>
                         </div>
 
                         <div class="col-6 text-right">
                             <p class="lead"><?php echo $datiUtente[0]['nomeUtente']; ?></p>
+                            <p class="lead"><?php echo ucfirst($datiUtente[0]['nome']); ?></p>
+                            <p class="lead"><?php echo ucfirst($datiUtente[0]['cognome']); ?></p>
+                            <p class="lead"><?php echo $datiUtente[0]['email']; ?></p>
+                            <p class="lead"><?php echo $datiUtente[0]['tipoUtente']; ?></p>
+                            <p class="lead"><?php echo $numBlog['contBlog']; ?></p>
                         </div>
                     </div>
 

@@ -87,7 +87,6 @@ include 'head.php';
                             <div class="col-6">
                                 <a class="btn btn-sm btn-danger"
                                    href="cancella_blog.php?idBlog=<?php echo $blog['idBlog'] ?>">Elimina</a>
-                                <!-- todo gestire delete blog con jquery + ajax ! -->
                             </div>
                         </div>
                     </div>
