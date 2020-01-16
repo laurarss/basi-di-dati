@@ -53,6 +53,11 @@ include 'head.php';
 
             <div class="card bg-light shadow">
                 <div class="card-body">
+                    <div class="row py-3 px-4">
+                        <div class="col-12 text-center">
+                            <i class="far fa-user fa-3x"></i>
+                        </div>
+                    </div>
 
                     <h4 class="card-title text-center">Il tuo profilo, <?php echo $nomeUtente; ?></h4>
                     <div class="row py-2 px-4">

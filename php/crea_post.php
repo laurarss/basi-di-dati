@@ -46,36 +46,34 @@ if (isset($_POST['crea_post_submit'])) {
     }
 
     // check immagine
-    $nomeImgPost = $_FILES['imgPost']['name']; // salvo il nome dell'immagine uploadata
-    $nomeImgPost_tmp = $_FILES['imgPost']['tmp_name'];
-    $targetDir = "../img/user_upload/";
-    $targetFile = $targetDir . basename($_FILES['imgPost']['name']); // concateno il path al nome img
+    if (!empty($_POST['imgPost'])) {
+        $nomeImgPost = $_FILES['imgPost']['name']; // salvo il nome dell'immagine uploadata
+        $nomeImgPost_tmp = $_FILES['imgPost']['tmp_name'];
+        $targetDir = "../img/user_upload/";
+        $targetFile = $targetDir . basename($_FILES['imgPost']['name']); // concateno il path al nome img
 
-    // recupero estensione dell'img caricata
-    $tipoImg = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+        // recupero estensione dell'img caricata
+        $tipoImg = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
 
-    // creo un array di stringhe nei quali scrivo i formati accettati di immagine
-    $estensioniAccettate = array("jpg", "png", "jpeg");
+        // creo un array di stringhe nei quali scrivo i formati accettati di immagine
+        $estensioniAccettate = array("jpg", "png", "jpeg");
 
-    // controllo se l'estensione e' tra quelle accettate
-    // in caso contrario creo un errore
-    if (!in_array($tipoImg, $estensioniAccettate)) {
-        $errors['imgPost'] = 'Il formato del file selezionato non è accettato';
-    }
+        // controllo se l'estensione e' tra quelle accettate
+        // in caso contrario creo un errore
+        if (!in_array($tipoImg, $estensioniAccettate)) {
+            $errors['imgPost'] = 'Il formato del file selezionato non è accettato';
+        }
 
-    // copio il file dalla locazione temporanea alla mia cartella upload
-    if (move_uploaded_file($nomeImgPost_tmp, $targetDir . $nomeImgPost)) {
+        // copio il file dalla locazione temporanea alla mia cartella upload
+        if (move_uploaded_file($nomeImgPost_tmp, $targetDir . $nomeImgPost)) {
 
-        //Se buon fine...
-        print " inviato con successo. Alcune informazioni:\n";
-        print_r($_FILES);
-    } else {
+            //Se buon fine...
+            print "Upload inviato con successo.\n";
+        } else {
 
-        //Se fallita...
-        print "Upload NON valido! Alcune informazioni:\n";
-        print_r($_FILES);
-        print_r($_FILES['blog_banner']['error']);
-        print_r($_FILES['blog_banner']['size']);
+            //Se fallita...
+            print "Upload NON valido!\n";
+        }
     }
 
     //retrieve timestamp
@@ -83,7 +81,7 @@ if (isset($_POST['crea_post_submit'])) {
 
     if (array_filter($errors)) {
         //se ci sono errori
-        print_r($errors);
+        //print_r($errors);
     } else {
 
         //escape sql chars
@@ -105,9 +103,6 @@ if (isset($_POST['crea_post_submit'])) {
             echo 'errore query: ' . mysqli_error($conn);
         }
     }
-
-    //libera memoria (su msqli_query)
-    mysqli_free_result($risIdBlog);
 
     //chiudi connessione
     mysqli_close($conn);
@@ -143,12 +138,16 @@ include 'head.php';
                 <h4 class="card-title text-center">Stai creando un post in "<?php echo $blog['titolo']; ?>"</h4>
                 <!-- div mostra errori -->
                 <div id="errore">
-                    <?php ?>
+                    <?php foreach ($errors as $value) {
+                        echo "$value\r\n";
+                    } ?>
                 </div>
 
-                <form enctype="multipart/form-data"
-                      method="POST"
-                      action="crea_post.php">
+                <form method="POST"
+                      name="creaPost"
+                      action="crea_post.php"
+                      enctype="multipart/form-data"
+                      novalidate>
 
                     <div class="row">
 
@@ -188,7 +187,6 @@ include 'head.php';
                                     <input type="file"
                                            class="custom-file-input"
                                            id="fileInput"
-                                           required
                                            placeholder="Carica un'immagine per il post"
                                            value="<?php echo htmlspecialchars($imgPost) ?>"
                                            accept="image/png/jpg"
@@ -222,6 +220,23 @@ include 'head.php';
 </div>
 
 <?php include('footer.php'); ?>
+
+<!-- script errori form -->
+<script type="text/javascript">
+    $("form").submit(function (event) {
+        let errore = "";
+        if ($("#titoloCreaPost").val() === "") { //se il campo è vuoto
+            errore += "Il titolo del post è obbligatorio.<br>";
+        }
+        if ($("#testoPost").val() === "") { //se il campo è vuoto
+            errore += "Non hai inserito un testo nel tuo post.<br>";
+        }
+        if (errore !== "") {
+            event.preventDefault();//fa in modo che il form non si refreshi al "submit" ma mi permetta di validare i dati prima di mandarli al server
+            $("#errore").html('<div class="alert alert-danger" role="alert"><p><strong>Nel form sono stati trovati i seguenti errori:</strong></p>' + errore + '</div>');
+        }
+    });
+</script>
 
 <!--
      Script per far apparire il nome del file nel relativo input.

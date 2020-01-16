@@ -4,7 +4,7 @@ include('db_connect.php');
 //includo php header
 include('header.php');
 
-$titolo = $data = $id_categoria = $descrizione = $banner = $idBlog = ''; //inizializzo le variabili vuote (altrimenti php dà errore quando le uso senza avere mai cliccato submit)
+$titolo = $data = $id_categoria = $descrizione = $banner = $idBlog = $tema = ''; //inizializzo le variabili vuote (altrimenti php dà errore quando le uso senza avere mai cliccato submit)
 $errors = array('titolo' => '', 'categoria' => '', 'descrizione' => '', 'banner' => ''); //array associativo che immagazzina gli errori
 
 // mi prendo le categorie per i controlli sul form
@@ -69,37 +69,36 @@ if (isset($_POST['crea_blog_submit'])) {
     }
 
     // check immagine
-    $nomeBannerBlog = $_FILES['blog_banner']['name']; // salvo il nome dell'immagine
-    $nomeBannerBlog_tmp = $_FILES['blog_banner']['tmp_name'];
-    $targetDir = "../img/user_upload/";
-    $targetFile = $targetDir . basename($nomeBannerBlog); // concateno il path al nome img
+    if (!empty($_POST['banner'])) {
+        $nomeBannerBlog = $_FILES['blog_banner']['name']; // salvo il nome dell'immagine
+        $nomeBannerBlog_tmp = $_FILES['blog_banner']['tmp_name'];
+        $targetDir = "../img/user_upload/";
+        $targetFile = $targetDir . basename($nomeBannerBlog); // concateno il path al nome img
 
-    // recupero estensione dell'img caricata
-    $tipoImg = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+        // recupero estensione dell'img caricata
+        $tipoImg = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
 
-    // creo un array di stringhe nei quali scrivo i formati accettati di immagine
-    $estensioniAccettate = array("jpg", "png", "jpeg");
+        // creo un array di stringhe nei quali scrivo i formati accettati di immagine
+        $estensioniAccettate = array("jpg", "png", "jpeg");
 
-    // controllo se l'estensione del banner e' tra quelle accettate
-    // in caso contrario creo un errore
-    if (!in_array($tipoImg, $estensioniAccettate)) {
-        $errors['banner'] = 'Il formato del banner selezionato non è accettato';
-    }
+        // controllo se l'estensione del banner e' tra quelle accettate
+        // in caso contrario creo un errore
+        if (!in_array($tipoImg, $estensioniAccettate)) {
+            $errors['banner'] = 'Il formato del banner selezionato non è accettato';
+        }
 
-    // copio il file dalla locazione temporanea alla mia cartella upload
-    if (move_uploaded_file($nomeBannerBlog_tmp, $targetDir . $nomeBannerBlog)) {
+        // copio il file dalla locazione temporanea alla mia cartella upload
+        if (move_uploaded_file($nomeBannerBlog_tmp, $targetDir . $nomeBannerBlog)) {
 
-        //Se buon fine...
-        print " inviato con successo. Alcune informazioni:\n";
-        print_r($_FILES);
+            //Se buon fine...
+            print " inviato con successo.\n";
+        } else {
+
+            //Se fallita...
+            print "Upload NON valido!\n";
+        }
     } else {
-
-        //Se fallita...
-        print "Upload NON valido! Alcune informazioni:\n";
-
-        print_r($_FILES);
-        print_r($_FILES['blog_banner']['error']);
-        print_r($_FILES['blog_banner']['size']);
+        $banner = NULL;
     }
 
     //recupero data timestamp
@@ -108,7 +107,7 @@ if (isset($_POST['crea_blog_submit'])) {
     if (array_filter($errors)) {
 
         //se ci sono errori
-        print_r($errors);
+        //print_r($errors);
     } else {
 
         //escape sql chars
@@ -117,6 +116,7 @@ if (isset($_POST['crea_blog_submit'])) {
         $data = $timestamp;
         $descrizione = mysqli_real_escape_string($conn, $_POST['descrizione']);
         $banner = $targetFile; //salvo path immagine
+        $tema = strtolower(mysqli_real_escape_string($conn, $_POST['temaBlog']));
 
         //tabella sql in cui inserire il dato
         $sqlNuovoBlog = "INSERT INTO blog (idBlog, titolo, autore, data, descrizione, categoria, banner) VALUES('NULL', '$titolo', '$autore', '$data', '$descrizione', '$id_categoria', '$banner')";
@@ -170,6 +170,7 @@ include 'head.php';
                           enctype="multipart/form-data"
                           novalidate>
                         <div class="form-row">
+
                             <!-- titolo -->
                             <div class="col-12">
                                 <div class="form-group">
@@ -241,47 +242,61 @@ include 'head.php';
                                 </div>
                             </div>
 
-                            <div class="form-group p-3">
-                                <button type="submit"
-                                        value="Crea"
-                                        class="btn btn-secondary float-left"
-                                        name="crea_blog_submit">
-                                    Crea
-                                </button>
+                            <!-- scelta tema -->
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="temaBlog">Scegli tema blog:</label>
+                                    <select class="form-control">
+                                        <option name="temaBlog">Light</option>
+                                        <option name="temaBlog">Dark</option>
+                                        <option name="temaBlog">Verde</option>
+                                        <option name="temaBlog">Azure</option>
+                                    </select>
+                                    <div class="invalid-feedback">Esempio file non accettato</div>
+                                </div>
                             </div>
-
                         </div>
 
-                    </form>
-
-                    <script type="text/javascript">
-                        $("form").submit(function (event) {
-                            let errore = "";
-                            if ($("#titoloCreaBlog").val() === "") { //se il campo è vuoto
-                                errore += "Il titolo è obbligatorio.<br>";
-                            }
-                            if ($("#categoriaCreaBlog").val() === "") { //se il campo è vuoto
-                                errore += "La categoria è obbligatoria.<br>";
-                            }
-                            if ($("#descrizioneCreaBlog").val() === "") { //se il campo è vuoto
-                                errore += "Non hai inserito una descrizione.<br>";
-                            }
-                            if (errore !== "") {
-                                event.preventDefault();//fa in modo che il form non si refreshi al "submit" ma mi permetta di validare i dati prima di mandarli al server
-                                $("#errore").html('<div class="alert alert-danger" role="alert"><p><strong>Nel form sono stati trovati i seguenti errori:</strong></p>' + errore + '</div>');
-                            }
-                        });
-                    </script>
-
+                        <div class="form-group p-3">
+                            <button type="submit"
+                                    value="Crea"
+                                    class="btn btn-secondary float-left"
+                                    name="crea_blog_submit">
+                                Crea
+                            </button>
+                        </div>
 
                 </div>
-            </div>
 
+                </form>
+            </div>
         </div>
+
     </div>
+</div>
 </div>
 
 <?php include('footer.php'); ?>
+
+<!-- script errori form -->
+<script type="text/javascript">
+    $("form").submit(function (event) {
+        let errore = "";
+        if ($("#titoloCreaBlog").val() === "") { //se il campo è vuoto
+            errore += "Il titolo è obbligatorio.<br>";
+        }
+        if ($("#categoriaCreaBlog").val() === "") { //se il campo è vuoto
+            errore += "La categoria è obbligatoria.<br>";
+        }
+        if ($("#descrizioneCreaBlog").val() === "") { //se il campo è vuoto
+            errore += "Non hai inserito una descrizione.<br>";
+        }
+        if (errore !== "") {
+            event.preventDefault();//fa in modo che il form non si refreshi al "submit" ma mi permetta di validare i dati prima di mandarli al server
+            $("#errore").html('<div class="alert alert-danger" role="alert"><p><strong>Nel form sono stati trovati i seguenti errori:</strong></p>' + errore + '</div>');
+        }
+    });
+</script>
 
 <!--
      Script per far apparire il nome del file nel relativo input.
