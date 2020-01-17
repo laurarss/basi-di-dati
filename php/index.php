@@ -93,7 +93,7 @@ include 'head.php';
                         <?php foreach ($blogs as $blog) { ?>
 
                             <!-- assegno alla colonna di bootstrap l'id del blog come id del tag -->
-                            <div id="<?php echo $blog['idBlog']; ?>" class="col-lg-4 py-3">
+                            <div id="<?php echo $blog['idBlog']; ?>" class="blog col-lg-4 py-3">
                                 <div class="card card-bg text-white h-100 z-depth-0"
                                      style="background-image: url('<?php echo htmlspecialchars($blog['banner']) ?>');">
                                     <div class="card-header text-center h-50r">
@@ -259,7 +259,7 @@ include 'head.php';
             // creo la variabile areAllBlogHidden dando per assunto che siano tutti nascosti
             // poi ciclo i div dei blog: se ne trovo uno non nascosto invalido la variabile di controllo e interrompo il ciclo
             let areAllBlogHidden = true;
-            $('#containerBlogs').children().each(function () {
+            $('#containerBlogs').children(".blog").each(function () {
                 if (this['hidden'] === false) {
                     areAllBlogHidden = false;
                     return;
@@ -268,9 +268,11 @@ include 'head.php';
 
             // se tutti i blog sono nascosti aggiungo un messaggio al container dei blog
             if (areAllBlogHidden) {
+                $('#containerBlogs').children().remove('h1'); // rimuovo il precedente, se no si duplica se clicco categorie vuote una dopo l'altra
                 $('#containerBlogs').append("<h1 class=\"col-12 text-center \">Nessun blog presente</h1>");
+
             } else {
-                $('#containerBlogs').children().remove('h1') // rimuove il messaggio nel caso fosse stato inserito
+                $('#containerBlogs').children().remove('h1'); // rimuove il messaggio nel caso fosse stato inserito
             }
         });
     });
