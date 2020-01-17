@@ -133,6 +133,14 @@ include 'head.php';
 </div>
 
 <div class="container">
+<!-- messaggio assenza post -->
+    <?php if (!$posts): ?>
+        <div class="lead text-center">
+            <?php echo "Non ci sono post"; ?>
+        </div>
+    <?php else: ?>
+    <?php endif; ?>
+
     <!-- mostra i post del blog dal db:-->
     <?php foreach ($posts as $post) { ?>
         <!-- riga intestazione post -->

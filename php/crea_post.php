@@ -29,7 +29,6 @@ if (isset($_GET['idBlog'])) {
 if (isset($_POST['crea_post_submit'])) {
 
     $idBlog = $_SESSION['idBlog'];
-    echo $_SESSION['idBlog'];
 
     // check titolo post
     if (empty($_POST['titoloPost'])) {
@@ -46,7 +45,10 @@ if (isset($_POST['crea_post_submit'])) {
     }
 
     // check immagine
-    if (!empty($_POST['imgPost'])) {
+    if ($_FILES['imgPost']['size'] > 800 * 1024) { // se le dimensioni sono troppo grandi
+        $errors['imgPost'] = 'Immagine troppo grande';
+    } else {
+        // your code for processing uploaded image
         $nomeImgPost = $_FILES['imgPost']['name']; // salvo il nome dell'immagine uploadata
         $nomeImgPost_tmp = $_FILES['imgPost']['tmp_name'];
         $targetDir = "../img/user_upload/";
@@ -74,6 +76,7 @@ if (isset($_POST['crea_post_submit'])) {
             //Se fallita...
             print "Upload NON valido!\n";
         }
+
     }
 
     //retrieve timestamp
@@ -119,102 +122,98 @@ include 'head.php';
 ?>
 <body>
 
-<div class="container" style="padding-top: 18vh">
-
+<div class="container">
+    <!-- pulsante torna indietro -->
+    <div class="row">
+        <div class="col-sm-12 px-5 py-4 text-left">
+            <a class="btn btn-outline-secondary btn-sm" href="visual_blog.php?idBlog=<?php echo $blog['idBlog'] ?>">
+                <i class="fa fa-arrow-left"></i>
+                Torna al blog
+            </a>
+        </div>
+    </div>
     <div class="row justify-content-center">
+        <div class="col-12 px-5">
+            <div class="card bg-light shadow">
+                <div class="card-body">
+                    <h4 class="card-title text-center">Stai creando un post in "<?php echo $blog['titolo']; ?>"</h4>
 
-        <div class="col-12">
-            <div class="col-sm-2 text-left navbar.fixed-top">
-                <a class="btn btn-outline-secondary btn-sm" href="visual_blog.php?idBlog=<?php echo $blog['idBlog'] ?>">
-                    <i class="fa fa-arrow-left"></i>
-                    Torna al blog
-                </a>
-            </div>
-        </div>
-
-        <div class="card bg-light shadow">
-            <div class="card-body">
-
-                <h4 class="card-title text-center">Stai creando un post in "<?php echo $blog['titolo']; ?>"</h4>
-                <!-- div mostra errori -->
-                <div id="errore">
-                    <?php foreach ($errors as $value) {
-                        echo "$value\r\n";
-                    } ?>
-                </div>
-
-                <form method="POST"
-                      name="creaPost"
-                      action="crea_post.php"
-                      enctype="multipart/form-data"
-                      novalidate>
-
-                    <div class="row">
-
-                        <!-- titolo -->
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label for="titoloCreaPost">Titolo post:</label>
-                                <input type="text" required
-                                       class="form-control"
-                                       id="titoloCreaPost"
-                                       value="<?php echo htmlspecialchars($titoloPost) ?>"
-                                       name="titoloPost">
-                                <!-- sopra ho "echo" le variabili vuote nei campi // htmlspecialchars() aggiunto per evitare script maligni -->
-                            </div>
-                        </div>
-
-                        <!-- testo -->
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label for="testoPost">Testo:</label>
-                                <input type="text" required
-                                       class="form-control"
-                                       id="testoPost"
-                                       value="<?php echo htmlspecialchars($testoPost); ?>"
-                                       name="testoPost">
-                                <div class="invalid-feedback">
-                                    Testo post non valido
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- media(immagine o video) -->
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label for="fileInput">Carica immagine post:</label>
-                                <div class="custom-file">
-                                    <input type="file"
-                                           class="custom-file-input"
-                                           id="fileInput"
-                                           placeholder="Carica un'immagine per il post"
-                                           value="<?php echo htmlspecialchars($imgPost) ?>"
-                                           accept="image/png/jpg"
-                                           name="imgPost">
-                                    <label class="custom-file-label" for="validatedCustomFile">
-                                        Scegli file...
-                                    </label>
-                                    <div class="invalid-feedback">Esempio file non accettato</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group p-3">
-                            <button type="submit"
-                                    value="Crea"
-                                    class="btn btn-secondary float-right"
-                                    name="crea_post_submit">
-                                Crea
-                            </button>
-                        </div>
-
+                    <!-- div mostra errori -->
+                    <div id="errore" class="alert">
+                        <?php foreach ($errors as $value) {
+                            echo "$value\r\n";
+                        } ?>
                     </div>
-                </form>
 
+                    <form method="POST"
+                          name="creaPost"
+                          action="crea_post.php?idBlog=<?php echo $blog['idBlog']; ?>"
+                          enctype="multipart/form-data"
+                          novalidate>
+
+                        <div class="row">
+
+                            <!-- titolo -->
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="titoloCreaPost">Titolo post:</label>
+                                    <input type="text" required
+                                           class="form-control"
+                                           id="titoloCreaPost"
+                                           value="<?php echo htmlspecialchars($titoloPost) ?>"
+                                           name="titoloPost">
+                                    <!-- sopra ho "echo" le variabili vuote nei campi // htmlspecialchars() aggiunto per evitare script maligni -->
+                                </div>
+                            </div>
+
+                            <!-- testo -->
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="testoPost">Testo:</label>
+                                    <input type="text" required
+                                           class="form-control"
+                                           id="testoPost"
+                                           value="<?php echo htmlspecialchars($testoPost); ?>"
+                                           name="testoPost">
+                                    <div class="invalid-feedback">
+                                        Testo post non valido
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- media(immagine o video) -->
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="fileInput">Carica immagine post:</label>
+                                    <div class="custom-file">
+                                        <input type="file"
+                                               class="custom-file-input"
+                                               id="fileInput"
+                                               placeholder="Carica un'immagine per il post"
+                                               value="<?php echo htmlspecialchars($imgPost) ?>"
+                                               accept="image/png/jpg"
+                                               name="imgPost">
+                                        <label class="custom-file-label" for="validatedCustomFile">
+                                            Scegli file...
+                                        </label>
+                                        <div class="invalid-feedback">Esempio file non accettato</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group p-3">
+                                <button type="submit"
+                                        value="Crea"
+                                        class="btn btn-secondary float-right"
+                                        name="crea_post_submit">
+                                    Crea
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
-
         </div>
-
     </div>
 </div>
 </div>
@@ -236,6 +235,13 @@ include 'head.php';
             $("#errore").html('<div class="alert alert-danger" role="alert"><p><strong>Nel form sono stati trovati i seguenti errori:</strong></p>' + errore + '</div>');
         }
     });
+    // script colora di rosso errori dal php
+    if ($('div#errore').is(':empty')) {
+        $("div#errore").addClass("alert_danger");
+    } else {
+        $("div#errore").removeClass("alert_danger");
+
+    }
 </script>
 
 <!--

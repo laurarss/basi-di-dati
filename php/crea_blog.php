@@ -4,7 +4,7 @@ include('db_connect.php');
 //includo php header
 include('header.php');
 
-$titolo = $data = $id_categoria = $descrizione = $banner = $idBlog = $tema = ''; //inizializzo le variabili vuote (altrimenti php dà errore quando le uso senza avere mai cliccato submit)
+$titolo = $autore = $data = $id_categoria = $descrizione = $banner = $idBlog = $tema = ''; //inizializzo le variabili vuote (altrimenti php dà errore quando le uso senza avere mai cliccato submit)
 $errors = array('titolo' => '', 'categoria' => '', 'descrizione' => '', 'banner' => ''); //array associativo che immagazzina gli errori
 
 // mi prendo le categorie per i controlli sul form
@@ -69,7 +69,9 @@ if (isset($_POST['crea_blog_submit'])) {
     }
 
     // check immagine
-    if (!empty($_POST['banner'])) {
+    if ($_FILES['imgPost']['size'] > 800 * 1024) { // se le dimensioni sono troppo grandi
+        $errors['imgPost'] = 'Immagine troppo grande';
+    } else {
         $nomeBannerBlog = $_FILES['blog_banner']['name']; // salvo il nome dell'immagine
         $nomeBannerBlog_tmp = $_FILES['blog_banner']['tmp_name'];
         $targetDir = "../img/user_upload/";
@@ -97,8 +99,6 @@ if (isset($_POST['crea_blog_submit'])) {
             //Se fallita...
             print "Upload NON valido!\n";
         }
-    } else {
-        $banner = NULL;
     }
 
     //recupero data timestamp
@@ -112,11 +112,11 @@ if (isset($_POST['crea_blog_submit'])) {
 
         //escape sql chars
         $titolo = mysqli_real_escape_string($conn, $_POST['titolo']);
-        $autore = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']); //autore, aggiunto da me (non so se è giusto, deve recuperare l'user della sessione)
+        $autore = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']); //recupero user della sessione
         $data = $timestamp;
         $descrizione = mysqli_real_escape_string($conn, $_POST['descrizione']);
         $banner = $targetFile; //salvo path immagine
-        $tema = strtolower(mysqli_real_escape_string($conn, $_POST['temaBlog']));
+        $tema = strtolower(mysqli_real_escape_string($conn, $_POST['selezTema']));
 
         //tabella sql in cui inserire il dato
         $sqlNuovoBlog = "INSERT INTO blog (idBlog, titolo, autore, data, descrizione, categoria, banner) VALUES('NULL', '$titolo', '$autore', '$data', '$descrizione', '$id_categoria', '$banner')";
@@ -150,8 +150,18 @@ include 'head.php';
 <body>
 
 <div class="container">
+    <!-- pulsante torna indietro -->
+    <div class="row">
+        <div class="col-sm-12 px-5 py-4 text-left">
+            <a class="btn btn-outline-secondary btn-sm" href="gestione_blog.php?nomeUtente=<?php echo $_SESSION['nomeUtente']; ?>">
+                <i class="fa fa-arrow-left"></i>
+                Torna alla gestione blog
+            </a>
+        </div>
+    </div>
+
     <div class="row justify-content-center">
-        <div class="col-8">
+        <div class="col-12 px-5">
 
             <div class="card bg-light shadow">
                 <div class="card-body">
@@ -246,11 +256,11 @@ include 'head.php';
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="temaBlog">Scegli tema blog:</label>
-                                    <select class="form-control">
-                                        <option name="temaBlog">Light</option>
-                                        <option name="temaBlog">Dark</option>
-                                        <option name="temaBlog">Verde</option>
-                                        <option name="temaBlog">Azure</option>
+                                    <select name="selezTema" class="form-control">
+                                        <option value="light">Light</option>
+                                        <option value="dark">Dark</option>
+                                        <option value="verde">Verde</option>
+                                        <option value="azure">Azure</option>
                                     </select>
                                     <div class="invalid-feedback">Esempio file non accettato</div>
                                 </div>
@@ -314,6 +324,7 @@ include 'head.php';
         $(this).next('.custom-file-label').html(fileName);
     })
 </script>
+
 
 </body>
 </html>
