@@ -12,6 +12,11 @@ $sqlCategorie = "SELECT * FROM categorie";
 $risCategorie = mysqli_query($conn, $sqlCategorie);
 $categorie = mysqli_fetch_all($risCategorie, MYSQLI_ASSOC);
 
+//recupero elenco temi
+$sqlTemi = "SELECT * FROM `temi`"; //elenco temi
+$risTemi = mysqli_query($conn, $sqlTemi); //ris temi
+$temi = mysqli_fetch_all($risTemi, MYSQLI_ASSOC);
+
 if (isset($_POST['crea_blog_submit'])) {
 
     // check titolo blog
@@ -19,10 +24,9 @@ if (isset($_POST['crea_blog_submit'])) {
         $errors['titolo'] = 'Manca un titolo per il tuo blog!<br>';
     } else {
         $titolo = $_POST['titolo'];
-
-//        if (!preg_match('/^[a-z][a-z\s]*$/', $titolo)) {
-//            $errors['titolo'] = 'Il titolo deve contenere solo lettere e spazi<br>';
-//        }
+        if (!preg_match('/^[a-z][a-z\s]*$/', $titolo)) {
+            $errors['titolo'] = 'Il titolo deve contenere solo lettere e spazi<br>';
+        }
     }
 
     //check categoria
@@ -38,7 +42,6 @@ if (isset($_POST['crea_blog_submit'])) {
         $nome_categoria = $_POST['categoria']; // variabili di utility per nome categoria inserito da utente
         if (!preg_match('/^\p{Latin}+$/', $nome_categoria)) {
             $errors['categoria'] = 'Categoria deve contenere solo lettere e spazi<br>';
-            echo $_POST['categoria'];
         }
 
         $trovato = $i = 0;
@@ -69,8 +72,8 @@ if (isset($_POST['crea_blog_submit'])) {
     }
 
     // check immagine
-    if ($_FILES['imgPost']['size'] > 800 * 1024) { // se le dimensioni sono troppo grandi
-        $errors['imgPost'] = 'Immagine troppo grande';
+    if ($_FILES['blog_banner']['size'] > 800 * 1024) { // se le dimensioni sono troppo grandi
+        $errors['banner'] = 'Immagine troppo grande';
     } else {
         $nomeBannerBlog = $_FILES['blog_banner']['name']; // salvo il nome dell'immagine
         $nomeBannerBlog_tmp = $_FILES['blog_banner']['tmp_name'];
@@ -89,15 +92,18 @@ if (isset($_POST['crea_blog_submit'])) {
             $errors['banner'] = 'Il formato del banner selezionato non è accettato';
         }
 
-        // copio il file dalla locazione temporanea alla mia cartella upload
-        if (move_uploaded_file($nomeBannerBlog_tmp, $targetDir . $nomeBannerBlog)) {
+        // se non ci sono errori
+        if (!$errors['banner']) {
+            // copio il file dalla locazione temporanea alla mia cartella upload
+            if (move_uploaded_file($nomeBannerBlog_tmp, $targetDir . $nomeBannerBlog)) {
 
-            //Se buon fine...
-            print " inviato con successo.\n";
-        } else {
+                //Se buon fine...
+                print "Upload completato.\n";
+            } else {
 
-            //Se fallita...
-            print "Upload NON valido!\n";
+                //Se fallita...
+                print "Upload fallito!\n";
+            }
         }
     }
 
@@ -111,15 +117,15 @@ if (isset($_POST['crea_blog_submit'])) {
     } else {
 
         //escape sql chars
-        $titolo = mysqli_real_escape_string($conn, $_POST['titolo']);
+        $titolo = mysqli_real_escape_string($conn, strtolower($_POST['titolo']));// prende titolo (minuscolo)
         $autore = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']); //recupero user della sessione
         $data = $timestamp;
         $descrizione = mysqli_real_escape_string($conn, $_POST['descrizione']);
         $banner = $targetFile; //salvo path immagine
-        $tema = strtolower(mysqli_real_escape_string($conn, $_POST['selezTema']));
+        $tema = mysqli_real_escape_string($conn, strtolower($_POST['selezTema']));
 
         //tabella sql in cui inserire il dato
-        $sqlNuovoBlog = "INSERT INTO blog (idBlog, titolo, autore, data, descrizione, categoria, banner) VALUES('NULL', '$titolo', '$autore', '$data', '$descrizione', '$id_categoria', '$banner')";
+        $sqlNuovoBlog = "INSERT INTO blog (idBlog, titolo, autore, data, descrizione, categoria, banner, tema) VALUES('NULL', '$titolo', '$autore', '$data', '$descrizione', '$id_categoria', '$banner', '$tema')";
 
         //controlla e salva sul db
         if (mysqli_query($conn, $sqlNuovoBlog)) {
@@ -153,7 +159,8 @@ include 'head.php';
     <!-- pulsante torna indietro -->
     <div class="row">
         <div class="col-sm-12 px-5 py-4 text-left">
-            <a class="btn btn-outline-secondary btn-sm" href="gestione_blog.php?nomeUtente=<?php echo $_SESSION['nomeUtente']; ?>">
+            <a class="btn btn-outline-secondary btn-sm"
+               href="gestione_blog.php?nomeUtente=<?php echo $_SESSION['nomeUtente']; ?>">
                 <i class="fa fa-arrow-left"></i>
                 Torna alla gestione blog
             </a>
@@ -168,7 +175,7 @@ include 'head.php';
 
                     <h4 class="card-title text-center">Crea un Blog</h4>
                     <!-- div che fa comparire errori trovati dal js con l'id e dal php -->
-                    <div id="errore">
+                    <div id="errore" class="alert">
                         <?php foreach ($errors as $value) {
                             echo "$value\r\n";
                         } ?>
@@ -206,7 +213,7 @@ include 'head.php';
                                            class="form-control"
                                            id="categoriaCreaBlog"
                                            placeholder="Dai un nome alla categoria"
-                                           value="<?php echo htmlspecialchars($id_categoria) ?>"
+                                           value="<?php echo htmlspecialchars($nome_categoria) ?>"
                                            name="categoria">
                                     <div class="form-text invalid-feedback">
                                         Categoria non corretta
@@ -257,10 +264,10 @@ include 'head.php';
                                 <div class="form-group">
                                     <label for="temaBlog">Scegli tema blog:</label>
                                     <select name="selezTema" class="form-control">
-                                        <option value="light">Light</option>
-                                        <option value="dark">Dark</option>
-                                        <option value="verde">Verde</option>
-                                        <option value="azure">Azure</option>
+                                        <?php foreach ($temi as $nomeTema) { ?>
+                                            <option value="<?php echo htmlspecialchars($nomeTema['nomeTema']); ?>"><?php echo htmlspecialchars($nomeTema['nomeTema']); ?></option>
+                                        <?php } ?>
+
                                     </select>
                                     <div class="invalid-feedback">Esempio file non accettato</div>
                                 </div>
@@ -306,6 +313,13 @@ include 'head.php';
             $("#errore").html('<div class="alert alert-danger" role="alert"><p><strong>Nel form sono stati trovati i seguenti errori:</strong></p>' + errore + '</div>');
         }
     });
+    // script colora di rosso errori dal php
+    if ($('div#errore').is(':empty')) {
+        $("div#errore").addClass("alert_danger");
+    } else {
+        $("div#errore").removeClass("alert_danger");
+
+    }
 </script>
 
 <!--

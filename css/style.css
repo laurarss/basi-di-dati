@@ -52,6 +52,10 @@ body {
     color: white;
 }
 
+.hide{
+    display: none;
+}
+
 /*body background*/
 
 .bg-blue {

@@ -6,33 +6,46 @@ include('header.php');
 include('head.php');
 
 $esito = '';
+$daCancellare = false;
 
 if (isset($_GET['idBlog'])) {
     $nomeUtente = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']);
     $idBlog = $_GET['idBlog'];
 
-//controllo sul numero di post del blog
+//salvo categoria del blog da cancellare
+//    $sqlCatBlog = "SELECT blog.categoria FROM `blog` WHERE `idBlog` = $idBlog";
+//    $result = mysqli_query($conn, $sqlCatBlog);
+//    var_dump($result);
+//    $catBlog = mysqli_fetch_all($result, MYSQLI_ASSOC);
+//    var_dump($catBlog);
+//
+//    // cerco nella tab categorie
+//    $sqlCercaCat = "SELECT categorie.nomeCategoria FROM `categorie` WHERE `idCategoria` = $catBlog";
+//    $risCercaCat = mysqli_query($conn, $sqlCercaCat);
+//    var_dump($risCercaCat);
+//    // se c'è solo un record significa che dopo la cancellazione blog la categoria rimarrà vuota, quindi la devo cancellare
+//    if (mysqli_num_rows($risCercaCat) == 1) {
+//        $sqlCancCat = "DELETE FROM `categorie` WHERE `idCategoria` = $catBlog";
+//        $daCancellare = true;
+//    }
 
-    /**
-     * questa sezione serve per chiedere all'utente conferma,
-     * quando il blog che vuole eliminare ha al suo interno uno o più post,
-     * che quindi verranno cancellati con esso
-     */
-//    $postBlog = "SELECT * FROM post WHERE idBlog = $idBlog";
-//    $risPostBlog = mysqli_query($conn, $postBlog);
-//    $posts = mysqli_num_rows($risPost, MYSQLI_ASSOC);
-//    if ($posts > 0) {
-//       //rivedere echo "<td> <a href='padamfail.php?FailID=$id' onClick=\"return confirm('Sicuro? Cancellando il blog verranno eliminati anche i suoi post');\"><p class='text-center'>Cancella</p></a>";
-//    } else {
 
 // sql cancella blog
     $cancBlog = "DELETE FROM `blog` WHERE `idBlog` = $idBlog";
 
     if ($conn->query($cancBlog) === TRUE) {
-        //se la query è andata a buon fine
-        /*        header("Location: gestione_blog.php?nomeUtente=$nomeUtente ?>");*/
+        // se la query è andata a buon fine
+    $cancCatVuota = "DELETE FROM categorie AS a 
+Where a.idCategoria = ?
+And not exists(
+ Select 1
+ From blog b
+ Where b.categoria = a.idCategoria
+)";
+    $conn->query($cancCatVuota);
         $esito = '<br><div class="alert alert-success" role="alert"><p><strong>' . " Record cancellato" . '</strong></p></div>';
     } else {
+        // se query fallita
         $esito = '<br><div class="alert alert-danger" role="alert"><p><strong>' . "Si è verificato un errore:" . $conn->error . '</strong></p></div>';
     }
 

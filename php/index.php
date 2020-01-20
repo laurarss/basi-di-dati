@@ -150,15 +150,6 @@ include 'head.php';
 <?php include('footer.php') ?>
 </body>
 
-<!-- script che fa scomparire msg di benvenuto dopo alcuni sec -->
-<script type="text/javascript">
-    setTimeout(fade_out, 3000);
-
-    function fade_out() {
-        $("#benvenuto").fadeOut().empty();
-    }
-</script>
-
 <!-- ricerca blog per titolo jquery -->
 <script type="text/javascript">
 
@@ -175,7 +166,7 @@ include 'head.php';
         $('#titoloCercato').keyup(function () {
 
             // assegno ad una variabile il testo scritto nel box di ricerca
-            const titoloCercato = $(this).val();
+            const titoloCercato = $(this).val().toLowerCase();
 
             // ciclo tutti i blog html che sono nel dom
             $('#containerBlogs').children().each(function () {
@@ -197,7 +188,7 @@ include 'head.php';
                 } else if (oggettoBlog) { // in caso contrario controllo se il titolo del blog contiene la stringa cercata
 
                     // versione leggibile
-                    if (oggettoBlog['titolo'].includes(titoloCercato)) {
+                    if (oggettoBlog['titolo'].toLowerCase().includes(titoloCercato)) {
                         this['hidden'] = false
                     } else {
                         this['hidden'] = true;
@@ -212,6 +203,10 @@ include 'head.php';
     });
 
     // ricerca per categorie
+    /**
+     * Funziona in modo simile a ricerca per titolo, ma prende l'id della categoria in base al pulsante
+     * cliccato, poi mette "hidden" tutti gli elem blog che non sono di quella categoria.
+     */
     $(document).ready(function () {
         $('#listaCateg').on("click", "li", function (event) {
 
@@ -229,10 +224,6 @@ include 'head.php';
 
             // ciclo tutti i blog html che sono nel dom
             $('#containerBlogs').children().each(function () {
-
-                // console.log('elemento div sul quale sto ciclando con la filter: ', this);
-                // console.log('id elementi div sul quale sto ciclando:', this['id']);
-
                 // assegno l'id del div del blog sul quale sto ciclando per usarlo dentro la find
                 // senza questa variabile avrei avuto problemi di scope con la keyword "this" dentro la funzione "find"
                 const idBlogDiv = this['id'];

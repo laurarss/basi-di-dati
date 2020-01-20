@@ -10,7 +10,7 @@ include('db_connect.php');
 //includo file header
 include('header.php');
 
-$blog = $posts = $followers = $segui = $utenteSession = '';
+$blog = $posts = $followers = $like = $utenteSession = '';
 
 //verifica la richiesta GET del parametro idBlog
 if (isset($_GET['idBlog'])) {
@@ -23,16 +23,20 @@ if (isset($_GET['idBlog'])) {
     $sqlBlog = "SELECT * FROM `blog` WHERE idBlog = $idBlog"; //dati blog
     $sqlPost = "SELECT * FROM `post` WHERE idBlog = $idBlog"; //elenco post
     $sqlCommenti = "SELECT * FROM `commenti` ORDER BY data DESC"; //commenti per post
+    $sqlTemi = "SELECT * FROM `temi`"; //elenco temi
+
 
 // risultato righe query
     $risBlog = mysqli_query($conn, $sqlBlog);
     $risPost = mysqli_query($conn, $sqlPost);
     $risCommenti = mysqli_query($conn, $sqlCommenti);
+    $risTemi = mysqli_query($conn, $sqlTemi); //ris temi
 
 // fetch righe risultato in un array
     $blog = mysqli_fetch_assoc($risBlog); // si usa assoc e non all perchè prendiamo solo una riga della tab risultato
     $posts = mysqli_fetch_all($risPost, MYSQLI_ASSOC);
     $commenti = mysqli_fetch_all($risCommenti, MYSQLI_ASSOC);
+    $temi = mysqli_fetch_all($risTemi, MYSQLI_ASSOC);
 
 // prendo dall'array associativo blog l'id della categoria associata, poi faccio la query che prende la categoria
     $idCategoriaBlog = $blog['categoria'];
@@ -41,13 +45,15 @@ if (isset($_GET['idBlog'])) {
     $risCateg = mysqli_query($conn, $sqlCategorie);
     $categoriaBlog = mysqli_fetch_assoc($risCateg);
 
-    // serve a pulsante "segui"
+
+
+    // serve a pulsante "segui" e "mi piace"
     if (isset($_SESSION['nomeUtente'])) {
         $utenteSession = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']);
     }
 
     // query per cercare nella tab follower l'utente attualmente loggato
-    // la risposta sarà un array di un elemento, ne caso venga trovato, o vuoto in caso contrario
+    // la risposta sarà un array di un elemento, nel caso venga trovato, o vuoto in caso contrario
     $sqlFollower = "SELECT * FROM follower WHERE idBlog = '$idBlog' AND idUtente = '$utenteSession'";
     $risFollow = mysqli_query($conn, $sqlFollower);
     $followers = mysqli_fetch_all($risFollow, MYSQLI_ASSOC);
@@ -59,9 +65,19 @@ if (isset($_GET['idBlog'])) {
         $segui = '<a class="btn btn-outline-primary btn-sm" id="follow" value="follow"><i class="fa fa-rss"></i>' . " Segui" . '</a>';
     }
 
+    // mi piace
+    //se post "piaciuto"
+    if (isset($_POST['like'])) { // controllo se la POST è stata mandata alla pagina e ha un campo like
+        $idPost = $_POST['like']; // prendiamo val del campo like
+        $contLikePlus = Array('cont_like' => $progdb->inc(1));
+        $progdb->where('idPost', $idPost);
+        $progdb->update('posts', $contLikePlus); //aggiorn tab post conteggio like +1
+
+        $progdb->insert('mipiace', Array('idPost' => $idPost, 'idUtente' => $utenteSession)); // inserisco nuova row nella tab mipiace con utente e post
+    }
 
 // chiudi connessione
-    mysqli_close($conn);
+    // mysqli_close($conn);
 
     // debug
 //    print_r($posts);
@@ -75,7 +91,8 @@ if (isset($_GET['idBlog'])) {
 <!DOCTYPE html>
 
 <!-- Link css custom personalizz blog-->
-<link href="../css/temi_blog/<?php echo $blog['tema']; ?>.css" rel="stylesheet" type="text/css"/>
+<link id="cssBlog" href="../css/temi_blog/<?php echo $blog['tema']; ?>.css" rel="stylesheet"
+      type="text/css"/>
 
 <body xmlns="http://www.w3.org/1999/xhtml" xml:lang="it" lang="it" class="user-bg user-text user-font">
 
@@ -115,25 +132,44 @@ include 'head.php';
 
                 <!-- pulsante segui -->
                 <!-- la visual cambia in base all'esito della query sul db "follower" -->
-                <div class="segui text-center">
-                    <?php echo $segui; ?>
+                <div class="row">
+                    <div class="segui col-12 text-center">
+                        <?php echo $segui; ?>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 text-left">
+                        <!-- implementata procedura cambio sfondo con nuova pag php -->
+                        <a class="daNascondere btn btn-outline-secondary btn-sm"
+                           href="cambio_banner.php?idBlog=<?php echo $blog['idBlog']; ?>">
+                            <i class="fa fa-edit"></i>
+                            Cambia sfondo banner
+                        </a>
+                    </div>
                 </div>
 
-                <div class="text-left">
-                    <!-- implementata procedura cambio sfondo con nuova pag php -->
-                    <a class="daNascondere btn btn-outline-secondary btn-sm"
-                       href="cambio_banner.php?idBlog=<?php echo $blog['idBlog']; ?>">
-                        <i class="fa fa-edit"></i>
-                        Cambia sfondo banner
-                    </a>
-                </div>
             </div>
         </div>
     </div>
 </div>
 
 <div class="container">
-<!-- messaggio assenza post -->
+
+    <div class="row">
+        <!-- scelta tema -->
+        <div class="col-3 text-center">
+            <label for="temaBlog">Scegli tema blog:</label>
+            <select name="selezTema" class="form-control form-control-sm">
+                <?php foreach ($temi as $nomeTema) { ?>
+                    <option value="<?php echo htmlspecialchars($nomeTema['nomeTema']); ?>"><?php echo htmlspecialchars($nomeTema['nomeTema']); ?></option>
+                <?php } ?>
+
+            </select>
+            <div class="invalid-feedback">Esempio file non accettato</div>
+        </div>
+    </div>
+
+    <!-- messaggio assenza post -->
     <?php if (!$posts): ?>
         <div class="lead text-center">
             <?php echo "Non ci sono post"; ?>
@@ -142,6 +178,7 @@ include 'head.php';
     <?php endif; ?>
 
     <!-- mostra i post del blog dal db:-->
+
     <?php foreach ($posts as $post) { ?>
         <!-- riga intestazione post -->
         <div class="row py-2">
@@ -150,7 +187,7 @@ include 'head.php';
                 <small class="text-muted"><?php echo date_format(new DateTime($post['data']), 'd M Y H:i:s'); ?></small>
             </div>
             <div class="col-sm-2 text-right">
-                <a class="daNascondere btn btn-sm btn-danger fa fa-trash"
+                <a class="daNascondere btn btn-md btn-danger fa fa-trash"
                    href="cancella_post.php?idPost=<?php echo $post['idPost'] ?>"></a>
             </div>
         </div>
@@ -161,6 +198,39 @@ include 'head.php';
             </div>
             <div class="col-sm-6">
                 <p><?php echo htmlspecialchars($post['testo']); ?></p>
+            </div>
+        </div>
+
+
+        <?php
+        // query per cercare nella tab mi piace l'utente attualmente loggato
+        $idPost = $post['idPost'];
+
+        $sqlMiPiace = "SELECT * FROM mipiace WHERE idPost = '$idPost' AND idUtente = '$utenteSession'";
+        $risMiPiace = mysqli_query($conn, $sqlMiPiace);
+        $miPiace = mysqli_fetch_all($risMiPiace, MYSQLI_ASSOC);
+        ?>
+        <div class="text-right">
+            <!-- pulsante mi piace -->
+            <!-- la visual cambia in base all'esito della query sul db "mipiace" -->
+            <div class="col-12 py-2">
+
+                <button class="miPiace btn btn-md btn-outline-primary"
+                        data-idPost="<?php $post['idPost']; ?>"
+                        data-miPiace="<?php $post['cont_like']; ?>">
+                <span class="cont_like py-3 px-2 text-primary font-weight-bold">
+                        <i class="px-1 fas fa-thumbs-up"></i>
+                    <!-- numero di like da tab post-->
+                        <?php echo $post['cont_like']; ?>
+                </span>
+                </button>
+
+                <!--                <a class="miPiace btn btn-md btn-outline-primary"-->
+                <!--                   href="crea_mi_piace.php?idPost=--><?php //echo $post['idPost'] ?><!--">-->
+                <!--                    Mi piace-->
+                <!--                    <i class="far fa-thumbs-up"></i>-->
+                <!--                </a>-->
+
             </div>
         </div>
 
@@ -182,7 +252,7 @@ include 'head.php';
             <?php } ?>
         <?php } ?>
 
-        <!--Card crea commento-->
+        <!-- Card crea commento -->
         <form enctype="multipart/form-data"
               class="formCreaCommento"
               method="POST"
@@ -196,12 +266,14 @@ include 'head.php';
                 </div>
                 <div class="col-sm-9">
                     <label class="sr-only" for="commentoFormInput">Nuovo Commento</label>
-                    <textarea name="nuovoCommentoTextarea" class="form-control mb-2 mr-sm-2 nuovoCommentoTextarea user-bg user-text"
+                    <textarea name="nuovoCommentoTextarea"
+                              class="form-control mb-2 mr-sm-2 nuovoCommentoTextarea user-bg user-text"
                               rows="2"
                               placeholder="Scrivi un commento"></textarea>
                 </div>
                 <div class="col-sm-2">
-                    <button name="crea_commento" type="submit" class="btn btn-outline-primary btn-lg mb-2 crea_commento"
+                    <button name="crea_commento" type="submit"
+                            class="btn btn-outline-primary btn-lg mb-2 crea_commento"
                             href="crea_post.php?idPost=<?php echo $post['idPost']; ?>">
                         <i class="fa fa-plus-circle"></i>
                     </button>
@@ -280,10 +352,57 @@ include 'head.php';
         });
     });
 </script>
+
+<!-- cambio link css in base a tema selezionato -->
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#selezTema").change(function(){ //** on selecting an option based on ID you assigned
+            var optionVal = $("#selezTema option:selected").val(); //** get the selected option's value
+
+            $.ajax({
+                type: "POST", //**how data is send
+                url: "cambia_tema.php", //** where to send the option data so that it can be saved in DB
+                data: {optionVal: optionVal }, //** send the selected option's value to above page
+                dataType: "json",
+                success: function(data){
+                    //** what should do after value is saved to DB and returned from above URL page.
+                    $("#cssBlog").attr("href", "../css/temi_blog/<?php echo $blog['tema']; ?>.css");
+                }
+            });
+        });
+    });
+</script>
+
+
+<!-- mi piace -->
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".miPiace").click(function () {
+            debugger;
+            let button = $(this)
+            let idPost = $(button).data('idPost')
+            $.post("visual_blog.php?idBlog=<?php echo $blog['idBlog'] ?>")
+            {
+                'like'
+            :
+                idPost
+            }
+        ,
+
+            function (data, status) {
+                $(button).html("Like (" + ($(button).data('mipiace') + 1) + ")")
+                $(button).data('mipiace', $(button).data('mipiace') + 1)
+            }
+
+        );
+    });
+    });
+</script>
+
 <!--crea commento-->
 <script>
     $(document).ready(function () {
-        $('#crea_commento').click( function () {
+        $('#crea_commento').click(function () {
             var testoCommento = $("#nuovoCommentoTextarea").serialize();
             $.ajax({
                 data: testoCommento,
@@ -291,7 +410,6 @@ include 'head.php';
                 url: "inser_commento.php?idPost=<?php echo $post['idPost'] ?>",
                 dataType: "text",
                 success: function () {
-                    debugger;
                     location.reload();
                 }
             });
