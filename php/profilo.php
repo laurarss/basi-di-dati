@@ -82,29 +82,38 @@ include 'head.php';
                         </div>
                     </div>
                     <?php if ($datiUtente[0]['tipoUtente'] == 'Normale') : ?>
-                    <div class="row py-2 px-4">
-                        <div class="col-12 text-center">
-                            <a id="utPremium" class="btn btn-secondary btn-sm" href="premium.php">
-                                Passa a premium
-                            </a>
+                        <div class="row py-2 px-4">
+                            <div class="col-12 text-center">
+                                <a id="utPremium" class="btn btn-secondary btn-sm" href="premium.php">
+                                    Passa a premium
+                                </a>
+                            </div>
                         </div>
-                    </div>
                     <?php else: ?>
-                    <div class="row py-2 px-4">
-                        <div class="col-12 text-center">
+                        <div class="row py-2 px-4">
+                            <div class="col-12 text-center">
                             <span id="utPremium" class="text-secondary">
                                 Sei premium<br>
                                 <small>Crea tutti i blog che vuoi</small>
                             </span>
+                            </div>
                         </div>
-                    </div>
                     <?php endif; ?>
 
                 </div>
             </div>
         </div>
-
     </div>
+
+    <!-- pulsante cancella profilo -->
+    <div class="row py-3 px-4">
+        <div class="col-12 text-center">
+            <a id="cancProfilo" class="btn btn-danger btn-sm" href="cancella_profilo.php">
+                Cancella profilo
+            </a>
+        </div>
+    </div>
+
 </div>
 </div>
 
