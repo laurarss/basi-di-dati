@@ -47,7 +47,7 @@ AND blog.autore = '$nomeUtente'";
 
 <!DOCTYPE html>
 <html lang="it">
-
+<body>
 <?php
 //includo file header
 include 'head.php';
@@ -127,7 +127,7 @@ include 'head.php';
 
 
 </div> <!-- fine container -->
-
+</body>
 <?php include('footer.php'); ?>
 
 </html>

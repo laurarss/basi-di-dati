@@ -213,7 +213,9 @@ include 'head.php';
                                            class="form-control"
                                            id="categoriaCreaBlog"
                                            placeholder="Dai un nome alla categoria"
-                                           value="<?php echo htmlspecialchars($nome_categoria) ?>"
+                                           value="<?php
+                                               echo htmlspecialchars($id_categoria);
+                                           ?>"
                                            name="categoria">
                                     <div class="form-text invalid-feedback">
                                         Categoria non corretta

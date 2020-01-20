@@ -81,6 +81,24 @@ include 'head.php';
                             <p class="lead"><?php echo $numBlog['contBlog']; ?></p>
                         </div>
                     </div>
+                    <?php if ($datiUtente[0]['tipoUtente'] == 'Normale') : ?>
+                    <div class="row py-2 px-4">
+                        <div class="col-12 text-center">
+                            <a id="utPremium" class="btn btn-secondary btn-sm" href="premium.php">
+                                Passa a premium
+                            </a>
+                        </div>
+                    </div>
+                    <?php else: ?>
+                    <div class="row py-2 px-4">
+                        <div class="col-12 text-center">
+                            <span id="utPremium" class="text-secondary">
+                                Sei premium<br>
+                                <small>Crea tutti i blog che vuoi</small>
+                            </span>
+                        </div>
+                    </div>
+                    <?php endif; ?>
 
                 </div>
             </div>
