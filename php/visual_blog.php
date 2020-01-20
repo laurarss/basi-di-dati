@@ -7,6 +7,7 @@
  */
 //includo file connessione al db
 include('db_connect.php');
+
 //includo file header
 include('header.php');
 
@@ -45,8 +46,6 @@ if (isset($_GET['idBlog'])) {
     $risCateg = mysqli_query($conn, $sqlCategorie);
     $categoriaBlog = mysqli_fetch_assoc($risCateg);
 
-
-
     // serve a pulsante "segui" e "mi piace"
     if (isset($_SESSION['nomeUtente'])) {
         $utenteSession = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']);
@@ -65,23 +64,39 @@ if (isset($_GET['idBlog'])) {
         $segui = '<a class="btn btn-outline-primary btn-sm" id="follow" value="follow"><i class="fa fa-rss"></i>' . " Segui" . '</a>';
     }
 
-    // mi piace
-    //se post "piaciuto"
-    if (isset($_POST['like'])) { // controllo se la POST è stata mandata alla pagina e ha un campo like
-        $idPost = $_POST['like']; // prendiamo val del campo like
-        $contLikePlus = Array('cont_like' => $progdb->inc(1));
-        $progdb->where('idPost', $idPost);
-        $progdb->update('posts', $contLikePlus); //aggiorn tab post conteggio like +1
+    /** GESTIONE MI PIACE **/
 
-        $progdb->insert('mipiace', Array('idPost' => $idPost, 'idUtente' => $utenteSession)); // inserisco nuova row nella tab mipiace con utente e post
+    //se e' stato premuto un tasto like/dislike su un qualsiasi post
+    if (isset($_POST['likeButtonIdPost'])) { // controllo se la POST è stata mandata alla pagina e ha un campo like
+
+        var_dump($_POST);
+
+        $idPost = $_POST['likeButtonIdPost']; // prendiamo l'idPost inerente al post sul quale abbiamo cliccato like/dislike
+        $isPostLiked = $_POST['likeButtonIsPostLiked']; // prendiamo lo stato del post -> true se c'e' gia' mi piace, false altrimenti
+
+        if ($isPostLiked == true) { // se il post ha gia' il mi piace...
+
+            $sqlDecrementLikeCounter = "UPDATE post SET cont_like = cont_like - 1 WHERE idPost = '$idPost'";
+            $risDecrementLikeCounter = mysqli_query($conn, $sqlDecrementLikeCounter);
+
+            $sqlRemoveMiPiace = "DELETE FROM mipiace WHERE idPost= '$idPost' AND idUtente = '$utenteSession'";
+            $risRemoveMiPiace = mysqli_query($conn, $sqlRemoveMiPiace);
+        } else { // se il post non ha il mi piace...
+
+            $sqlUpdateLikeCounter = "UPDATE post SET cont_like = cont_like + 1 WHERE idPost = '$idPost'";
+            $risUpdateLikeCounter = mysqli_query($conn, $sqlUpdateLikeCounter);
+
+            $sqlAddMiPiace = "INSERT INTO mipiace (idLike, idPost, idUtente) VALUES (NULL, '$idPost', '$utenteSession')";
+            $risAddMiPiace = mysqli_query($conn, $sqlAddMiPiace);
+        }
     }
 
-// chiudi connessione
+    // chiudi connessione
     // mysqli_close($conn);
 
     // debug
-//    print_r($posts);
-//    print_r($categoria);
+    //    print_r($posts);
+    //    print_r($categoria);
 
 } else {
     header("Location: ops.php");
@@ -180,56 +195,66 @@ include 'head.php';
     <!-- mostra i post del blog dal db:-->
 
     <?php foreach ($posts as $post) { ?>
+
         <!-- riga intestazione post -->
         <div class="row py-2">
+
             <div class="col-sm-10">
                 <h1 class="lead display-5 font-weight-bold"><?php echo htmlspecialchars($post['titolo']); ?></h1>
                 <small class="text-muted"><?php echo date_format(new DateTime($post['data']), 'd M Y H:i:s'); ?></small>
             </div>
+
             <div class="col-sm-2 text-right">
                 <a class="daNascondere btn btn-md btn-danger fa fa-trash"
                    href="cancella_post.php?idPost=<?php echo $post['idPost'] ?>"></a>
             </div>
+
         </div>
+
         <!-- riga immagine descrizione e bottoni post -->
         <div class="row py-2">
+
             <div class="col-sm-6">
                 <img class="img-fluid" alt="Immagine post" src="<?php echo htmlspecialchars($post['media']); ?>">
             </div>
+
             <div class="col-sm-6">
                 <p><?php echo htmlspecialchars($post['testo']); ?></p>
             </div>
+
         </div>
 
-
         <?php
-        // query per cercare nella tab mi piace l'utente attualmente loggato
+        // query per cercare nella tabella dei mi piace l'utente attualmente loggato
         $idPost = $post['idPost'];
 
         $sqlMiPiace = "SELECT * FROM mipiace WHERE idPost = '$idPost' AND idUtente = '$utenteSession'";
         $risMiPiace = mysqli_query($conn, $sqlMiPiace);
-        $miPiace = mysqli_fetch_all($risMiPiace, MYSQLI_ASSOC);
+        $miPiace = mysqli_fetch_assoc($risMiPiace);
         ?>
+
         <div class="text-right">
+
             <!-- pulsante mi piace -->
             <!-- la visual cambia in base all'esito della query sul db "mipiace" -->
             <div class="col-12 py-2">
 
-                <button class="miPiace btn btn-md btn-outline-primary"
-                        data-idPost="<?php $post['idPost']; ?>"
-                        data-miPiace="<?php $post['cont_like']; ?>">
-                <span class="cont_like py-3 px-2 text-primary font-weight-bold">
-                        <i class="px-1 fas fa-thumbs-up"></i>
-                    <!-- numero di like da tab post-->
-                        <?php echo $post['cont_like']; ?>
-                </span>
-                </button>
+                <button class="like-button btn btn-md btn-outline-primary"
+                        data-id-post="<?php echo $post['idPost']; ?>"
+                        data-is-liked="<?php echo isset($miPiace) ?>"
+                        data-cont-like="<?php echo $post['cont_like']; ?>">
+                        <span class="cont_like py-3 px-2 text-primary font-weight-bold">
 
-                <!--                <a class="miPiace btn btn-md btn-outline-primary"-->
-                <!--                   href="crea_mi_piace.php?idPost=--><?php //echo $post['idPost'] ?><!--">-->
-                <!--                    Mi piace-->
-                <!--                    <i class="far fa-thumbs-up"></i>-->
-                <!--                </a>-->
+                            <?php if ($miPiace !== null) { ?>
+                                <i class="px-1 fas fa-thumbs-down"></i>
+                            <?php } else { ?>
+                                <i class="px-1 fas fa-thumbs-up"></i>
+                            <?php } ?>
+
+                            <!-- numero di like da tab post-->
+                            <?php echo $post['cont_like']; ?>
+                        </span>
+                </button>
 
             </div>
         </div>
@@ -257,13 +282,17 @@ include 'head.php';
               class="formCreaCommento"
               method="POST"
               action="inser_commento.php?idPost=<?php echo $post['idPost'] ?>&idBlog=<?php echo $blog['idBlog'] ?>">
+
             <div class="row pl-5">
                 <h5 class="display-5">+ aggiungi un commento:</h5>
             </div>
+
             <div class="row py-2 pl-md-5 text-center">
+
                 <div class="col-sm-1 pt-4 pb-2">
                     <i class="fas fa-comment-alt fa-2x"></i>
                 </div>
+
                 <div class="col-sm-9">
                     <label class="sr-only" for="commentoFormInput">Nuovo Commento</label>
                     <textarea name="nuovoCommentoTextarea"
@@ -271,6 +300,7 @@ include 'head.php';
                               rows="2"
                               placeholder="Scrivi un commento"></textarea>
                 </div>
+
                 <div class="col-sm-2">
                     <button name="crea_commento" type="submit"
                             class="btn btn-outline-primary btn-lg mb-2 crea_commento"
@@ -278,6 +308,7 @@ include 'head.php';
                         <i class="fa fa-plus-circle"></i>
                     </button>
                 </div>
+
             </div>
         </form>
 
@@ -309,6 +340,7 @@ include 'head.php';
         $('.segui').hide();
         $('.formCreaCommento').hide();//nasconde crea commenti ai non loggati
     </script>
+
 <?php elseif ($_SESSION['nomeUtente'] !== $blog['autore']): ?>
     <!-- nasconde pulsanti di un blog di un utente diverso dal visualizzatore, ma mostrare segui -->
     <script type="text/javascript">
@@ -355,16 +387,19 @@ include 'head.php';
 
 <!-- cambio link css in base a tema selezionato -->
 <script type="text/javascript">
-    $(document).ready(function() {
-        $("#selezTema").change(function(){ //** on selecting an option based on ID you assigned
-            var optionVal = $("#selezTema option:selected").val(); //** get the selected option's value
+
+    $(document).ready(function () {
+
+        $("#selezTema").change(function () { //** on selecting an option based on ID you assigned
+
+            const optionVal = $("#selezTema option:selected").val(); //** get the selected option's value
 
             $.ajax({
                 type: "POST", //**how data is send
                 url: "cambia_tema.php", //** where to send the option data so that it can be saved in DB
-                data: {optionVal: optionVal }, //** send the selected option's value to above page
+                data: {optionVal: optionVal}, //** send the selected option's value to above page
                 dataType: "json",
-                success: function(data){
+                success: function (data) {
                     //** what should do after value is saved to DB and returned from above URL page.
                     $("#cssBlog").attr("href", "../css/temi_blog/<?php echo $blog['tema']; ?>.css");
                 }
@@ -373,37 +408,61 @@ include 'head.php';
     });
 </script>
 
-
-<!-- mi piace -->
 <script type="text/javascript">
-    $(document).ready(function () {
-        $(".miPiace").click(function () {
-            debugger;
-            let button = $(this)
-            let idPost = $(button).data('idPost')
-            $.post("visual_blog.php?idBlog=<?php echo $blog['idBlog'] ?>")
-            {
-                'like'
-            :
-                idPost
-            }
-        ,
 
-            function (data, status) {
-                $(button).html("Like (" + ($(button).data('mipiace') + 1) + ")")
-                $(button).data('mipiace', $(button).data('mipiace') + 1)
-            }
+    /*
+    * mi lego all'evento di click sul bottone like button che serve
+    * per aggiungere o togliere il mi piace da un post
+    */
 
-        );
+    $(function () {
+
+        $(".like-button").on('click', function () {
+
+            const button = $(this); // elemento html corrispondente al bottone
+            const idPost = $(button).data('id-post');
+            const isPostLiked = $(button).data('is-liked');
+
+            $.post(
+                "visual_blog.php?idBlog=<?php echo $blog['idBlog'] ?>",
+                {
+                    // parametri che sto per salvare nella costante post di php
+                    likeButtonIdPost: idPost,
+                    likeButtonIsPostLiked: isPostLiked,
+                },
+                (data, status) => {
+
+                    // dato che la pagina non ricarica a causa della chiamata asincrona,
+                    // aggiorno i dati dell'elemento html relativo al like button con data(chiave_valore, nuovo_valore)
+
+                    if (isPostLiked === 1) {
+                        $(button).html("Like (" + ($(button).data('cont-like') - 1) + ")");
+                        $(button).data('cont-like', $(button).data('cont-like') - 1); // aggiorno cont like
+                        $(button).data('is-liked', '') // aggiorno is-liked
+
+                        // todo riuscire ad accedere all'icona a cambiarla al volo
+                    } else {
+                        $(button).html("Like (" + ($(button).data('cont-like') + 1) + ")");
+                        $(button).data('cont-like', $(button).data('cont-like') + 1);
+                        $(button).data('is-liked', 1) // aggiorno is-liked
+
+                        // todo riuscire ad accedere all'icona a cambiarla al volo
+                    }
+                }
+            )
+        });
     });
-    });
+
 </script>
 
 <!--crea commento-->
 <script>
-    $(document).ready(function () {
-        $('#crea_commento').click(function () {
-            var testoCommento = $("#nuovoCommentoTextarea").serialize();
+    $(function () {
+
+        $('#crea_commento').on('click', function () {
+
+            const testoCommento = $("#nuovoCommentoTextarea").serialize();
+
             $.ajax({
                 data: testoCommento,
                 type: "post",
