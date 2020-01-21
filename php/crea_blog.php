@@ -73,7 +73,7 @@ if (isset($_POST['crea_blog_submit'])) {
 
 // check immagine
     if ($_FILES['blog_banner']['size'] > 1024 * 1024) { // se le dimensioni sono troppo grandi
-        $errors['banner'] = '<p>' . 'Immagine troppo grande' . '</p>';
+        //$errors['banner'] = '<p>' . 'Immagine troppo grande' . '</p>';
     } else {
         $nomeBannerBlog = $_FILES['blog_banner']['name']; // salvo il nome dell'immagine
         $nomeBannerBlog_tmp = $_FILES['blog_banner']['tmp_name'];
@@ -96,8 +96,8 @@ if (isset($_POST['crea_blog_submit'])) {
         if (!$errors['banner']) {
             // copio il file dalla locazione temporanea alla mia cartella upload
             if (!move_uploaded_file($nomeBannerBlog_tmp, $targetDir . $nomeBannerBlog)) {
-                //errore
-                $errors['banner'] = '<p>' . "Upload immagine non valido!\n" . '</p>';
+                //se errore img è troppo grande
+                $errors['banner'] = '<p>' . "Upload immagine troppo grande" . '</p>';
             }
         }
     }
@@ -206,9 +206,7 @@ include 'head.php';
                                            class="form-control"
                                            id="categoriaCreaBlog"
                                            placeholder="Dai un nome alla categoria"
-                                           value="<?php
-                                           echo htmlspecialchars($id_categoria);
-                                           ?>"
+                                           value="<?php echo htmlspecialchars($id_categoria); ?>"
                                            name="categoria">
                                 </div>
                             </div>
@@ -286,12 +284,27 @@ include 'head.php';
         let errore = "";
         if ($("#titoloCreaBlog").val() === "") { //se il campo titolo è vuoto
             errore += "Il titolo è obbligatorio.<br>";
+            $("#titoloCreaBlog").css('border-color', '#b32d39');
+        } else {
+            $("#titoloCreaBlog").css('border-color', '#28a745');
         }
         if ($("#categoriaCreaBlog").val() === "") { //se il campo categoria è vuoto
             errore += "La categoria è obbligatoria.<br>";
+            $("#categoriaCreaBlog").css('border-color', '#b32d39');
+        } else {
+            $("#categoriaCreaBlog").css('border-color', '#28a745');
         }
-        if ($("#descrizioneCreaBlog").val() === "") { //se il campo descrizione è vuoto
+        if ($("#descrizioneCreaBlog").val() === "") { //se il campo categoria è vuoto
+            errore += "La categoria è obbligatoria.<br>";
+            $("#descrizioneCreaBlog").css('border-color', '#b32d39');
+        } else {
+            $("#descrizioneCreaBlog").css('border-color', '#28a745');
+        }
+        if ($("#fileInput").value === "") { //se il campo descrizione è vuoto
             errore += "Non hai inserito una descrizione.<br>";
+            $("#fileInput").css('border-color', '#b32d39');
+        } else {
+            $("#fileInput").css('border-color', '#28a745');
         }
         if (errore !== "") {
             event.preventDefault();//fa in modo che il form non si refreshi al "submit" ma mi permetta di validare i dati prima di mandarli al server

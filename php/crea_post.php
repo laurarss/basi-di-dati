@@ -63,13 +63,16 @@ if (isset($_POST['crea_post_submit'])) {
         // controllo se l'estensione e' tra quelle accettate
         // in caso contrario creo un errore
         if (!in_array($tipoImg, $estensioniAccettate)) {
-            $errors['imgPost'] = '<p>' . 'Il formato del file selezionato non è accettato' . '</p>';
+            $errors['imgPost'] = '<p>' . 'Formato del file selezionato non accettato.' . '</p>';
         }
 
-        // se errore nella copia del file dalla locazione temporanea alla mia cartella upload
-        if (!move_uploaded_file($nomeImgPost_tmp, $targetDir . $nomeImgPost)) {
-            //errore
-            $errors['imgPost'] = '<p>' . "Upload immagine non valido!\n" . '</p>';
+        // se non ci sono errori
+        if (!$errors['imgPost']) {
+            // se errore nella copia del file dalla locazione temporanea alla mia cartella upload
+            if (!move_uploaded_file($nomeImgPost_tmp, $targetDir . $nomeImgPost)) {
+                //errore
+                $errors['imgPost'] = '<p>' . "Upload immagine troppo grande." . '</p>';
+            }
         }
     }
 
@@ -217,14 +220,23 @@ include 'head.php';
 <script type="text/javascript">
     $("form").submit(function (event) {
         let errore = "";
-        if ($("#titoloCreaPost").val() === "") { //se il campo è vuoto
+        if ($("#titoloCreaPost").val() === "") { //se il campo titolo del post è vuoto
             errore += "Il titolo del post è obbligatorio.<br>";
+            $("#titoloCreaPost").css('border-color', '#b32d39');
+        } else {
+            $("#titoloCreaPost").css('border-color', '#28a745');
         }
-        if ($("#testoPost").val() === "") { //se il campo è vuoto
+        if ($("#testoPost").val() === "") { //se il campo testo è vuoto
             errore += "Non hai inserito un testo nel tuo post.<br>";
+            $("#testoPost").css('border-color', '#b32d39');
+        } else {
+            $("#testoPost").css('border-color', '#28a745');
         }
-        if ($("#fileInput").val() === "") { //se il campo è vuoto
+        if ($("#fileInput").val() === "") { //se il campo file input è vuoto
             errore += "Non hai inserito un'immagine nel tuo post.<br>";
+            $("#fileInput").css('background-color', '#b32d39');
+        } else {
+            $("#fileInput").css('border-color', '#28a745');
         }
         if (errore !== "") {
             event.preventDefault();//fa in modo che il form non si refreshi al "submit" ma mi permetta di validare i dati prima di mandarli al server
