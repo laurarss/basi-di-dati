@@ -19,19 +19,19 @@ $temi = mysqli_fetch_all($risTemi, MYSQLI_ASSOC);
 
 if (isset($_POST['crea_blog_submit'])) {
 
-    // check titolo blog
+// check titolo blog
     if (empty($_POST['titolo'])) {
-        $errors['titolo'] = 'Manca un titolo per il tuo blog!<br>';
+        $errors['titolo'] = '<p>' . 'Manca un titolo per il tuo blog!<br>';
     } else {
         $titolo = $_POST['titolo'];
         if (!preg_match('/^[ A-Za-z]+$/', $titolo)) {
-            $errors['titolo'] = 'Il titolo deve contenere solo lettere e spazi<br>';
+            $errors['titolo'] = '<p>' . 'Il titolo deve contenere solo lettere e spazi<br>';
         }
     }
 
-    //check categoria
+//check categoria
     if (empty($_POST['categoria'])) {
-        $errors['categoria'] = 'Manca una categoria per il tuo blog!<br>';
+        $errors['categoria'] = '<p>' . 'Manca una categoria per il tuo blog!<br>';
     } else {
 
         /**
@@ -59,21 +59,21 @@ if (isset($_POST['crea_blog_submit'])) {
             if (mysqli_query($conn, $sqlInserisciCateg)) {
                 $id_categoria = mysqli_insert_id($conn);
             } else {
-                echo '<p>'."Inserimento fallito per la nuova categoria";
+                echo "Inserimento fallito per la nuova categoria";
             }
         }
     }
 
-    //check descrizione
+//check descrizione
     if (empty($_POST['descrizione'])) {
-        $errors['descrizione'] = 'Manca una descrizione per il tuo blog!<br>'.'</p>';
+        $errors['descrizione'] = '<p>' . 'Manca una descrizione per il tuo blog!' . '</p>';
     } else {
         $descrizione = $_POST['descrizione'];
     }
 
-    // check immagine
+// check immagine
     if ($_FILES['blog_banner']['size'] > 1024 * 1024) { // se le dimensioni sono troppo grandi
-        $errors['banner'] = '<p>'.'Immagine troppo grande'.'</p>';
+        $errors['banner'] = '<p>' . 'Immagine troppo grande' . '</p>';
     } else {
         $nomeBannerBlog = $_FILES['blog_banner']['name']; // salvo il nome dell'immagine
         $nomeBannerBlog_tmp = $_FILES['blog_banner']['tmp_name'];
@@ -89,29 +89,24 @@ if (isset($_POST['crea_blog_submit'])) {
         // controllo se l'estensione del banner e' tra quelle accettate
         // in caso contrario creo un errore
         if (!in_array($tipoImg, $estensioniAccettate)) {
-            $errors['banner'] = '<p>'.'Il formato del banner selezionato non è accettato'.'</p>';
+            $errors['banner'] = '<p>' . 'Il formato del banner selezionato non è accettato' . '</p>';
         }
 
         // se non ci sono errori
         if (!$errors['banner']) {
             // copio il file dalla locazione temporanea alla mia cartella upload
-            if (move_uploaded_file($nomeBannerBlog_tmp, $targetDir . $nomeBannerBlog)) {
-
-                //Se buon fine...
-                print "Upload completato.\n";
-            } else {
-
-                //Se fallita...
-                print "Upload fallito!\n";
+            if (!move_uploaded_file($nomeBannerBlog_tmp, $targetDir . $nomeBannerBlog)) {
+                //errore
+                $errors['banner'] = '<p>' . "Upload immagine non valido!\n" . '</p>';
             }
         }
     }
 
-    //recupero data timestamp
+
+//recupero data timestamp
     $timestamp = date("Y-m-d H:i:s");
 
     if (array_filter($errors)) {
-
         //se ci sono errori
         //print_r($errors);
     } else {
@@ -138,10 +133,10 @@ if (isset($_POST['crea_blog_submit'])) {
             echo 'errore query: ' . mysqli_error($conn);
         }
     }
-    //libera memoria
+//libera memoria
     mysqli_free_result($risCategorie);
 
-    //chiudi connessione
+//chiudi connessione
     mysqli_close($conn);
 }
 
@@ -212,7 +207,7 @@ include 'head.php';
                                            id="categoriaCreaBlog"
                                            placeholder="Dai un nome alla categoria"
                                            value="<?php
-                                               echo htmlspecialchars($id_categoria);
+                                           echo htmlspecialchars($id_categoria);
                                            ?>"
                                            name="categoria">
                                 </div>
@@ -326,10 +321,9 @@ include 'head.php';
 
         // rimpiazzo la scritta di default con il nome del file
         $(this).next('.custom-file-label').html(fileName);
-    })
+    });
 </script>
 
 
 </body>
 </html>
-

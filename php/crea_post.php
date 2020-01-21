@@ -32,21 +32,21 @@ if (isset($_POST['crea_post_submit'])) {
 
     // check titolo post
     if (empty($_POST['titoloPost'])) {
-        $errors['titoloPost'] = '<p>'.'Manca un titolo per il tuo post!' . '</p>';
+        $errors['titoloPost'] = '<p>' . 'Manca un titolo per il tuo post!' . '</p>';
     } else {
         $titoloPost = $_POST['titoloPost'];
     }
 
     //check testo post
     if (empty($_POST['testoPost'])) {
-        $errors['testoPost'] = '<p>'.'Manca una descrizione per il tuo blog!' . '</p>';
+        $errors['testoPost'] = '<p>' . 'Manca una descrizione per il tuo blog!' . '</p>';
     } else {
         $testoPost = $_POST['testoPost'];
     }
 
     // check immagine
     if ($_FILES['imgPost']['size'] > 800 * 1024) { // se le dimensioni sono troppo grandi
-        $errors['imgPost'] = '<p>'.'Immagine troppo grande' . '</p>';
+        $errors['imgPost'] = '<p>' . 'Immagine troppo grande' . '</p>';
     } else {
         // your code for processing uploaded image
         $nomeImgPost = $_FILES['imgPost']['name']; // salvo il nome dell'immagine uploadata
@@ -63,15 +63,14 @@ if (isset($_POST['crea_post_submit'])) {
         // controllo se l'estensione e' tra quelle accettate
         // in caso contrario creo un errore
         if (!in_array($tipoImg, $estensioniAccettate)) {
-            $errors['imgPost'] = '<p>'.'Il formato del file selezionato non è accettato' . '</p>';
+            $errors['imgPost'] = '<p>' . 'Il formato del file selezionato non è accettato' . '</p>';
         }
 
         // se errore nella copia del file dalla locazione temporanea alla mia cartella upload
         if (!move_uploaded_file($nomeImgPost_tmp, $targetDir . $nomeImgPost)) {
             //errore
-            $errors['imgPost'] ='<p>'."Upload immagine non valido!\n" . '</p>';
+            $errors['imgPost'] = '<p>' . "Upload immagine non valido!\n" . '</p>';
         }
-
     }
 
     //recupero timestamp
@@ -106,7 +105,6 @@ if (isset($_POST['crea_post_submit'])) {
     mysqli_close($conn);
 
 }
-
 
 ?>
 <!DOCTYPE html>
