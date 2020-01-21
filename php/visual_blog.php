@@ -225,16 +225,16 @@ include 'head.php';
         </div>
 
         <?php
-        // query per cercare nella tabella dei mi piace l'utente attualmente loggato
+//        php per pulsante mi piace
+        // recupero id post
         $idPost = $post['idPost'];
-
+        // query per cercare nella tabella dei mi piace l'utente attualmente loggato
         $sqlMiPiace = "SELECT * FROM mipiace WHERE idPost = '$idPost' AND idUtente = '$utenteSession'";
         $risMiPiace = mysqli_query($conn, $sqlMiPiace);
         $miPiace = mysqli_fetch_assoc($risMiPiace);
         ?>
 
         <div class="text-right">
-
             <!-- pulsante mi piace -->
             <!-- la visual cambia in base all'esito della query sul db "mipiace" -->
             <div class="col-12 py-2">
@@ -436,15 +436,16 @@ include 'head.php';
                     // aggiorno i dati dell'elemento html relativo al like button con data(chiave_valore, nuovo_valore)
 
                     if (isPostLiked === 1) {
-                        $(button).html("Like (" + ($(button).data('cont-like') - 1) + ")");
+                        $(button).html("<i class=\"px-1 fas fa-thumbs-up\"></i> (" + ($(button).data('cont-like') - 1) + ")");
                         $(button).data('cont-like', $(button).data('cont-like') - 1); // aggiorno cont like
-                        $(button).data('is-liked', '') // aggiorno is-liked
+                        $(button).data('is-liked', '') ;// aggiorno is-liked
+
 
                         // todo riuscire ad accedere all'icona a cambiarla al volo
                     } else {
-                        $(button).html("Like (" + ($(button).data('cont-like') + 1) + ")");
+                        $(button).html("<i class=\"px-1 fas fa-thumbs-down\"></i> (" + ($(button).data('cont-like') + 1) + ")");
                         $(button).data('cont-like', $(button).data('cont-like') + 1);
-                        $(button).data('is-liked', 1) // aggiorno is-liked
+                        $(button).data('is-liked', 1); // aggiorno is-liked
 
                         // todo riuscire ad accedere all'icona a cambiarla al volo
                     }
