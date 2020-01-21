@@ -5,7 +5,25 @@ include('db_connect.php');
 include('header.php');
 
 //un utente diventa premium inserendo dati di pagamento in questa pagina
+$errors = array('numCarta' => '', 'scadenza' => '', 'codSicurezza' => '', 'nome' => '', 'congnome' => ''); //array associativo che immagazzina gli errori
 
+if (isset($_SESSION['nomeUtente'])) {
+    $nomeUtente = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']);
+}
+// azioni conseguenti a submit
+if (isset($_POST['paga_submit'])) {
+    // sql codice per recuperare titolo blog avendo l'id
+    $sqlAggiornaUtente = "UPDATE `utenti` SET `tipoUtente` = 'Premium' WHERE `utenti`.`nomeUtente` = '$nomeUtente'";
+
+    //risultato query
+    $risAggiornaUtente = mysqli_query($conn, $sqlAggiornaUtente);
+
+    if ($risAggiornaUtente) {
+        header('Location: profilo.php');
+    } else {
+        echo "Errore richiesta";
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="it">
@@ -32,7 +50,7 @@ include 'head.php';
 
                     <!-- div mostra errori da js -->
                     <div id="errore">
-                        <?php include('errors.php'); ?>
+                        <?php //include('errors.php'); ?>
                     </div>
 
                     <form id="formPagam" method="post" action="premium.php">
@@ -40,7 +58,7 @@ include 'head.php';
                         <div class="row">
 
                             <div class="col-12">
-                                <!-- INPUT username -->
+                                <!-- INPUT numero carta -->
                                 <div class="form-group">
                                     <label for="numeroCarta"><strong>Numero carta</strong></label>
                                     <input id="numeroCarta"
@@ -57,8 +75,11 @@ include 'head.php';
                                 <div class="it-datepicker-wrapper">
                                     <div class="form-group">
                                         <label for="scadenzaCarta"><strong>Data scadenza</strong></label>
-                                        <input class="form-control it-date-datepicker" id="scadenzaCarta" type="text"
-                                               placeholder="inserisci la data in formato mm/aaaa">
+                                        <input id="scadenzaCarta"
+                                               class="form-control it-date-datepicker"
+                                               type="month"
+                                               placeholder="inserisci la data"
+                                               name="scadenzaCarta">
                                     </div>
                                 </div>
                             </div>
@@ -101,7 +122,7 @@ include 'head.php';
                             <div class="col-12 text-right">
                                 <button type="submit"
                                         class="btn btn-primary"
-                                        name="paga">
+                                        name="paga_submit">
                                     Paga
                                 </button>
                             </div>
@@ -116,24 +137,41 @@ include 'head.php';
                             $('#accessoF').hide();
                             let errore = "";
 
-                            if ($("#loginUsername").val() === "") { //se il campo è vuoto
+                            if ($("#numeroCarta").val() === "") { //se il campo numero carta è vuoto
                                 errore += "Numero carta obbligatorio.<br>";
-                                $("#loginUsername").css('border-color', '#b32d39');
+                                $("#numeroCarta").css('border-color', '#b32d39');
                             } else {
-                                $("#loginUsername").css('border-color', '#28a745');
+                                $("#numeroCarta").css('border-color', '#28a745');
                             }
-                            if ($("#loginPassword").val() === "") { //se il campo è vuoto
+
+                            if ($("#scadenzaCarta").val() === "") { //se il campo scadenza è vuoto
                                 errore += "Data obbligatoria.<br>";
-                                $("#loginPassword").css('border-color', '#b32d39');
+                                $("#scadenzaCarta").css('border-color', '#b32d39');
                             } else {
-                                $("#loginPassword").css('border-color', '#28a745');
+                                $("#scadenzaCarta").css('border-color', '#28a745');
                             }
-                            if ($("#loginPassword").val() === "") { //se il campo è vuoto
-                                errore += "Data obbligatoria.<br>";
-                                $("#loginPassword").css('border-color', '#b32d39');
+
+                            if ($("#codSicurezza").val() === "") { //se il campo codice sicurezza è vuoto
+                                errore += "Codice obbligatorio.<br>";
+                                $("#codSicurezza").css('border-color', '#b32d39');
                             } else {
-                                $("#loginPassword").css('border-color', '#28a745');
+                                $("#codSicurezza").css('border-color', '#28a745');
                             }
+
+                            if ($("#nome").val() === "") { //se il campo nome è vuoto
+                                errore += "Nome intestatario obbligatorio.<br>";
+                                $("#nome").css('border-color', '#b32d39');
+                            } else {
+                                $("#nome").css('border-color', '#28a745');
+                            }
+
+                            if ($("#cognome").val() === "") { //se il campo cognome è vuoto
+                                errore += "Cognome intestatario obbligatorio.<br>";
+                                $("#cognome").css('border-color', '#b32d39');
+                            } else {
+                                $("#cognome").css('border-color', '#28a745');
+                            }
+
                             if (errore !== "") {
                                 event.preventDefault(); // previene il submit di default
                                 $("#errore").html('<div class="alert alert-danger" role="alert"><p><strong>Nel form sono stati trovati i seguenti errori:</strong></p>' + errore + '</div>');
@@ -141,22 +179,15 @@ include 'head.php';
                         });
 
                         //datepicker bootstrap per inserim date
-                        $.(function () {
-                            $('.datepicker').datepicker({
-                                format: "mm/yyyy",
-                                startView: "months",
-                                minViewMode: "months",
-                                outputFormat: 'MM/yyyy'
-                            });
-                        });
+                        // $.(function () {
+                        //     $('.datepicker').datepicker({
+                        //         format: "mm/yyyy",
+                        //         startView: "months",
+                        //         minViewMode: "months",
+                        //         outputFormat: 'MM/yyyy'
+                        //     });
+                        // });
 
-                        $(function(){
-                            $('.date_picker input').datepicker({
-                                format: "dd.mm.yyyy",
-                                todayBtn: "linked",
-                                language: "de"
-                            });
-                        });
                     </script>
                 </div>
 
