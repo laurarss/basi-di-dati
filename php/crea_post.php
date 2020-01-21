@@ -79,7 +79,7 @@ if (isset($_POST['crea_post_submit'])) {
 
     }
 
-    //retrieve timestamp
+    //recupero timestamp
     $timestamp = date("Y-m-d H:i:s");
 
     if (array_filter($errors)) {
@@ -94,7 +94,7 @@ if (isset($_POST['crea_post_submit'])) {
         $imgPost = $targetFile;
 
         //query creazione post
-        $sqlNuovoPost = "INSERT INTO `post` (`idPost`, `titolo`, `data`, `testo`, `media`, `idBlog`, `cont_like`) VALUES (NULL, '$titoloPost', '$dataPost', '$testoPost', '$imgPost', '$idBlog', NULL)";
+        $sqlNuovoPost = "INSERT INTO `post` (`idPost`, `titolo`, `data`, `testo`, `media`, `idBlog`, `cont_like`) VALUES (NULL, '$titoloPost', '$dataPost', '$testoPost', '$imgPost', '$idBlog', '0')";
 
         //controlla e salva sul db
         if (mysqli_query($conn, $sqlNuovoPost)) {

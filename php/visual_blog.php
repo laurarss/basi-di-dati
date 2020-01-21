@@ -388,7 +388,7 @@ include 'head.php';
 <!-- cambio link css in base a tema selezionato -->
 <script type="text/javascript">
 
-    $(document).ready(function () {
+    $(function () {
 
         $("#selezTema").change(function () { //** on selecting an option based on ID you assigned
 
@@ -463,9 +463,8 @@ include 'head.php';
 
             const testoCommento = $("#nuovoCommentoTextarea").serialize();
 
-            $.ajax({
+            $.post({
                 data: testoCommento,
-                type: "post",
                 url: "inser_commento.php?idPost=<?php echo $post['idPost'] ?>",
                 dataType: "text",
                 success: function () {

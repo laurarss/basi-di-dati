@@ -72,7 +72,7 @@ if (isset($_POST['crea_blog_submit'])) {
     }
 
     // check immagine
-    if ($_FILES['blog_banner']['size'] > 800 * 1024) { // se le dimensioni sono troppo grandi
+    if ($_FILES['blog_banner']['size'] > 1024 * 1024) { // se le dimensioni sono troppo grandi
         $errors['banner'] = 'Immagine troppo grande';
     } else {
         $nomeBannerBlog = $_FILES['blog_banner']['name']; // salvo il nome dell'immagine
