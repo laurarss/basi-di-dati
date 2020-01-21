@@ -32,21 +32,21 @@ if (isset($_POST['crea_post_submit'])) {
 
     // check titolo post
     if (empty($_POST['titoloPost'])) {
-        $errors['titoloPost'] = 'Manca un titolo per il tuo post!<br>';
+        $errors['titoloPost'] = '<p>'.'Manca un titolo per il tuo post!' . '</p>';
     } else {
         $titoloPost = $_POST['titoloPost'];
     }
 
     //check testo post
     if (empty($_POST['testoPost'])) {
-        $errors['testoPost'] = 'Manca una descrizione per il tuo blog!<br>';
+        $errors['testoPost'] = '<p>'.'Manca una descrizione per il tuo blog!' . '</p>';
     } else {
         $testoPost = $_POST['testoPost'];
     }
 
     // check immagine
     if ($_FILES['imgPost']['size'] > 800 * 1024) { // se le dimensioni sono troppo grandi
-        $errors['imgPost'] = 'Immagine troppo grande';
+        $errors['imgPost'] = '<p>'.'Immagine troppo grande' . '</p>';
     } else {
         // your code for processing uploaded image
         $nomeImgPost = $_FILES['imgPost']['name']; // salvo il nome dell'immagine uploadata
@@ -63,18 +63,13 @@ if (isset($_POST['crea_post_submit'])) {
         // controllo se l'estensione e' tra quelle accettate
         // in caso contrario creo un errore
         if (!in_array($tipoImg, $estensioniAccettate)) {
-            $errors['imgPost'] = 'Il formato del file selezionato non è accettato';
+            $errors['imgPost'] = '<p>'.'Il formato del file selezionato non è accettato' . '</p>';
         }
 
-        // copio il file dalla locazione temporanea alla mia cartella upload
-        if (move_uploaded_file($nomeImgPost_tmp, $targetDir . $nomeImgPost)) {
-
-            //Se buon fine...
-            print "Upload inviato con successo.\n";
-        } else {
-
-            //Se fallita...
-            print "Upload NON valido!\n";
+        // se errore nella copia del file dalla locazione temporanea alla mia cartella upload
+        if (!move_uploaded_file($nomeImgPost_tmp, $targetDir . $nomeImgPost)) {
+            //errore
+            $errors['imgPost'] ='<p>'."Upload immagine non valido!\n" . '</p>';
         }
 
     }
@@ -139,7 +134,7 @@ include 'head.php';
                     <h4 class="card-title text-center">Stai creando un post in "<?php echo $blog['titolo']; ?>"</h4>
 
                     <!-- div mostra errori -->
-                    <div id="errore" class="alert">
+                    <div id="errore" class="alert" role="alert">
                         <?php foreach ($errors as $value) {
                             echo "$value\r\n";
                         } ?>
@@ -230,17 +225,20 @@ include 'head.php';
         if ($("#testoPost").val() === "") { //se il campo è vuoto
             errore += "Non hai inserito un testo nel tuo post.<br>";
         }
+        if ($("#fileInput").val() === "") { //se il campo è vuoto
+            errore += "Non hai inserito un'immagine nel tuo post.<br>";
+        }
         if (errore !== "") {
             event.preventDefault();//fa in modo che il form non si refreshi al "submit" ma mi permetta di validare i dati prima di mandarli al server
-            $("#errore").html('<div class="alert alert-danger" role="alert"><p><strong>Nel form sono stati trovati i seguenti errori:</strong></p>' + errore + '</div>');
+            $("#errore").addClass("alert-danger"); // aggiunge al div il colore rosso con classe bootstrap
+            $("#errore").html('<p><strong>Nel form sono stati trovati i seguenti errori:</strong></p>' + errore);
         }
     });
-    // script colora di rosso errori dal php
-    if ($('div#errore').is(':empty')) {
-        $("div#errore").addClass("alert_danger");
+    // script colora di rosso errori dal php al refersh della pagina, per controllo fallito sull'img (aggiungendo classe alert-danger di bootstrap)
+    if ($('#errore').children().length > 0) { //se div errore non è vuoto
+        $("#errore").addClass("alert-danger");
     } else {
-        $("div#errore").removeClass("alert_danger");
-
+        $("#errore").removeClass("alert-danger");
     }
 </script>
 

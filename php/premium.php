@@ -6,7 +6,6 @@ include('header.php');
 
 //un utente diventa premium inserendo dati di pagamento in questa pagina
 
-
 ?>
 <!DOCTYPE html>
 <html lang="it">
@@ -142,12 +141,20 @@ include 'head.php';
                         });
 
                         //datepicker bootstrap per inserim date
-                        $(document).ready(function () {
+                        $.(function () {
                             $('.datepicker').datepicker({
                                 format: "mm/yyyy",
                                 startView: "months",
                                 minViewMode: "months",
                                 outputFormat: 'MM/yyyy'
+                            });
+                        });
+
+                        $(function(){
+                            $('.date_picker input').datepicker({
+                                format: "dd.mm.yyyy",
+                                todayBtn: "linked",
+                                language: "de"
                             });
                         });
                     </script>

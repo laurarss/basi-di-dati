@@ -24,7 +24,7 @@ if (isset($_POST['crea_blog_submit'])) {
         $errors['titolo'] = 'Manca un titolo per il tuo blog!<br>';
     } else {
         $titolo = $_POST['titolo'];
-        if (!preg_match('/^[a-z][a-z\s]*$/', $titolo)) {
+        if (!preg_match('/^[ A-Za-z]+$/', $titolo)) {
             $errors['titolo'] = 'Il titolo deve contenere solo lettere e spazi<br>';
         }
     }
@@ -40,7 +40,7 @@ if (isset($_POST['crea_blog_submit'])) {
          * se categ non esiste crearla con relativa insert, e prenderne l'id
          */
         $nome_categoria = $_POST['categoria']; // variabili di utility per nome categoria inserito da utente
-        if (!preg_match('/^\p{Latin}+$/', $nome_categoria)) {
+        if (!preg_match('/^[ A-Za-z]+$/', $nome_categoria)) {
             $errors['categoria'] = 'Categoria deve contenere solo lettere e spazi<br>';
         }
 
@@ -59,21 +59,21 @@ if (isset($_POST['crea_blog_submit'])) {
             if (mysqli_query($conn, $sqlInserisciCateg)) {
                 $id_categoria = mysqli_insert_id($conn);
             } else {
-                echo "Inserimento fallito per la nuova categoria";
+                echo '<p>'."Inserimento fallito per la nuova categoria";
             }
         }
     }
 
     //check descrizione
     if (empty($_POST['descrizione'])) {
-        $errors['descrizione'] = 'Manca una descrizione per il tuo blog!<br>';
+        $errors['descrizione'] = 'Manca una descrizione per il tuo blog!<br>'.'</p>';
     } else {
         $descrizione = $_POST['descrizione'];
     }
 
     // check immagine
     if ($_FILES['blog_banner']['size'] > 1024 * 1024) { // se le dimensioni sono troppo grandi
-        $errors['banner'] = 'Immagine troppo grande';
+        $errors['banner'] = '<p>'.'Immagine troppo grande'.'</p>';
     } else {
         $nomeBannerBlog = $_FILES['blog_banner']['name']; // salvo il nome dell'immagine
         $nomeBannerBlog_tmp = $_FILES['blog_banner']['tmp_name'];
@@ -89,7 +89,7 @@ if (isset($_POST['crea_blog_submit'])) {
         // controllo se l'estensione del banner e' tra quelle accettate
         // in caso contrario creo un errore
         if (!in_array($tipoImg, $estensioniAccettate)) {
-            $errors['banner'] = 'Il formato del banner selezionato non è accettato';
+            $errors['banner'] = '<p>'.'Il formato del banner selezionato non è accettato'.'</p>';
         }
 
         // se non ci sono errori
@@ -174,8 +174,9 @@ include 'head.php';
                 <div class="card-body">
 
                     <h4 class="card-title text-center">Crea un Blog</h4>
-                    <!-- div che fa comparire errori trovati dal js con l'id e dal php -->
-                    <div id="errore" class="alert">
+
+                    <!-- div che fa comparire errori trovati dal js e dal php -->
+                    <div id="errore" class="alert" role="alert">
                         <?php foreach ($errors as $value) {
                             echo "$value\r\n";
                         } ?>
@@ -199,9 +200,6 @@ include 'head.php';
                                            value="<?php echo htmlspecialchars($titolo) ?>"
                                            name="titolo">
                                     <!--  sopra ho "echo" le variabili vuote nei campi // htmlspecialchars() aggiunto per evitare script maligni-->
-                                    <div class="invalid-feedback">
-                                        Titolo non corretto
-                                    </div>
                                 </div>
                             </div>
 
@@ -217,9 +215,6 @@ include 'head.php';
                                                echo htmlspecialchars($id_categoria);
                                            ?>"
                                            name="categoria">
-                                    <div class="form-text invalid-feedback">
-                                        Categoria non corretta
-                                    </div>
                                 </div>
                             </div>
 
@@ -233,9 +228,6 @@ include 'head.php';
                                            placeholder="Aggiungi una descrizione"
                                            value="<?php echo htmlspecialchars($descrizione); ?>"
                                            name="descrizione">
-                                    <div class="invalid-feedback">
-                                        Descrizione non corretta
-                                    </div>
                                 </div>
                             </div>
 
@@ -252,11 +244,9 @@ include 'head.php';
                                                value="<?php echo htmlspecialchars($banner) ?>"
                                                accept="image/png/jpg"
                                                name="blog_banner"/>
-
                                         <label class="custom-file-label" for="validatedCustomFile">
                                             Scegli file...
                                         </label>
-                                        <div class="invalid-feedback">Esempio file non accettato</div>
                                     </div>
                                 </div>
                             </div>
@@ -269,9 +259,7 @@ include 'head.php';
                                         <?php foreach ($temi as $nomeTema) { ?>
                                             <option value="<?php echo htmlspecialchars($nomeTema['nomeTema']); ?>"><?php echo htmlspecialchars($nomeTema['nomeTema']); ?></option>
                                         <?php } ?>
-
                                     </select>
-                                    <div class="invalid-feedback">Esempio file non accettato</div>
                                 </div>
                             </div>
                         </div>
@@ -301,26 +289,26 @@ include 'head.php';
 <script type="text/javascript">
     $("form").submit(function (event) {
         let errore = "";
-        if ($("#titoloCreaBlog").val() === "") { //se il campo è vuoto
+        if ($("#titoloCreaBlog").val() === "") { //se il campo titolo è vuoto
             errore += "Il titolo è obbligatorio.<br>";
         }
-        if ($("#categoriaCreaBlog").val() === "") { //se il campo è vuoto
+        if ($("#categoriaCreaBlog").val() === "") { //se il campo categoria è vuoto
             errore += "La categoria è obbligatoria.<br>";
         }
-        if ($("#descrizioneCreaBlog").val() === "") { //se il campo è vuoto
+        if ($("#descrizioneCreaBlog").val() === "") { //se il campo descrizione è vuoto
             errore += "Non hai inserito una descrizione.<br>";
         }
         if (errore !== "") {
             event.preventDefault();//fa in modo che il form non si refreshi al "submit" ma mi permetta di validare i dati prima di mandarli al server
-            $("#errore").html('<div class="alert alert-danger" role="alert"><p><strong>Nel form sono stati trovati i seguenti errori:</strong></p>' + errore + '</div>');
+            $("#errore").addClass("alert-danger");
+            $("#errore").html('<p><strong>Nel form sono stati trovati i seguenti errori:</strong></p>' + errore);
         }
     });
-    // script colora di rosso errori dal php
-    if ($('div#errore').is(':empty')) {
-        $("div#errore").addClass("alert_danger");
+    // script colora di rosso errori dal php(aggiungendo classe alert-danger di bootstrap)
+    if ($('#errore').children().length > 0) { //se div errore non è vuoto
+        $("#errore").addClass("alert-danger");
     } else {
-        $("div#errore").removeClass("alert_danger");
-
+        $("#errore").removeClass("alert-danger");
     }
 </script>
 
