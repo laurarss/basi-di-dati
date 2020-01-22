@@ -243,16 +243,15 @@ include 'head.php';
                         data-id-post="<?php echo $post['idPost']; ?>"
                         data-is-liked="<?php echo isset($miPiace) ?>"
                         data-cont-like="<?php echo $post['cont_like']; ?>">
-                        <span class="cont_like py-3 px-2 text-primary font-weight-bold">
-
+                        <span class="cont_like py-3 px-2 text-primary">
                             <?php if ($miPiace !== null) { ?>
                                 <i class="px-1 fas fa-thumbs-down"></i>
                             <?php } else { ?>
                                 <i class="px-1 fas fa-thumbs-up"></i>
                             <?php } ?>
-
+                            Mi piace
                             <!-- numero di like da tab post-->
-                            <?php echo $post['cont_like']; ?>
+                            (<?php echo $post['cont_like']; ?>)
                         </span>
                 </button>
 
@@ -436,18 +435,13 @@ include 'head.php';
                     // aggiorno i dati dell'elemento html relativo al like button con data(chiave_valore, nuovo_valore)
 
                     if (isPostLiked === 1) {
-                        $(button).html("<i class=\"px-1 fas fa-thumbs-up\"></i> (" + ($(button).data('cont-like') - 1) + ")");
+                        $(button).html("<i class=\"px-1 fas fa-thumbs-up\"></i>Mi piace (" + ($(button).data('cont-like') - 1) + ")");
                         $(button).data('cont-like', $(button).data('cont-like') - 1); // aggiorno cont like
-                        $(button).data('is-liked', '') ;// aggiorno is-liked
-
-
-                        // todo riuscire ad accedere all'icona a cambiarla al volo
+                        $(button).data('is-liked', '');// aggiorno is-liked
                     } else {
-                        $(button).html("<i class=\"px-1 fas fa-thumbs-down\"></i> (" + ($(button).data('cont-like') + 1) + ")");
+                        $(button).html("<i class=\"px-1 fas fa-thumbs-down\"></i>Non mi piace più (" + ($(button).data('cont-like') + 1) + ")");
                         $(button).data('cont-like', $(button).data('cont-like') + 1);
                         $(button).data('is-liked', 1); // aggiorno is-liked
-
-                        // todo riuscire ad accedere all'icona a cambiarla al volo
                     }
                 }
             )
