@@ -14,7 +14,7 @@ include('db_connect.php');
 // REGISTRAZIONE UTENTE
 if (isset($_POST['reg_btn'])) {
 
-    // receive all input values from the form
+    // ricevo valori dal form
     $nomeUtente = mysqli_real_escape_string($conn, $_POST['nomeUtente']);
     $password_1 = mysqli_real_escape_string($conn, $_POST['password_1']);
     $password_2 = mysqli_real_escape_string($conn, $_POST['password_2']);
@@ -22,8 +22,8 @@ if (isset($_POST['reg_btn'])) {
     $cognome = mysqli_real_escape_string($conn, $_POST['cognome']);
     $email = mysqli_real_escape_string($conn, $_POST['email']);
 
-    // form validation: ensure that the form is correctly filled ...
-    // by adding (array_push()) corresponding error unto $errors array
+    // validazione form
+    // con (array_push()) inserisco l'errore corrispondente nell'array errors
     if (empty($nomeUtente)) {
         array_push($errors, "E' richiesto il nome utente");
     }

@@ -27,7 +27,7 @@ if (isset($_SESSION['nomeUtente'])) {
     $risBlog = mysqli_query($conn, $sqlBlog);
 
     // fetch righe risultato in un array
-    $datiUtente = mysqli_fetch_all($risUtente, MYSQLI_ASSOC); // si usa assoc e non all perchè prendiamo solo una riga della tab risultato
+    $datiUtente = mysqli_fetch_assoc($risUtente); // si usa assoc e non all perchè prendiamo solo una riga della tab risultato
     $numBlog = mysqli_fetch_assoc($risBlog); // si usa assoc e non all perchè prendiamo solo una riga della tab risultato
 
 //    printf("Select returned %d rows.\n", $risUtente->num_rows);
@@ -62,26 +62,45 @@ include 'head.php';
                     <h4 class="card-title text-center">Il tuo profilo, <?php echo $nomeUtente; ?></h4>
                     <div class="row py-2 px-4">
 
-                        <!-- titolo -->
+                        <!-- titoli riga a sx -->
                         <div class="col-6 text-left">
                             <p class="lead">Nome utente:</p>
-                            <p class="lead">Nome:</p>
-                            <p class="lead">Cognome:</p>
+                            <?php
+                            //non echo nomi degli elem non obbligatori, se vuoti(nome e cognome)
+                            $nome = $datiUtente['nome'];
+                            $cognome = $datiUtente['cognome'];
+                            if ($nome != NULL) {
+                                echo ' <p class="lead">Nome:</p>';
+                            }
+                            if ($cognome != NULL) {
+                                echo '<p class="lead">Cognome:</p>';
+                            }
+                            ?>
                             <p class="lead">email:</p>
                             <p class="lead">Tipo utente:</p>
                             <p class="lead">Blog creati:</p>
                         </div>
 
+                        <!-- valori dal db nella riga a dx -->
                         <div class="col-6 text-right">
-                            <p class="lead"><?php echo $datiUtente[0]['nomeUtente']; ?></p>
-                            <p class="lead"><?php echo ucfirst($datiUtente[0]['nome']); ?></p>
-                            <p class="lead"><?php echo ucfirst($datiUtente[0]['cognome']); ?></p>
-                            <p class="lead"><?php echo $datiUtente[0]['email']; ?></p>
-                            <p class="lead"><?php echo $datiUtente[0]['tipoUtente']; ?></p>
+                            <p class="lead"><?php echo $datiUtente['nomeUtente']; ?></p>
+                            <?php
+                            //non echo gli elem non obbligatori, se vuoti(nome e cognome)
+                            $nome = $datiUtente['nome'];
+                            $cognome = $datiUtente['cognome'];
+                            if ($nome != NULL) {
+                                    echo '<p class="lead">'. ucfirst($datiUtente['nome']).'</p>';
+                                }
+                            if ($cognome != NULL) {
+                                    echo '<p class="lead">'. ucfirst($datiUtente['cognome']).'</p>';
+                                }
+                            ?>
+                            <p class="lead"><?php echo $datiUtente['email']; ?></p>
+                            <p class="lead"><?php echo $datiUtente['tipoUtente']; ?></p>
                             <p class="lead"><?php echo $numBlog['contBlog']; ?></p>
                         </div>
                     </div>
-                    <?php if ($datiUtente[0]['tipoUtente'] == 'Normale') : ?>
+                    <?php if ($datiUtente['tipoUtente'] == 'Normale') : ?>
                         <div class="row py-2 px-4">
                             <div class="col-12 text-center">
                                 <a id="utPremium" class="btn btn-secondary btn-sm" href="premium.php">

@@ -4,6 +4,8 @@ include('db_connect.php');
 //includo file header
 include('header.php');
 
+
+
 $titolo = $autore = $data = $id_categoria = $descrizione = $banner = $idBlog = $tema = ''; //inizializzo le variabili vuote (altrimenti php dà errore quando le uso senza avere mai cliccato submit)
 $errors = array('titolo' => '', 'categoria' => '', 'descrizione' => '', 'banner' => ''); //array associativo che immagazzina gli errori
 
@@ -21,17 +23,17 @@ if (isset($_POST['crea_blog_submit'])) {
 
 // check titolo blog
     if (empty($_POST['titolo'])) {
-        $errors['titolo'] = '<p>' . 'Manca un titolo per il tuo blog!<br>';
+        $errors['titolo'] = '<p>' . 'Manca un titolo per il tuo blog.' . '</p>';
     } else {
         $titolo = $_POST['titolo'];
         if (!preg_match('/^[ A-Za-z]+$/', $titolo)) {
-            $errors['titolo'] = '<p>' . 'Il titolo deve contenere solo lettere e spazi<br>';
+            $errors['titolo'] = '<p>' . 'Il titolo deve contenere solo lettere e spazi'. '</p>';
         }
     }
 
 //check categoria
     if (empty($_POST['categoria'])) {
-        $errors['categoria'] = '<p>' . 'Manca una categoria per il tuo blog!<br>';
+        $errors['categoria'] = '<p>' . 'Manca una categoria per il tuo blog!'. '</p>';
     } else {
 
         /**
@@ -41,7 +43,7 @@ if (isset($_POST['crea_blog_submit'])) {
          */
         $nome_categoria = $_POST['categoria']; // variabili di utility per nome categoria inserito da utente
         if (!preg_match('/^[ A-Za-z]+$/', $nome_categoria)) {
-            $errors['categoria'] = 'Categoria deve contenere solo lettere e spazi<br>';
+            $errors['categoria'] = 'Categoria deve contenere solo lettere e spazi'. '</p>';
         }
 
         $trovato = $i = 0;
@@ -101,7 +103,6 @@ if (isset($_POST['crea_blog_submit'])) {
             }
         }
     }
-
 
 //recupero data timestamp
     $timestamp = date("Y-m-d H:i:s");

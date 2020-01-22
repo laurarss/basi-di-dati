@@ -141,7 +141,7 @@ include 'head.php';
                             if ($("#passwordUtente").val() === "" || $("#passwordUtente2").val() === "") { //se il campo è vuoto
                                 errore += "Password obbligatoria.<br>";
                                 $("#passwordUtente").css('border-color', '#b32d39');
-                            } else if ($("#passwordUtente").val().length <= 8) {
+                            } else if ($("#passwordUtente").val().length < 8) {
                                 errore += "La password deve essere almeno di 8 caratteri<br>";
                                 $("#passwordUtente").css('border-color', '#b32d39');
                             } else {
@@ -151,9 +151,6 @@ include 'head.php';
                                 errore += "Le password non combaciano.<br>";
                                 $("#passwordUtente").css('border-color', '#b32d39');
                                 $("#passwordUtente2").css('border-color', '#b32d39');
-                            } else {
-                                $("#passwordUtente").css('border-color', '#28a745');
-                                $("#passwordUtente2").css('border-color', '#28a745');
                             }
                             if ($("#inputEmail").val() === "") { //se il campo è vuoto
                                 errore += "Email obbligatoria.<br>";

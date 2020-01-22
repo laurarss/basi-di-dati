@@ -12,39 +12,94 @@ $errors = array('numeroCarta' => '', 'scadenzaCarta' => '', 'codSicurezza' => ''
 
 if (isset($_SESSION['nomeUtente'])) {
     $nomeUtente = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']);
-}
+
 // azioni conseguenti a submit
-if (isset($_POST['paga_submit'])) {
+    if (isset($_POST['paga_submit'])) {
 
-    //check numero carta
-    if (empty($_POST['numeroCarta'])) {
-        $errors['numeroCarta'] = '<p>' . 'Manca il numero della tua carta!<br>';
-    } else {
-        $numeroCarta = $_POST['numeroCarta'];
-        if (!preg_match('/^[0-9]$/', $numeroCarta)) {
-            $errors['numeroCarta'] = '<p>' . 'Deve contenere il numero a 16 cifre della tua carta<br>';
+        // ricevo valori dal form
+        $numeroCarta = mysqli_real_escape_string($conn, $_POST['numeroCarta']);
+        $scadenzaCarta = mysqli_real_escape_string($conn, $_POST['scadenzaCarta']);
+        $codSicurezza = mysqli_real_escape_string($conn, $_POST['codSicurezza']);
+        $nome = mysqli_real_escape_string($conn, $_POST['nome']);
+        $cognome = mysqli_real_escape_string($conn, $_POST['cognome']);
+
+        //check numero carta
+        if (empty($numeroCarta)) {
+            $errors['numeroCarta'] = '<p>' . 'Manca il numero della tua carta!' . '</p>';
+        } else {
+            //controllo se 16 cifre inserite
+            if (!preg_match('/^[0-9]{16}+$/', $numeroCarta)) {
+                $errors['numeroCarta'] = 'Il campo "Numero carta" deve contenere il numero a 16 cifre della tua carta';
+            }
         }
+
+        //check data scadenza
+        if (empty($scadenzaCarta)) {
+            $errors['scadenzaCarta'] = '<p>' . 'Manca data di scadenza della tua carta!' . '</p>';
+        } else {
+            //controllo se data inserita nel formato desiderato
+            if (!preg_match('/^[a-z] [0-9]{4}$/', $scadenzaCarta)) {
+                $errors['scadenzaCarta'] = '<p>' . 'Il campo "Data scadenza" deve contenere la data di scadenza della tua carta' . '</p>';
+            }
+        }
+
+        //check codice sicurezza
+        if (empty($codSicurezza)) {
+            $errors['codSicurezza'] = '<p>' . 'Manca il codice di sicurezza della tua carta!' . '</p>';
+        } else {
+            //controllo se sono cifre in input
+            if (!preg_match('/^[0-9]{3}$/', $codSicurezza)) {
+                $errors['codSicurezza'] = '<p>' . 'Il campo "Codice di sicurezza" deve contenere il codice di sicurezza della tua carta' . '</p>';
+            } else if (strlen(trim($codSicurezza)) != 3) { //controllo se la lunghezza è di 3 cifre
+                $errors['codSicurezza'] = '<p>' . 'Il campo "Codice di sicurezza" deve contenere il codice a 3 cifre sul retro della tua carta' . '</p>';
+            }
+        }
+
+        //check nome
+        if (empty($nome)) {
+            $errors['nome'] = '<p>' . 'Manca nome intestatario.' . '</p>';
+        } else {
+            if (!preg_match('/^[ A-Za-z]+$/', $nome)) {
+                $errors['nome'] = '<p>' . 'Inserisci nome intestatario' . '</p>';
+            }
+        }
+
+        //check cognome
+        if (empty($cognome)) {
+            $errors['cognome'] = '<p>' . 'Manca cognome intestatario.' . '</p>';
+        } else {
+            if (!preg_match('/^[ A-Za-z]+$/', $cognome)) {
+                $errors['cognome'] = '<p>' . 'Inserisci cognome intestatario' . '</p>';
+            }
+        }
+
+        if (count($errors) == 0) {
+            //inserisco dati pagamento in db
+            $sqlDatiPagam = "INSERT INTO `pagamenti` (`numeroCarta`, `scadenzaCarta`, `codSicurezza`, `idUtente`) VALUES ('$numeroCarta', '$scadenzaCarta', '$codSicurezza', '$nomeUtente')";
+            $insDatiPagam = mysqli_query($conn, $sqlDatiPagam);
+
+            // sql aggiorna utente a premium
+            $sqlAggiornaUtente = "UPDATE `utenti` SET `tipoUtente` = 'Premium' WHERE `utenti`.`nomeUtente` = '$nomeUtente'";
+
+            //aggiorno utente se inserim dati pagamento a buon fine
+            if ($insDatiPagam) {
+                //risultato query aggiorna utente a premium
+                $risAggiornaUtente = mysqli_query($conn, $sqlAggiornaUtente);
+            } else {
+                echo "Errore richiesta";
+            }
+            if ($risAggiornaUtente) {
+                header('Location: profilo.php');
+            } else {
+                echo "Errore richiesta";
+            }
+        } else {
+            print_r($errors);
+        }
+
     }
-
-    //check data scadenza
-
-    //check codice sicurezza
-
-    //check nome
-
-    //check cognome
-
-    // sql codice per recuperare titolo blog avendo l'id
-    $sqlAggiornaUtente = "UPDATE `utenti` SET `tipoUtente` = 'Premium' WHERE `utenti`.`nomeUtente` = '$nomeUtente'";
-
-    //risultato query
-    $risAggiornaUtente = mysqli_query($conn, $sqlAggiornaUtente);
-
-    if ($risAggiornaUtente) {
-        header('Location: profilo.php');
-    } else {
-        echo "Errore richiesta";
-    }
+} else {
+    header('Location: ops.php');
 }
 ?>
 <!DOCTYPE html>
@@ -56,7 +111,7 @@ include 'head.php';
 ?>
 
 <body>
-<!-- IMPLEMENTAZIONE LOGIN CON BOOTSTRAP -->
+
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-sm-6">
@@ -72,7 +127,7 @@ include 'head.php';
 
                     <!-- div mostra errori da js -->
                     <div id="errore">
-                        <?php //include('errors.php'); ?>
+                        <?php include('errors.php'); ?>
                     </div>
 
                     <form id="formPagam" method="post" action="premium.php">
@@ -88,23 +143,23 @@ include 'head.php';
                                            class="form-control"
                                            placeholder="Numero di carta a 16 cifre"
                                            name="numeroCarta"
-                                           value="<?php echo htmlspecialchars($nomeUtente) ?>"/>
+                                           value="<?php echo $numeroCarta; ?>">
                                 </div>
                             </div>
 
                             <div class="col-12">
                                 <!-- INPUT scadenza -->
-                                <div class="it-datepicker-wrapper">
-                                    <div class="form-group">
-                                        <label for="scadenzaCarta"><strong>Data scadenza</strong></label>
-                                        <input id="scadenzaCarta"
-                                               class="form-control it-date-datepicker"
-                                               type="month"
-                                               placeholder="inserisci la data"
-                                               name="scadenzaCarta">
-                                    </div>
+                                <div class="form-group">
+                                    <label for="scadenzaCarta"><strong>Data scadenza</strong></label>
+                                    <input id="scadenzaCarta"
+                                           class="form-control"
+                                           type="month"
+                                           placeholder="inserisci la data"
+                                           name="scadenzaCarta"
+                                           value="<?php echo $scadenzaCarta; ?>">
                                 </div>
                             </div>
+
 
                             <div class="col-12">
                                 <!-- INPUT cod sicurezza -->
@@ -114,7 +169,8 @@ include 'head.php';
                                            type="text"
                                            class="form-control"
                                            placeholder="Codice di sicurezza..."
-                                           name="codSicurezza">
+                                           name="codSicurezza"
+                                           value="<?php echo $codSicurezza; ?>">
                                 </div>
                             </div>
 
@@ -126,9 +182,11 @@ include 'head.php';
                                            type="text"
                                            class="form-control"
                                            placeholder="Nome..."
-                                           name="nome">
+                                           name="nome"
+                                           value="<?php echo $nome; ?>">
                                 </div>
                             </div>
+
                             <div class="col-6">
                                 <!-- INPUT Cognome-->
                                 <div class="form-group">
@@ -137,7 +195,8 @@ include 'head.php';
                                            type="text"
                                            class="form-control"
                                            placeholder="Cognome.."
-                                           name="cognome">
+                                           name="cognome"
+                                           value="<?php echo $cognome; ?>">
                                 </div>
                             </div>
 
@@ -148,8 +207,6 @@ include 'head.php';
                                     Paga
                                 </button>
                             </div>
-
-                        </div>
                     </form>
 
                     <!-- validazione form -->
@@ -199,16 +256,6 @@ include 'head.php';
                                 $("#errore").html('<div class="alert alert-danger" role="alert"><p><strong>Nel form sono stati trovati i seguenti errori:</strong></p>' + errore + '</div>');
                             }
                         });
-
-                        //datepicker bootstrap per inserim date
-                        // $.(function () {
-                        //     $('.datepicker').datepicker({
-                        //         format: "mm/yyyy",
-                        //         startView: "months",
-                        //         minViewMode: "months",
-                        //         outputFormat: 'MM/yyyy'
-                        //     });
-                        // });
 
                     </script>
                 </div>

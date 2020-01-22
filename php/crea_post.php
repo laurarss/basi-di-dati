@@ -35,6 +35,9 @@ if (isset($_POST['crea_post_submit'])) {
         $errors['titoloPost'] = '<p>' . 'Manca un titolo per il tuo post!' . '</p>';
     } else {
         $titoloPost = $_POST['titoloPost'];
+        if (!preg_match('/^[ A-Za-z]+$/', $titoloPost)) {
+            $errors['titoloPost'] = '<p>' . 'Il titolo deve contenere solo lettere e spazi'. '</p>';
+        }
     }
 
     //check testo post
