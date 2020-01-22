@@ -1,7 +1,7 @@
 <?php
 //includo file connessione al db
 include('db_connect.php');
-//includo php header
+//includo file header
 include('header.php');
 
 $titolo = $autore = $data = $id_categoria = $descrizione = $banner = $idBlog = $tema = ''; //inizializzo le variabili vuote (altrimenti php dà errore quando le uso senza avere mai cliccato submit)

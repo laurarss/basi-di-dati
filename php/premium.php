@@ -5,13 +5,35 @@ include('db_connect.php');
 include('header.php');
 
 //un utente diventa premium inserendo dati di pagamento in questa pagina
-$errors = array('numCarta' => '', 'scadenza' => '', 'codSicurezza' => '', 'nome' => '', 'congnome' => ''); //array associativo che immagazzina gli errori
+//variabili usate
+$nomeUtente = $numeroCarta = $scadenzaCarta = $codSicurezza = $nome = $cognome = '';
+//array errori
+$errors = array('numeroCarta' => '', 'scadenzaCarta' => '', 'codSicurezza' => '', 'nome' => '', 'cognome' => ''); //array associativo che immagazzina gli errori
 
 if (isset($_SESSION['nomeUtente'])) {
     $nomeUtente = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']);
 }
 // azioni conseguenti a submit
 if (isset($_POST['paga_submit'])) {
+
+    //check numero carta
+    if (empty($_POST['numeroCarta'])) {
+        $errors['numeroCarta'] = '<p>' . 'Manca il numero della tua carta!<br>';
+    } else {
+        $numeroCarta = $_POST['numeroCarta'];
+        if (!preg_match('/^[0-9]$/', $numeroCarta)) {
+            $errors['numeroCarta'] = '<p>' . 'Deve contenere il numero a 16 cifre della tua carta<br>';
+        }
+    }
+
+    //check data scadenza
+
+    //check codice sicurezza
+
+    //check nome
+
+    //check cognome
+
     // sql codice per recuperare titolo blog avendo l'id
     $sqlAggiornaUtente = "UPDATE `utenti` SET `tipoUtente` = 'Premium' WHERE `utenti`.`nomeUtente` = '$nomeUtente'";
 
