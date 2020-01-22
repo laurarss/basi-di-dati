@@ -19,20 +19,29 @@ if (isset($_SESSION['nomeUtente'])) {
 
     // sql blog creati dall'utente loggato
     $sqlGetBlogsByAutore = "SELECT blog.idBlog, blog.titolo, blog.autore, categorie.nomeCategoria, blog.data, blog.descrizione, blog.categoria, blog.banner
-FROM categorie , blog
-WHERE  categorie.idCategoria = blog.categoria
-AND blog.autore = '$nomeUtente'";
+FROM categorie , blog WHERE categorie.idCategoria = blog.categoria AND blog.autore = '$nomeUtente'";
 
     // sql categorie
     $sqlCategorie = "SELECT * FROM `categorie`";
 
+    // sql tipo utente
+    $sqlTipoUtente = "SELECT tipoUtente FROM utenti WHERE nomeUtente = '$nomeUtente'";
+
     // righe risultato
     $result = mysqli_query($conn, $sqlGetBlogsByAutore);
     $resultCategorie = mysqli_query($conn, $sqlCategorie);
+    $resTipoUtente = mysqli_query($conn, $sqlTipoUtente);
+
+    //conto i blog creati dall'utente
+    $numBlog = mysqli_num_rows($result);
+    var_dump($numBlog);
+
 
     // righe risultato "fetchate" in array
     $blogs = mysqli_fetch_all($result, MYSQLI_ASSOC);
     $categorie = mysqli_fetch_all($resultCategorie, MYSQLI_ASSOC);
+    $tipoUtente = mysqli_fetch_assoc($resTipoUtente);
+
 
     // libero memoria
     mysqli_free_result($result);
@@ -94,8 +103,11 @@ include 'head.php';
             </div>
         <?php } ?>
 
+
+        <?php // mostro pulsante crea blog solo agli utenti normali che hanno meno di 3 blog o a quelli che sono premium
+        if (($tipoUtente['tipoUtente'] == "Normale" && $numBlog < 3) ||  $tipoUtente['tipoUtente'] == "Premium") { ?>
         <!--aggiunta card di crea blog-->
-        <div class="col-lg-3 py-3">
+        <div class="cardCreaBlog col-lg-3 py-3">
             <div class="card h-100 z-depth-0">
 
                 <div class="card-header">
@@ -122,6 +134,7 @@ include 'head.php';
                 </div>
             </div>
         </div>
+        <?php } ?>
 
     </div>
 

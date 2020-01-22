@@ -4,143 +4,162 @@ include('db_connect.php');
 //includo file header
 include('header.php');
 
+$nomeUtente = $_SESSION['nomeUtente'];
+
+// sql blog creati dall'utente loggato(se < 3 con utente normale devo nascondere la pagina)
+$sqlContaBlog = "SELECT COUNT(*) as contati FROM blog WHERE autore = '$nomeUtente'";
+$risContaBlog = mysqli_query($conn, $sqlContaBlog);
+$numBlog = mysqli_fetch_assoc($risContaBlog);
+
+// recupero tipo utente
+$sqlTipoUtente = "SELECT tipoUtente FROM utenti WHERE nomeUtente = '$nomeUtente'";
+$risTipoUtente = mysqli_query($conn, $sqlTipoUtente);
+$tipoUtente = mysqli_fetch_assoc($risTipoUtente);
 
 
-$titolo = $autore = $data = $id_categoria = $descrizione = $banner = $idBlog = $tema = ''; //inizializzo le variabili vuote (altrimenti php dà errore quando le uso senza avere mai cliccato submit)
-$errors = array('titolo' => '', 'categoria' => '', 'descrizione' => '', 'banner' => ''); //array associativo che immagazzina gli errori
+// accedono a crea blog solo gli utenti normali che hanno meno di 3 blog o quelli che sono premium
+if (($tipoUtente['tipoUtente'] == "Normale" && $numBlog['contati'] < 3) || $tipoUtente['tipoUtente'] == "Premium") {
+
+//inizializzo le variabili vuote (altrimenti php dà errore quando le uso senza avere mai cliccato submit)
+    $titolo = $autore = $data = $id_categoria = $descrizione = $banner = $idBlog = $tema = '';
+
+//array associativo che immagazzina gli errori
+    $errors = array('titolo' => '', 'categoria' => '', 'descrizione' => '', 'banner' => '');
 
 // mi prendo le categorie per i controlli sul form
-$sqlCategorie = "SELECT * FROM categorie";
-$risCategorie = mysqli_query($conn, $sqlCategorie);
-$categorie = mysqli_fetch_all($risCategorie, MYSQLI_ASSOC);
+    $sqlCategorie = "SELECT * FROM categorie";
+    $risCategorie = mysqli_query($conn, $sqlCategorie);
+    $categorie = mysqli_fetch_all($risCategorie, MYSQLI_ASSOC);
 
 //recupero elenco temi
-$sqlTemi = "SELECT * FROM `temi`"; //elenco temi
-$risTemi = mysqli_query($conn, $sqlTemi); //ris temi
-$temi = mysqli_fetch_all($risTemi, MYSQLI_ASSOC);
+    $sqlTemi = "SELECT * FROM `temi`"; //elenco temi
+    $risTemi = mysqli_query($conn, $sqlTemi); //ris temi
+    $temi = mysqli_fetch_all($risTemi, MYSQLI_ASSOC);
 
-if (isset($_POST['crea_blog_submit'])) {
+    if (isset($_POST['crea_blog_submit'])) {
 
 // check titolo blog
-    if (empty($_POST['titolo'])) {
-        $errors['titolo'] = '<p>' . 'Manca un titolo per il tuo blog.' . '</p>';
-    } else {
-        $titolo = $_POST['titolo'];
-        if (!preg_match('/^[ A-Za-z]+$/', $titolo)) {
-            $errors['titolo'] = '<p>' . 'Il titolo deve contenere solo lettere e spazi'. '</p>';
+        if (empty($_POST['titolo'])) {
+            $errors['titolo'] = '<p>' . 'Manca un titolo per il tuo blog.' . '</p>';
+        } else {
+            $titolo = $_POST['titolo'];
+            if (!preg_match('/^[ A-Za-z]+$/', $titolo)) {
+                $errors['titolo'] = '<p>' . 'Il titolo deve contenere solo lettere e spazi' . '</p>';
+            }
         }
-    }
 
 //check categoria
-    if (empty($_POST['categoria'])) {
-        $errors['categoria'] = '<p>' . 'Manca una categoria per il tuo blog!'. '</p>';
-    } else {
+        if (empty($_POST['categoria'])) {
+            $errors['categoria'] = '<p>' . 'Manca una categoria per il tuo blog!' . '</p>';
+        } else {
 
-        /**
-         * controllare che la categ inserita dall'utente non esista già(facendo lowercase)
-         * se categ esiste già allora assegno a $categoria l'id della categ già persistita
-         * se categ non esiste crearla con relativa insert, e prenderne l'id
-         */
-        $nome_categoria = $_POST['categoria']; // variabili di utility per nome categoria inserito da utente
-        if (!preg_match('/^[ A-Za-z]+$/', $nome_categoria)) {
-            $errors['categoria'] = 'Categoria deve contenere solo lettere e spazi'. '</p>';
-        }
-
-        $trovato = $i = 0;
-        while ($i < sizeof($categorie) and !$trovato) {
-            if (strtolower($nome_categoria) === strtolower($categorie[$i]['nomeCategoria'])) {
-                $id_categoria = $categorie[$i]['idCategoria'];
-                $trovato = 1;
+            /**
+             * controllare che la categ inserita dall'utente non esista già(facendo lowercase)
+             * se categ esiste già allora assegno a $categoria l'id della categ già persistita
+             * se categ non esiste crearla con relativa insert, e prenderne l'id
+             */
+            $nome_categoria = $_POST['categoria']; // variabili di utility per nome categoria inserito da utente
+            if (!preg_match('/^[ A-Za-z]+$/', $nome_categoria)) {
+                $errors['categoria'] = 'Categoria deve contenere solo lettere e spazi' . '</p>';
             }
-            $i = $i + 1;
-        }
 
-        if (!$trovato) {
-            $sqlInserisciCateg = "INSERT INTO categorie (idCategoria, nomeCategoria) VALUES('NULL', '$nome_categoria')";
+            $trovato = $i = 0;
+            while ($i < sizeof($categorie) and !$trovato) {
+                if (strtolower($nome_categoria) === strtolower($categorie[$i]['nomeCategoria'])) {
+                    $id_categoria = $categorie[$i]['idCategoria'];
+                    $trovato = 1;
+                }
+                $i = $i + 1;
+            }
 
-            if (mysqli_query($conn, $sqlInserisciCateg)) {
-                $id_categoria = mysqli_insert_id($conn);
-            } else {
-                echo "Inserimento fallito per la nuova categoria";
+            if (!$trovato) {
+                $sqlInserisciCateg = "INSERT INTO categorie (idCategoria, nomeCategoria) VALUES('NULL', '$nome_categoria')";
+
+                if (mysqli_query($conn, $sqlInserisciCateg)) {
+                    $id_categoria = mysqli_insert_id($conn);
+                } else {
+                    echo "Inserimento fallito per la nuova categoria";
+                }
             }
         }
-    }
 
 //check descrizione
-    if (empty($_POST['descrizione'])) {
-        $errors['descrizione'] = '<p>' . 'Manca una descrizione per il tuo blog!' . '</p>';
-    } else {
-        $descrizione = $_POST['descrizione'];
-    }
+        if (empty($_POST['descrizione'])) {
+            $errors['descrizione'] = '<p>' . 'Manca una descrizione per il tuo blog!' . '</p>';
+        } else {
+            $descrizione = $_POST['descrizione'];
+        }
 
 // check immagine
-    if ($_FILES['blog_banner']['size'] > 1024 * 1024) { // se le dimensioni sono troppo grandi
-        //$errors['banner'] = '<p>' . 'Immagine troppo grande' . '</p>';
-    } else {
-        $nomeBannerBlog = $_FILES['blog_banner']['name']; // salvo il nome dell'immagine
-        $nomeBannerBlog_tmp = $_FILES['blog_banner']['tmp_name'];
-        $targetDir = "../img/user_upload/";
-        $targetFile = $targetDir . basename($nomeBannerBlog); // concateno il path al nome img
+        if ($_FILES['blog_banner']['size'] > 1024 * 1024) { // se le dimensioni sono troppo grandi
+            //$errors['banner'] = '<p>' . 'Immagine troppo grande' . '</p>';
+        } else {
+            $nomeBannerBlog = $_FILES['blog_banner']['name']; // salvo il nome dell'immagine
+            $nomeBannerBlog_tmp = $_FILES['blog_banner']['tmp_name'];
+            $targetDir = "../img/user_upload/";
+            $targetFile = $targetDir . basename($nomeBannerBlog); // concateno il path al nome img
 
-        // recupero estensione dell'img caricata
-        $tipoImg = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+            // recupero estensione dell'img caricata
+            $tipoImg = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
 
-        // creo un array di stringhe nei quali scrivo i formati accettati di immagine
-        $estensioniAccettate = array("jpg", "png", "jpeg");
+            // creo un array di stringhe nei quali scrivo i formati accettati di immagine
+            $estensioniAccettate = array("jpg", "png", "jpeg");
 
-        // controllo se l'estensione del banner e' tra quelle accettate
-        // in caso contrario creo un errore
-        if (!in_array($tipoImg, $estensioniAccettate)) {
-            $errors['banner'] = '<p>' . 'Il formato del banner selezionato non è accettato' . '</p>';
-        }
+            // controllo se l'estensione del banner e' tra quelle accettate
+            // in caso contrario creo un errore
+            if (!in_array($tipoImg, $estensioniAccettate)) {
+                $errors['banner'] = '<p>' . 'Il formato del banner selezionato non è accettato' . '</p>';
+            }
 
-        // se non ci sono errori
-        if (!$errors['banner']) {
-            // copio il file dalla locazione temporanea alla mia cartella upload
-            if (!move_uploaded_file($nomeBannerBlog_tmp, $targetDir . $nomeBannerBlog)) {
-                //se errore img è troppo grande
-                $errors['banner'] = '<p>' . "Upload immagine troppo grande" . '</p>';
+            // se non ci sono errori
+            if (!$errors['banner']) {
+                // copio il file dalla locazione temporanea alla mia cartella upload
+                if (!move_uploaded_file($nomeBannerBlog_tmp, $targetDir . $nomeBannerBlog)) {
+                    //se errore img è troppo grande
+                    $errors['banner'] = '<p>' . "Upload immagine troppo grande" . '</p>';
+                }
             }
         }
-    }
 
 //recupero data timestamp
-    $timestamp = date("Y-m-d H:i:s");
+        $timestamp = date("Y-m-d H:i:s");
 
-    if (array_filter($errors)) {
-        //se ci sono errori
-        //print_r($errors);
-    } else {
-
-        //escape sql chars
-        $titolo = mysqli_real_escape_string($conn, strtolower($_POST['titolo']));// prende titolo (minuscolo)
-        $autore = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']); //recupero user della sessione
-        $data = $timestamp;
-        $descrizione = mysqli_real_escape_string($conn, $_POST['descrizione']);
-        $banner = $targetFile; //salvo path immagine
-        $tema = mysqli_real_escape_string($conn, strtolower($_POST['selezTema']));
-
-        //tabella sql in cui inserire il dato
-        $sqlNuovoBlog = "INSERT INTO blog (idBlog, titolo, autore, data, descrizione, categoria, banner, tema) VALUES('NULL', '$titolo', '$autore', '$data', '$descrizione', '$id_categoria', '$banner', '$tema')";
-
-        //controlla e salva sul db
-        if (mysqli_query($conn, $sqlNuovoBlog)) {
-            //successo
-            //passo id blog appena creato all'url della pagina visual_blog e lo apro(per permettere all'utente di creare subito un nuovo post)
-            $idBlog = mysqli_insert_id($conn);
-            header("Location: visual_blog.php?idBlog=$idBlog");
+        if (array_filter($errors)) {
+            //se ci sono errori
+            //print_r($errors);
         } else {
-            //errore
-            echo 'errore query: ' . mysqli_error($conn);
+
+            //escape sql chars
+            $titolo = mysqli_real_escape_string($conn, strtolower($_POST['titolo']));// prende titolo (minuscolo)
+            $autore = mysqli_real_escape_string($conn, $nomeUtente); //recupero user della sessione
+            $data = $timestamp;
+            $descrizione = mysqli_real_escape_string($conn, $_POST['descrizione']);
+            $banner = $targetFile; //salvo path immagine
+            $tema = mysqli_real_escape_string($conn, strtolower($_POST['selezTema']));
+
+            //tabella sql in cui inserire il dato
+            $sqlNuovoBlog = "INSERT INTO blog (idBlog, titolo, autore, data, descrizione, categoria, banner, tema) VALUES('NULL', '$titolo', '$autore', '$data', '$descrizione', '$id_categoria', '$banner', '$tema')";
+
+            //controlla e salva sul db
+            if (mysqli_query($conn, $sqlNuovoBlog)) {
+                //successo
+                //passo id blog appena creato all'url della pagina visual_blog e lo apro(per permettere all'utente di creare subito un nuovo post)
+                $idBlog = mysqli_insert_id($conn);
+                header("Location: visual_blog.php?idBlog=$idBlog");
+            } else {
+                //errore
+                echo 'errore query: ' . mysqli_error($conn);
+            }
         }
-    }
 //libera memoria
-    mysqli_free_result($risCategorie);
+        mysqli_free_result($risCategorie);
 
 //chiudi connessione
-    mysqli_close($conn);
+        mysqli_close($conn);
+    }
+} else {
+    header("Location: ops.php");
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -156,7 +175,7 @@ include 'head.php';
     <div class="row">
         <div class="col-sm-12 px-5 py-4 text-left">
             <a class="btn btn-outline-secondary btn-sm"
-               href="gestione_blog.php?nomeUtente=<?php echo $_SESSION['nomeUtente']; ?>">
+               href="gestione_blog.php?nomeUtente=<?php echo $nomeUtente; ?>">
                 <i class="fa fa-arrow-left"></i>
                 Torna alla gestione blog
             </a>
@@ -296,13 +315,13 @@ include 'head.php';
             $("#categoriaCreaBlog").css('border-color', '#28a745');
         }
         if ($("#descrizioneCreaBlog").val() === "") { //se il campo categoria è vuoto
-            errore += "La categoria è obbligatoria.<br>";
+            errore += "La descrizione è obbligatoria.<br>";
             $("#descrizioneCreaBlog").css('border-color', '#b32d39');
         } else {
             $("#descrizioneCreaBlog").css('border-color', '#28a745');
         }
         if ($("#fileInput").value === "") { //se il campo descrizione è vuoto
-            errore += "Non hai inserito una descrizione.<br>";
+            errore += "Non hai inserito un'immagine'.<br>";
             $("#fileInput").css('border-color', '#b32d39');
         } else {
             $("#fileInput").css('border-color', '#28a745');
