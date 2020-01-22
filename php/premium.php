@@ -8,7 +8,7 @@ include('header.php');
 //variabili usate
 $nomeUtente = $numeroCarta = $scadenzaCarta = $codSicurezza = $nome = $cognome = '';
 //array errori
-$errors = array('numeroCarta' => '', 'scadenzaCarta' => '', 'codSicurezza' => '', 'nome' => '', 'cognome' => ''); //array associativo che immagazzina gli errori
+$errors = array();
 
 if (isset($_SESSION['nomeUtente'])) {
     $nomeUtente = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']);
@@ -25,51 +25,50 @@ if (isset($_SESSION['nomeUtente'])) {
 
         //check numero carta
         if (empty($numeroCarta)) {
-            $errors['numeroCarta'] = '<p>' . 'Manca il numero della tua carta!' . '</p>';
+            array_push($errors, 'Manca il numero della tua carta!');
         } else {
             //controllo se 16 cifre inserite
             if (!preg_match('/^[0-9]{16}+$/', $numeroCarta)) {
-                $errors['numeroCarta'] = 'Il campo "Numero carta" deve contenere il numero a 16 cifre della tua carta';
+                array_push($errors, 'Il campo "Numero carta" deve contenere il numero a 16 cifre della tua carta');
             }
         }
 
         //check data scadenza
         if (empty($scadenzaCarta)) {
-            $errors['scadenzaCarta'] = '<p>' . 'Manca data di scadenza della tua carta!' . '</p>';
+            array_push($errors, 'Manca data di scadenza della tua carta!');
         } else {
+            var_dump($scadenzaCarta);
             //controllo se data inserita nel formato desiderato
-            if (!preg_match('/^[a-z] [0-9]{4}$/', $scadenzaCarta)) {
-                $errors['scadenzaCarta'] = '<p>' . 'Il campo "Data scadenza" deve contenere la data di scadenza della tua carta' . '</p>';
+            if (!preg_match('/^[0-9]{4}-(0[1-9]|1[0-2])$/', $scadenzaCarta)) {
+                array_push($errors, 'Il campo "Data scadenza" deve contenere la data di scadenza della tua carta');
             }
         }
 
         //check codice sicurezza
         if (empty($codSicurezza)) {
-            $errors['codSicurezza'] = '<p>' . 'Manca il codice di sicurezza della tua carta!' . '</p>';
+            array_push($errors, 'Manca il codice di sicurezza della tua carta!');
         } else {
             //controllo se sono cifre in input
             if (!preg_match('/^[0-9]{3}$/', $codSicurezza)) {
-                $errors['codSicurezza'] = '<p>' . 'Il campo "Codice di sicurezza" deve contenere il codice di sicurezza della tua carta' . '</p>';
-            } else if (strlen(trim($codSicurezza)) != 3) { //controllo se la lunghezza è di 3 cifre
-                $errors['codSicurezza'] = '<p>' . 'Il campo "Codice di sicurezza" deve contenere il codice a 3 cifre sul retro della tua carta' . '</p>';
+                array_push($errors, 'Il campo "Codice di sicurezza" deve contenere il codice a 3 cifre sul retro della tua carta');
             }
         }
 
         //check nome
         if (empty($nome)) {
-            $errors['nome'] = '<p>' . 'Manca nome intestatario.' . '</p>';
+            array_push($errors, 'Manca nome intestatario.');
         } else {
             if (!preg_match('/^[ A-Za-z]+$/', $nome)) {
-                $errors['nome'] = '<p>' . 'Inserisci nome intestatario' . '</p>';
+                array_push($errors, 'Inserisci nome intestatario');
             }
         }
 
         //check cognome
         if (empty($cognome)) {
-            $errors['cognome'] = '<p>' . 'Manca cognome intestatario.' . '</p>';
+            array_push($errors, 'Manca cognome intestatario.');
         } else {
             if (!preg_match('/^[ A-Za-z]+$/', $cognome)) {
-                $errors['cognome'] = '<p>' . 'Inserisci cognome intestatario' . '</p>';
+                array_push($errors, 'Inserisci cognome intestatario');
             }
         }
 
@@ -93,10 +92,7 @@ if (isset($_SESSION['nomeUtente'])) {
             } else {
                 echo "Errore richiesta";
             }
-        } else {
-            print_r($errors);
         }
-
     }
 } else {
     header('Location: ops.php');
@@ -115,10 +111,7 @@ include 'head.php';
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-sm-6">
-            <!-- errore accesso non andato a buon fine -->
-            <div id="accessoF">
-                <?php echo $accessoF; ?>
-            </div>
+
             <h4 class="card-title text-center">Diventa premium!</h4>
 
             <div class="card bg-light shadow">

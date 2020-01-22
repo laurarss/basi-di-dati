@@ -6,6 +6,7 @@ session_start();
 
 // inizializzo variabili
 $nomeUtente = $password_1 = $password_2 = $nome = $cognome = $email = '';
+//array associativo che immagazzina gli errori(vuoto all'inizio)
 $errors = array();
 $accessoF = '';
 
