@@ -136,10 +136,11 @@ if (isset($_SESSION['nomeUtente'])) {
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    Sei sicuro?
+                    <strong>Sei sicuro?</strong>
                 </div>
                 <div class="modal-body">
-                    La cancellazione del tuo profilo comporterà anche la cancellazione di tutti i tuoi blog e post, con anche commenti e mi piace inseriti.
+                    La cancellazione del tuo profilo comporterà anche la cancellazione di tutti i tuoi blog e post,
+                    insieme a commenti e mi piace inseriti.
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Annulla</button>
