@@ -48,50 +48,62 @@ if (isset($_POST['crea_post_submit'])) {
     }
 
     // check immagine
-    if ($_FILES['imgPost']['size'] < 800 * 1024) { // se le dimensioni sono troppo grandi
+    if (empty($_POST['$imgPost'])) {
 
-        $nomeImgPost = $_FILES['imgPost']['name']; // salvo il nome dell'immagine uploadata
-        $nomeImgPost_tmp = $_FILES['imgPost']['tmp_name'];
-        $targetDir = "../img/user_upload/";
-        $targetFile = $targetDir . basename($_FILES['imgPost']['name']); // concateno il path al nome img
+        $nomeImgPost = "postDefault.jpg";
+        $nomeImgPost_tmp = "postDefault.jpg";
+        $targetDir = "../img/";
+        $targetFile = $targetDir . basename($nomeImgPost); // concateno il path al nome img di default
 
-        // recupero estensione dell'img caricata
-        $tipoImg = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
-
-        // creo un array di stringhe nei quali scrivo i formati accettati di immagine
-        $estensioniAccettate = array("jpg", "png", "jpeg");
-
-        // controllo se l'estensione e' tra quelle accettate
-        // se non c'è creo un errore
-        if (!in_array($tipoImg, $estensioniAccettate)) {
-            $errors['imgPost'] = '<p>' . 'Formato del file selezionato non accettato.' . '</p>';
-        }
     } else {
-        //se 1M < img < 2M
-        $errors['imgPost'] = '<p>' . "Upload immagine troppo grande" . '</p>';
-    }
 
-    // se non ci sono errori
-    if (!$errors['imgPost']) {
-        // se errore nella copia del file dalla locazione temporanea alla mia cartella upload
-        if (!move_uploaded_file($nomeImgPost_tmp, $targetDir . $nomeImgPost)) {
-            //se non è trasferita l'img è troppo grande (non è stata proprio "presa" dal php in quanto >2M)
-            $errors['imgPost'] = '<p>' . "Upload immagine troppo grande." . '</p>';
+        if ($_FILES['imgPost']['size'] < 800 * 1024) { // se le dimensioni sono troppo grandi
+
+            $nomeImgPost = $_FILES['imgPost']['name']; // salvo il nome dell'immagine uploadata
+            $nomeImgPost_tmp = $_FILES['imgPost']['tmp_name'];
+            $targetDir = "../img/user_upload/";
+            $targetFile = $targetDir . basename($_FILES['imgPost']['name']); // concateno il path al nome img
+
+            // recupero estensione dell'img caricata
+            $tipoImg = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+
+            // creo un array di stringhe nei quali scrivo i formati accettati di immagine
+            $estensioniAccettate = array("jpg", "png", "jpeg");
+
+            // controllo se l'estensione e' tra quelle accettate
+            // se non c'è creo un errore
+            if (!in_array($tipoImg, $estensioniAccettate)) {
+                $errors['imgPost'] = '<p>' . 'Formato del file selezionato non accettato.' . '</p>';
+            }
+
+        } else {
+
+            //se 1M < img < 2M
+            $errors['imgPost'] = '<p>' . "Upload immagine troppo grande" . '</p>';
+
+        }
+
+        // se non ci sono errori
+        if (!$errors['imgPost']) {
+
+            // se errore nella copia del file dalla locazione temporanea alla mia cartella upload
+            if (!move_uploaded_file($nomeImgPost_tmp, $targetDir . $nomeImgPost)) {
+                //se non è trasferita l'img è troppo grande (non è stata proprio "presa" dal php in quanto >2M)
+                $errors['imgPost'] = '<p>' . "Upload immagine troppo grande." . '</p>';
+            }
+
         }
     }
 
     //recupero data timestamp
     $timestamp = date("Y-m-d H:i:s");
 
-    if (array_filter($errors)) {
-        //se ci sono errori
-        //print_r($errors);
-    } else {
+    if (!array_filter($errors)) {
 
         //escape sql chars
         $titoloPost = mysqli_real_escape_string($conn, $_POST['titoloPost']);
-        $dataPost = $timestamp;
         $testoPost = mysqli_real_escape_string($conn, $_POST['testoPost']);
+        $dataPost = $timestamp;
         $imgPost = $targetFile;
 
         //query creazione post
@@ -99,12 +111,16 @@ if (isset($_POST['crea_post_submit'])) {
 
         //controlla e salva sul db
         if (mysqli_query($conn, $sqlNuovoPost)) {
+
             // successo: passo id blog appena creato all'url della pagina visual_blog e lo apro(per permettere all'utente di creare subito un nuovo post)
             $idBlog = $_SESSION['idBlog'];
             header("Location: visual_blog.php?idBlog=$idBlog");
+
         } else {
+
             //errore
             echo 'errore query: ' . mysqli_error($conn);
+
         }
     }
 
@@ -235,12 +251,6 @@ include 'head.php';
             $("#testoPost").css('border-color', '#b32d39');
         } else {
             $("#testoPost").css('border-color', '#28a745');
-        }
-        if ($("#fileInput").val() === "") { //se il campo file input è vuoto
-            errore += "Non hai inserito un'immagine nel tuo post.<br>";
-            $("#fileInput").css('background-color', '#b32d39');
-        } else {
-            $("#fileInput").css('border-color', '#28a745');
         }
         if (errore !== "") {
             event.preventDefault();//fa in modo che il form non si refreshi al "submit" ma mi permetta di validare i dati prima di mandarli al server

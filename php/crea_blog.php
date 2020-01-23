@@ -20,35 +20,40 @@ $tipoUtente = mysqli_fetch_assoc($risTipoUtente);
 // accedono a crea blog solo gli utenti normali che hanno meno di 3 blog o quelli che sono premium
 if (($tipoUtente['tipoUtente'] == "Normale" && $numBlog['contati'] < 3) || $tipoUtente['tipoUtente'] == "Premium") {
 
-//inizializzo le variabili vuote (altrimenti php dà errore quando le uso senza avere mai cliccato submit)
+    //inizializzo le variabili vuote (altrimenti php dà errore quando le uso senza avere mai cliccato submit)
     $titolo = $autore = $data = $id_categoria = $nome_categoria = $descrizione = $banner = $idBlog = $tema = '';
 
-//array associativo che immagazzina gli errori
+    //array associativo che immagazzina gli errori
     $errors = array('titolo' => '', 'categoria' => '', 'descrizione' => '', 'banner' => '');
 
-// mi prendo le categorie per i controlli sul form
+    // mi prendo le categorie per i controlli sul form
     $sqlCategorie = "SELECT * FROM categorie";
     $risCategorie = mysqli_query($conn, $sqlCategorie);
     $categorie = mysqli_fetch_all($risCategorie, MYSQLI_ASSOC);
 
-//recupero elenco temi
+    //recupero elenco temi
     $sqlTemi = "SELECT * FROM `temi`"; //elenco temi
     $risTemi = mysqli_query($conn, $sqlTemi); //ris temi
     $temi = mysqli_fetch_all($risTemi, MYSQLI_ASSOC);
 
     if (isset($_POST['crea_blog_submit'])) {
 
-// check titolo blog
+        // check titolo blog
         if (empty($_POST['titolo'])) {
+
             $errors['titolo'] = '<p>' . 'Manca un titolo per il tuo blog.' . '</p>';
+
         } else {
+
             $titolo = $_POST['titolo'];
+
             if (!preg_match('/^[ A-Za-z]+$/', $titolo)) {
                 $errors['titolo'] = '<p>' . 'Il titolo deve contenere solo lettere e spazi' . '</p>';
             }
+
         }
 
-//check categoria
+        //check categoria
         if (empty($_POST['categoria'])) {
             $errors['categoria'] = '<p>' . 'Manca una categoria per il tuo blog!' . '</p>';
         } else {
@@ -58,19 +63,24 @@ if (($tipoUtente['tipoUtente'] == "Normale" && $numBlog['contati'] < 3) || $tipo
              * se categ non esiste crearla con relativa insert, e prenderne l'id
              */
             $nome_categoria = mysqli_real_escape_string($conn, $_POST['categoria']); // variabili di utility per nome categoria inserito da utente
-            if (!preg_match('/^[ A-Za-z]+$/', $nome_categoria)) {
-                $errors['categoria'] = 'Categoria deve contenere solo lettere e spazi' . '</p>';
-            } else {
 
+            if (!preg_match('/^[ A-Za-z]+$/', $nome_categoria)) {
+
+                $errors['categoria'] = 'Categoria deve contenere solo lettere e spazi' . '</p>';
+
+            } else {
+                // cerco categoria in db tabella categorie
                 $trovato = $i = 0;
                 while ($i < sizeof($categorie) and !$trovato) {
+
                     if (strtolower($nome_categoria) === strtolower($categorie[$i]['nomeCategoria'])) {
                         $id_categoria = $categorie[$i]['idCategoria'];
                         $trovato = 1;
                     }
                     $i = $i + 1;
-                }
 
+                }
+                // se non la trovo la inserisco
                 if (!$trovato) {
                     $sqlInserisciCateg = "INSERT INTO categorie (idCategoria, nomeCategoria) VALUES('NULL', '$nome_categoria')";
 
@@ -80,61 +90,74 @@ if (($tipoUtente['tipoUtente'] == "Normale" && $numBlog['contati'] < 3) || $tipo
                         echo "Inserimento fallito per la nuova categoria";
                     }
                 }
+
             }
         }
 
-//check descrizione
+        //check descrizione
         if (empty($_POST['descrizione'])) {
             $errors['descrizione'] = '<p>' . 'Manca una descrizione per il tuo blog!' . '</p>';
         } else {
             $descrizione = $_POST['descrizione'];
         }
 
-// check immagine
-        if ($_FILES['blog_banner']['size'] < 1024 * 1024) { // se le dimensioni non sono troppo grandi
+        // check immagine
+        if (empty($_POST['$imgPost'])) {
 
-            $nomeBannerBlog = $_FILES['blog_banner']['name']; // salvo il nome dell'immagine
-            $nomeBannerBlog_tmp = $_FILES['blog_banner']['tmp_name'];
-            $targetDir = "../img/user_upload/";
-            $targetFile = $targetDir . basename($nomeBannerBlog); // concateno il path al nome img
-            var_dump($_FILES['blog_banner']['name']);
+            $nomeBannerBlog = "blogDefault.jpg";
+            $nomeBannerBlog_tmp = "blogDefault.jpg";
+            $targetDir = "../img/";
+            $targetFile = $targetDir . basename($nomeBannerBlog); // concateno il path al nome img di default
 
-            // recupero estensione dell'img caricata
-            $tipoImg = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
-
-            // creo un array di stringhe nei quali scrivo i formati accettati di immagine
-            $estensioniAccettate = array("jpg", "png", "jpeg");
-
-            // controllo se l'estensione del banner e' tra quelle accettate
-            // se non c'è creo un errore
-            if (!in_array($tipoImg, $estensioniAccettate)) {
-                $errors['banner'] = '<p>' . 'Il formato del banner selezionato non è accettato' . '</p>';
-            }
         } else {
-            //se 1M < img < 2M
-            $errors['banner'] = '<p>' . "Upload immagine troppo grande" . '</p>';
-        }
-        // se non ci sono errori
-        if (!$errors['banner']) {
-            // copio il file dalla locazione temporanea alla mia cartella upload
-            if (!move_uploaded_file($nomeBannerBlog_tmp, $targetDir . $nomeBannerBlog)) {
-                //se non è trasferita l'img è troppo grande (non è stata proprio "presa" dal php in quanto >2M)
+            if ($_FILES['blog_banner']['size'] < 1024 * 1024) { // se le dimensioni non sono troppo grandi
+
+                $nomeBannerBlog = $_FILES['blog_banner']['name']; // salvo il nome dell'immagine
+                $nomeBannerBlog_tmp = $_FILES['blog_banner']['tmp_name'];
+                $targetDir = "../img/user_upload/";
+                $targetFile = $targetDir . basename($nomeBannerBlog); // concateno il path al nome img
+
+                // recupero estensione dell'img caricata
+                $tipoImg = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+
+                // creo un array di stringhe nei quali scrivo i formati accettati di immagine
+                $estensioniAccettate = array("jpg", "png", "jpeg");
+
+                // controllo se l'estensione del banner e' tra quelle accettate
+                // se non c'è creo un errore
+                if (!in_array($tipoImg, $estensioniAccettate)) {
+                    $errors['banner'] = '<p>' . 'Il formato del banner selezionato non è accettato' . '</p>';
+                }
+
+            } else {
+                //se 1M < img < 2M
                 $errors['banner'] = '<p>' . "Upload immagine troppo grande" . '</p>';
             }
+
+            // se non ci sono errori
+            if (!$errors['banner']) {
+
+                // copio il file dalla locazione temporanea alla mia cartella upload
+                if (!move_uploaded_file($nomeBannerBlog_tmp, $targetDir . $nomeBannerBlog)) {
+
+                    //se non è trasferita l'img è troppo grande (non è stata proprio "presa" dal php in quanto >2M)
+                    $errors['banner'] = '<p>' . "Upload immagine troppo grande" . '</p>';
+                }
+
+            }
         }
 
-//recupero data timestamp
+        //recupero data timestamp
         $timestamp = date("Y-m-d H:i:s");
 
         //se non ci sono errori
-
         if (!array_filter($errors)) {
 
             //escape sql chars
             $titolo = mysqli_real_escape_string($conn, strtolower($_POST['titolo']));// prende titolo (minuscolo)
+            $descrizione = mysqli_real_escape_string($conn, $_POST['descrizione']);
             $autore = mysqli_real_escape_string($conn, $nomeUtente); //recupero user della sessione
             $data = $timestamp;
-            $descrizione = mysqli_real_escape_string($conn, $_POST['descrizione']);
             $banner = $targetFile; //salvo path immagine
             $tema = mysqli_real_escape_string($conn, strtolower($_POST['selezTema']));
 
@@ -143,19 +166,23 @@ if (($tipoUtente['tipoUtente'] == "Normale" && $numBlog['contati'] < 3) || $tipo
 
             //controlla e salva sul db
             if (mysqli_query($conn, $sqlNuovoBlog)) {
+
                 //successo
                 //passo id blog appena creato all'url della pagina visual_blog e lo apro(per permettere all'utente di creare subito un nuovo post)
                 $idBlog = mysqli_insert_id($conn);
                 header("Location: visual_blog.php?idBlog=$idBlog");
+
             } else {
+
                 //errore
                 echo 'errore query: ' . mysqli_error($conn);
+
             }
         }
-//libera memoria
+        //libera memoria
         mysqli_free_result($risCategorie);
 
-//chiudi connessione
+        //chiudi connessione
         mysqli_close($conn);
     }
 } else {
