@@ -37,7 +37,6 @@ if (isset($_SESSION['nomeUtente'])) {
         if (empty($scadenzaCarta)) {
             array_push($errors, 'Manca data di scadenza della tua carta!');
         } else {
-            var_dump($scadenzaCarta);
             //controllo se data inserita nel formato desiderato
             if (!preg_match('/^[0-9]{4}-(0[1-9]|1[0-2])$/', $scadenzaCarta)) {
                 array_push($errors, 'Il campo "Data scadenza" deve contenere la data di scadenza della tua carta');

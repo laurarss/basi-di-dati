@@ -34,8 +34,6 @@ FROM categorie , blog WHERE categorie.idCategoria = blog.categoria AND blog.auto
 
     //conto i blog creati dall'utente
     $numBlog = mysqli_num_rows($result);
-    var_dump($numBlog);
-
 
     // righe risultato "fetchate" in array
     $blogs = mysqli_fetch_all($result, MYSQLI_ASSOC);

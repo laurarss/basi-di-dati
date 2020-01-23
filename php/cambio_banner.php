@@ -22,54 +22,51 @@ if (isset($_GET['idBlog'])) {
 
     if (isset($_POST['carica_banner_submit'])) {
         // check immagine
-        $nomeBannerBlog = $_FILES['blog_banner']['name']; // salvo il nome dell'immagine
-        $nomeBannerBlog_tmp = $_FILES['blog_banner']['tmp_name'];
-        $targetDir = "../img/user_upload/";
-        $targetFile = $targetDir . basename($nomeBannerBlog); //concateno il path al nome img
+        if ($_FILES['blog_banner']['size'] < 1024 * 1024) { // se le dimensioni non sono troppo grandi
 
-        // get image file type
-        $tipoImg = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
-        // creo un array di stringhe nei quali scrivo i formati accettati di immagine
-        $estensioniAccettate = array("jpg", "png", "jpeg");
+            $nomeBannerBlog = $_FILES['blog_banner']['name']; // salvo il nome dell'immagine
+            $nomeBannerBlog_tmp = $_FILES['blog_banner']['tmp_name'];
+            $targetDir = "../img/user_upload/";
+            $targetFile = $targetDir . basename($nomeBannerBlog); //concateno il path al nome img
 
-        // controllo se l'estensione e' tra quelle accettate
-        // in caso contrario creo un errore
-        if (!in_array($tipoImg, $estensioniAccettate)) {
-            $errore = 'Il formato del banner selezionato non è accettato';
-        }
+            // recupero estensione dell'img caricata
+            $tipoImg = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
 
-        if ($errore) {
-            //se ci sono errori
-            print($errore);
+            // creo un array di stringhe nei quali scrivo i formati accettati di immagine
+            $estensioniAccettate = array("jpg", "png", "jpeg");
+
+            // controllo se l'estensione e' tra quelle accettate
+            // se non c'è creo un errore
+            if (!in_array($tipoImg, $estensioniAccettate)) {
+                $errore = 'Il formato del banner selezionato non è accettato';
+            }
         } else {
-            $banner = $targetFile; //salvo path immagine
-            $sqlNuovoBanner = "UPDATE `blog` SET `banner` = '$banner' WHERE `blog`.`idBlog` = '$idBlog' ";
+            //se 1M < img < 2M
+            $errore = '<p>' . "Upload immagine troppo grande" . '</p>';
         }
-
         // copio il file dalla locazione temporanea alla mia cartella upload
-        if (move_uploaded_file($nomeBannerBlog_tmp, $targetDir . $nomeBannerBlog)) {
-            //Se buon fine...
-            print " inviato con successo. Alcune informazioni:\n";
-            print_r($_FILES);
-        } else {
-            //Se fallita...
-            print "Upload NON valido! Alcune informazioni:\n";
-
-            print_r($_FILES);
-            print_r($_FILES['blog_banner']['error']);
-            print_r($_FILES['blog_banner']['size']);
+        if ($errore == '') {
+            if (!move_uploaded_file($nomeBannerBlog_tmp, $targetDir . $nomeBannerBlog)) {
+                //se non è trasferita l'img è troppo grande (non è stata proprio "presa" dal php in quanto >2M)
+                $errore = '<p>' . "Upload immagine troppo grande" . '</p>';
+            }
         }
 
-        //controlla e salva sul db
-        if (mysqli_query($conn, $sqlNuovoBanner)) {
-            //successo
-            //passo id all'url della pagina visual_blog e lo apro
-            header("Location: visual_blog.php?idBlog=$idBlog");
-        } else {
-            //errore
-            echo 'errore query: ' . mysqli_error($conn);
+        if ($errore == '') {
+            //se non ci sono errori
+            $banner = $targetFile; //salvo path immagine
+            //controlla e salva sul db
+            if (mysqli_query($conn, "UPDATE `blog` SET `banner` = '$banner' WHERE `blog`.`idBlog` = '$idBlog' ")) {
+                //successo
+                //passo id all'url della pagina visual_blog e lo apro
+                header("Location: visual_blog.php?idBlog=$idBlog");
+            } else {
+                //errore
+                echo 'errore query: ' . mysqli_error($conn);
+            }
         }
     }
+
 
 // chiudi connessione
     mysqli_close($conn);
@@ -111,6 +108,14 @@ include 'head.php';
 </div>
 
 <div class="container">
+
+    <!-- div che fa comparire errori trovati dal js e dal php -->
+    <?php if ($errore != '') : ?>
+        <div id="errore" class="alert alert-danger" role="alert">
+            <?php echo "$errore\r\n"; ?>
+        </div>
+    <?php endif ?>
+
     <form method="POST"
           name="cambiaBanner"
           action="cambio_banner.php?idBlog=<?php echo $blog['idBlog']; ?>"

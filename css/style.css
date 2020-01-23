@@ -51,16 +51,3 @@ body {
     opacity: 0.9;
     color: white;
 }
-
-/*body background*/
-.bg-blue {
-    background-color: #aed6f1;
-}
-
-.bg-pink {
-    background-color: #FFC0CB;
-}
-
-.bg-green {
-    background-color: #9FFFA7;
-}

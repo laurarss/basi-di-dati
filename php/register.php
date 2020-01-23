@@ -18,7 +18,7 @@ include 'head.php';
                 <div class="card-body">
                     <h4 class="card-title text-center">Registrazione</h4>
 
-                    <!-- div mostra errori da js -->
+                    <!-- div mostra errori da js e da php -->
                     <div id="errore">
                         <?php include('errors.php'); ?>
                     </div>

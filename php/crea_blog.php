@@ -21,7 +21,7 @@ $tipoUtente = mysqli_fetch_assoc($risTipoUtente);
 if (($tipoUtente['tipoUtente'] == "Normale" && $numBlog['contati'] < 3) || $tipoUtente['tipoUtente'] == "Premium") {
 
 //inizializzo le variabili vuote (altrimenti php dà errore quando le uso senza avere mai cliccato submit)
-    $titolo = $autore = $data = $id_categoria = $descrizione = $banner = $idBlog = $tema = '';
+    $titolo = $autore = $data = $id_categoria = $nome_categoria = $descrizione = $banner = $idBlog = $tema = '';
 
 //array associativo che immagazzina gli errori
     $errors = array('titolo' => '', 'categoria' => '', 'descrizione' => '', 'banner' => '');
@@ -52,33 +52,33 @@ if (($tipoUtente['tipoUtente'] == "Normale" && $numBlog['contati'] < 3) || $tipo
         if (empty($_POST['categoria'])) {
             $errors['categoria'] = '<p>' . 'Manca una categoria per il tuo blog!' . '</p>';
         } else {
-
             /**
              * controllare che la categ inserita dall'utente non esista già(facendo lowercase)
              * se categ esiste già allora assegno a $categoria l'id della categ già persistita
              * se categ non esiste crearla con relativa insert, e prenderne l'id
              */
-            $nome_categoria = $_POST['categoria']; // variabili di utility per nome categoria inserito da utente
+            $nome_categoria = mysqli_real_escape_string($conn, $_POST['categoria']); // variabili di utility per nome categoria inserito da utente
             if (!preg_match('/^[ A-Za-z]+$/', $nome_categoria)) {
                 $errors['categoria'] = 'Categoria deve contenere solo lettere e spazi' . '</p>';
-            }
+            } else {
 
-            $trovato = $i = 0;
-            while ($i < sizeof($categorie) and !$trovato) {
-                if (strtolower($nome_categoria) === strtolower($categorie[$i]['nomeCategoria'])) {
-                    $id_categoria = $categorie[$i]['idCategoria'];
-                    $trovato = 1;
+                $trovato = $i = 0;
+                while ($i < sizeof($categorie) and !$trovato) {
+                    if (strtolower($nome_categoria) === strtolower($categorie[$i]['nomeCategoria'])) {
+                        $id_categoria = $categorie[$i]['idCategoria'];
+                        $trovato = 1;
+                    }
+                    $i = $i + 1;
                 }
-                $i = $i + 1;
-            }
 
-            if (!$trovato) {
-                $sqlInserisciCateg = "INSERT INTO categorie (idCategoria, nomeCategoria) VALUES('NULL', '$nome_categoria')";
+                if (!$trovato) {
+                    $sqlInserisciCateg = "INSERT INTO categorie (idCategoria, nomeCategoria) VALUES('NULL', '$nome_categoria')";
 
-                if (mysqli_query($conn, $sqlInserisciCateg)) {
-                    $id_categoria = mysqli_insert_id($conn);
-                } else {
-                    echo "Inserimento fallito per la nuova categoria";
+                    if (mysqli_query($conn, $sqlInserisciCateg)) {
+                        $id_categoria = mysqli_insert_id($conn);
+                    } else {
+                        echo "Inserimento fallito per la nuova categoria";
+                    }
                 }
             }
         }
@@ -91,13 +91,13 @@ if (($tipoUtente['tipoUtente'] == "Normale" && $numBlog['contati'] < 3) || $tipo
         }
 
 // check immagine
-        if ($_FILES['blog_banner']['size'] > 1024 * 1024) { // se le dimensioni sono troppo grandi
-            //$errors['banner'] = '<p>' . 'Immagine troppo grande' . '</p>';
-        } else {
+        if ($_FILES['blog_banner']['size'] < 1024 * 1024) { // se le dimensioni non sono troppo grandi
+
             $nomeBannerBlog = $_FILES['blog_banner']['name']; // salvo il nome dell'immagine
             $nomeBannerBlog_tmp = $_FILES['blog_banner']['tmp_name'];
             $targetDir = "../img/user_upload/";
             $targetFile = $targetDir . basename($nomeBannerBlog); // concateno il path al nome img
+            var_dump($_FILES['blog_banner']['name']);
 
             // recupero estensione dell'img caricata
             $tipoImg = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
@@ -106,28 +106,29 @@ if (($tipoUtente['tipoUtente'] == "Normale" && $numBlog['contati'] < 3) || $tipo
             $estensioniAccettate = array("jpg", "png", "jpeg");
 
             // controllo se l'estensione del banner e' tra quelle accettate
-            // in caso contrario creo un errore
+            // se non c'è creo un errore
             if (!in_array($tipoImg, $estensioniAccettate)) {
                 $errors['banner'] = '<p>' . 'Il formato del banner selezionato non è accettato' . '</p>';
             }
-
-            // se non ci sono errori
-            if (!$errors['banner']) {
-                // copio il file dalla locazione temporanea alla mia cartella upload
-                if (!move_uploaded_file($nomeBannerBlog_tmp, $targetDir . $nomeBannerBlog)) {
-                    //se errore img è troppo grande
-                    $errors['banner'] = '<p>' . "Upload immagine troppo grande" . '</p>';
-                }
+        } else {
+            //se 1M < img < 2M
+            $errors['banner'] = '<p>' . "Upload immagine troppo grande" . '</p>';
+        }
+        // se non ci sono errori
+        if (!$errors['banner']) {
+            // copio il file dalla locazione temporanea alla mia cartella upload
+            if (!move_uploaded_file($nomeBannerBlog_tmp, $targetDir . $nomeBannerBlog)) {
+                //se non è trasferita l'img è troppo grande (non è stata proprio "presa" dal php in quanto >2M)
+                $errors['banner'] = '<p>' . "Upload immagine troppo grande" . '</p>';
             }
         }
 
 //recupero data timestamp
         $timestamp = date("Y-m-d H:i:s");
 
-        if (array_filter($errors)) {
-            //se ci sono errori
-            //print_r($errors);
-        } else {
+        //se non ci sono errori
+
+        if (!array_filter($errors)) {
 
             //escape sql chars
             $titolo = mysqli_real_escape_string($conn, strtolower($_POST['titolo']));// prende titolo (minuscolo)
@@ -226,7 +227,7 @@ include 'head.php';
                                            class="form-control"
                                            id="categoriaCreaBlog"
                                            placeholder="Dai un nome alla categoria"
-                                           value="<?php echo htmlspecialchars($id_categoria); ?>"
+                                           value="<?php echo htmlspecialchars($nome_categoria); ?>"
                                            name="categoria">
                                 </div>
                             </div>
@@ -314,17 +315,11 @@ include 'head.php';
         } else {
             $("#categoriaCreaBlog").css('border-color', '#28a745');
         }
-        if ($("#descrizioneCreaBlog").val() === "") { //se il campo categoria è vuoto
+        if ($("#descrizioneCreaBlog").val() === "") { //se il campo descrizione è vuoto
             errore += "La descrizione è obbligatoria.<br>";
             $("#descrizioneCreaBlog").css('border-color', '#b32d39');
         } else {
             $("#descrizioneCreaBlog").css('border-color', '#28a745');
-        }
-        if ($("#fileInput").value === "") { //se il campo descrizione è vuoto
-            errore += "Non hai inserito un'immagine'.<br>";
-            $("#fileInput").css('border-color', '#b32d39');
-        } else {
-            $("#fileInput").css('border-color', '#28a745');
         }
         if (errore !== "") {
             event.preventDefault();//fa in modo che il form non si refreshi al "submit" ma mi permetta di validare i dati prima di mandarli al server
