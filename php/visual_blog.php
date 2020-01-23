@@ -338,6 +338,7 @@ include 'head.php';
         $('.daNascondere').hide();
         $('.segui').hide();
         $('.formCreaCommento').hide();//nasconde crea commenti ai non loggati
+        $('.like-button').hide(); //nasconde pulsante mi piace ai non loggati
     </script>
 
 <?php elseif ($_SESSION['nomeUtente'] !== $blog['autore']): ?>
