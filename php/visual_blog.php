@@ -206,7 +206,7 @@ include 'head.php';
 
             <div class="col-sm-2 text-right">
                 <a class="daNascondere btn btn-md btn-danger fa fa-trash"
-                   href="cancella_post.php?idPost=<?php echo $post['idPost'] ?>"></a>
+                   href="cancella_post.php?idPost=<?php echo $post['idPost']; ?>&idBlog=<?php echo $blog['idBlog']; ?>"></a>
             </div>
 
         </div>
@@ -270,7 +270,7 @@ include 'head.php';
                     </div>
                     <div class="col-sm-1 text-right">
                         <a class="btn btn-sm btn-danger fa fa-trash"
-                           href="canc_commento.php?idCommento=<?php echo $commento['idCommento'] ?>&idBlog=<?php echo $blog['idBlog'] ?>"></a>
+                           href="canc_commento.php?idCommento=<?php echo $commento['idCommento']; ?>&idBlog=<?php echo $blog['idBlog']; ?>"></a>
                     </div>
                 </div>
             <?php } ?>

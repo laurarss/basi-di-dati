@@ -5,7 +5,9 @@ include('db_connect.php');
 include('header.php');
 include('head.php');
 
-$idBlog = $_SESSION['idBlog'];
+$idBlog = $nomeUtente = $idPost = '';
+
+$idBlog = $_GET['idBlog'];
 
 if (isset($_GET['idPost'])) {
     $nomeUtente = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']);
@@ -26,11 +28,11 @@ if (isset($_GET['idPost'])) {
     $conn->close();
 }
 ?>
-
-
+<html>
 <div class="col-10 text-left">
     <a class="btn btn-outline-secondary btn-sm" href="visual_blog.php?idBlog=<?php echo $idBlog; ?>">
         <i class="fa fa-arrow-left"></i>
         Torna al blog
     </a>
 </div>
+</html>
