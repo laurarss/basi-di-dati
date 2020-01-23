@@ -44,9 +44,7 @@ if (isset($_SESSION['nomeUtente'])) {
 <!DOCTYPE html>
 <html lang="it">
 <body>
-<?php
-include 'head.php';
-?>
+<?php include 'head.php'; ?>
 <div class="container">
     <div class="row py-2 justify-content-center">
         <div class="col-8">
@@ -127,9 +125,27 @@ include 'head.php';
     <!-- pulsante cancella profilo -->
     <div class="row py-3 px-4">
         <div class="col-12 text-center">
-            <a id="cancProfilo" class="btn btn-danger btn-sm" href="cancella_profilo.php">
+            <a id="cancProfilo" class="btn btn-danger btn-sm" href="#" data-href="cancella_profilo.php" data-toggle="modal" data-target="#confirm-delete">
                 Cancella profilo
             </a>
+        </div>
+    </div>
+
+    <!-- popup conferma cancellaz profilo -->
+    <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    Sei sicuro?
+                </div>
+                <div class="modal-body">
+                    La cancellazione del tuo profilo comporterà anche la cancellazione di tutti i tuoi blog e post, con anche commenti e mi piace inseriti.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Annulla</button>
+                    <a class="btn btn-danger btn-ok">Cancella</a>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -137,6 +153,12 @@ include 'head.php';
 </div>
 
 <?php include('footer.php'); ?>
+
+<script>
+    $('#confirm-delete').on('show.bs.modal', function(e) {
+        $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+    });
+</script>
 
 </body>
 </html>

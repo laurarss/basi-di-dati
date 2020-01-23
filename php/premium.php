@@ -99,13 +99,20 @@ if (isset($_SESSION['nomeUtente'])) {
 ?>
 <!DOCTYPE html>
 <html lang="it">
-
 <?php
 //includo file header
 include 'head.php';
 ?>
 
 <body>
+
+<!-- pulsante torna indietro -->
+<div class="col-sm-3 py-4">
+    <a class="btn btn-outline-secondary btn-sm" href="profilo.php">
+        <i class="fa fa-arrow-left"></i>
+        Torna al profilo
+    </a>
+</div>
 
 <div class="container">
     <div class="row justify-content-center">

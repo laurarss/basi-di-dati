@@ -5,11 +5,11 @@ include('db_connect.php');
 include('header.php');
 include('head.php');
 
-$idBlog = $nomeUtente = $idPost = '';
+if (isset($_SESSION['nomeUtente'], $_GET['idPost'])) {
 
-$idBlog = $_GET['idBlog'];
+    $idBlog = $nomeUtente = $idPost = '';
 
-if (isset($_GET['idPost'])) {
+    $idBlog = $_GET['idBlog'];
     $nomeUtente = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']);
     $idPost = $_GET['idPost'];
 
@@ -26,9 +26,12 @@ if (isset($_GET['idPost'])) {
 
     // close connection
     $conn->close();
+} else {
+    header("Location: ops.php");
 }
 ?>
 <html>
+<!-- pulsante torna indietro -->
 <div class="col-10 text-left">
     <a class="btn btn-outline-secondary btn-sm" href="visual_blog.php?idBlog=<?php echo $idBlog; ?>">
         <i class="fa fa-arrow-left"></i>

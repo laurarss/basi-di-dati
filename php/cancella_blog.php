@@ -8,7 +8,7 @@ include('head.php');
 $esito = '';
 $daCancellare = false;
 
-if (isset($_GET['idBlog'])) {
+if (isset($_SESSION['nomeUtente'], $_GET['idBlog'])) {
     $nomeUtente = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']);
     $idBlog = $_GET['idBlog'];
 
@@ -51,8 +51,12 @@ And not exists(
 
     // close connection
     $conn->close();
+} else {
+    header("Location: ops.php");
 }
 ?>
+<html>
+<!-- pulsante torna indietro -->
 <div class="col-sm-3">
     <br>
     <?php echo $esito; ?>
@@ -61,3 +65,4 @@ And not exists(
         Torna ai blog
     </a>
 </div>
+</html>
