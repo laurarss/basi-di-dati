@@ -42,13 +42,13 @@ if (isset($_GET['idBlog'])) {
             }
         } else {
             //se 1M < img < 2M
-            $errore = '<p>' . "Upload immagine troppo grande" . '</p>';
+            $errore = "Upload immagine troppo grande";
         }
         // copio il file dalla locazione temporanea alla mia cartella upload
         if ($errore == '') {
             if (!move_uploaded_file($nomeBannerBlog_tmp, $targetDir . $nomeBannerBlog)) {
                 //se non è trasferita l'img è troppo grande (non è stata proprio "presa" dal php in quanto >2M)
-                $errore = '<p>' . "Upload immagine troppo grande" . '</p>';
+                $errore = "Upload immagine troppo grande";
             }
         }
 

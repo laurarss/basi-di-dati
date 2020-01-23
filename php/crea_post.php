@@ -36,7 +36,7 @@ if (isset($_POST['crea_post_submit'])) {
     } else {
         $titoloPost = $_POST['titoloPost'];
         if (!preg_match('/^[ A-Za-z]+$/', $titoloPost)) {
-            $errors['titoloPost'] = '<p>' . 'Il titolo deve contenere solo lettere e spazi'. '</p>';
+            $errors['titoloPost'] = '<p>' . 'Il titolo deve contenere solo lettere e spazi' . '</p>';
         }
     }
 
@@ -48,10 +48,8 @@ if (isset($_POST['crea_post_submit'])) {
     }
 
     // check immagine
-    if ($_FILES['imgPost']['size'] > 800 * 1024) { // se le dimensioni sono troppo grandi
-        $errors['imgPost'] = '<p>' . 'Immagine troppo grande' . '</p>';
-    } else {
-        // your code for processing uploaded image
+    if ($_FILES['imgPost']['size'] < 800 * 1024) { // se le dimensioni sono troppo grandi
+
         $nomeImgPost = $_FILES['imgPost']['name']; // salvo il nome dell'immagine uploadata
         $nomeImgPost_tmp = $_FILES['imgPost']['tmp_name'];
         $targetDir = "../img/user_upload/";
@@ -64,22 +62,25 @@ if (isset($_POST['crea_post_submit'])) {
         $estensioniAccettate = array("jpg", "png", "jpeg");
 
         // controllo se l'estensione e' tra quelle accettate
-        // in caso contrario creo un errore
+        // se non c'è creo un errore
         if (!in_array($tipoImg, $estensioniAccettate)) {
             $errors['imgPost'] = '<p>' . 'Formato del file selezionato non accettato.' . '</p>';
         }
+    } else {
+        //se 1M < img < 2M
+        $errors['imgPost'] = '<p>' . "Upload immagine troppo grande" . '</p>';
+    }
 
-        // se non ci sono errori
-        if (!$errors['imgPost']) {
-            // se errore nella copia del file dalla locazione temporanea alla mia cartella upload
-            if (!move_uploaded_file($nomeImgPost_tmp, $targetDir . $nomeImgPost)) {
-                //errore
-                $errors['imgPost'] = '<p>' . "Upload immagine troppo grande." . '</p>';
-            }
+    // se non ci sono errori
+    if (!$errors['imgPost']) {
+        // se errore nella copia del file dalla locazione temporanea alla mia cartella upload
+        if (!move_uploaded_file($nomeImgPost_tmp, $targetDir . $nomeImgPost)) {
+            //se non è trasferita l'img è troppo grande (non è stata proprio "presa" dal php in quanto >2M)
+            $errors['imgPost'] = '<p>' . "Upload immagine troppo grande." . '</p>';
         }
     }
 
-    //recupero timestamp
+    //recupero data timestamp
     $timestamp = date("Y-m-d H:i:s");
 
     if (array_filter($errors)) {
