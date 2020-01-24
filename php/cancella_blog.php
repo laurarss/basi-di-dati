@@ -1,61 +1,65 @@
 <?php
-//includo file connessione al db
-include('db_connect.php');
-//includo file header
-include('header.php');
-include('head.php');
 
-$esito = '';
-$daCancellare = false;
+    //includo file connessione al db
+    include('db_connect.php');
 
-if (isset($_SESSION['nomeUtente'], $_GET['idBlog'])) {
-    $nomeUtente = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']);
-    $idBlog = $_GET['idBlog'];
+    //includo file header
+    include('header.php');
+    include('head.php');
 
-//salvo categoria del blog da cancellare
-//    $sqlCatBlog = "SELECT blog.categoria FROM `blog` WHERE `idBlog` = $idBlog";
-//    $result = mysqli_query($conn, $sqlCatBlog);
-//    var_dump($result);
-//    $catBlog = mysqli_fetch_all($result, MYSQLI_ASSOC);
-//    var_dump($catBlog);
-//
-//    // cerco nella tab categorie
-//    $sqlCercaCat = "SELECT categorie.nomeCategoria FROM `categorie` WHERE `idCategoria` = $catBlog";
-//    $risCercaCat = mysqli_query($conn, $sqlCercaCat);
-//    var_dump($risCercaCat);
-//    // se c'è solo un record significa che dopo la cancellazione blog la categoria rimarrà vuota, quindi la devo cancellare
-//    if (mysqli_num_rows($risCercaCat) == 1) {
-//        $sqlCancCat = "DELETE FROM `categorie` WHERE `idCategoria` = $catBlog";
-//        $daCancellare = true;
-//    }
+    $esito = '';
+    $daCancellare = false;
+
+    if (isset($_SESSION['nomeUtente'], $_GET['idBlog'])) {
+        $nomeUtente = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']);
+        $idBlog = $_GET['idBlog'];
+
+        // salvo categoria del blog da cancellare
+        //    $sqlCatBlog = "SELECT blog.categoria FROM `blog` WHERE `idBlog` = $idBlog";
+        //    $result = mysqli_query($conn, $sqlCatBlog);
+        //    var_dump($result);
+        //    $catBlog = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        //    var_dump($catBlog);
+        //
+        //    // cerco nella tab categorie
+        //    $sqlCercaCat = "SELECT categorie.nomeCategoria FROM `categorie` WHERE `idCategoria` = $catBlog";
+        //    $risCercaCat = mysqli_query($conn, $sqlCercaCat);
+        //    var_dump($risCercaCat);
+        //    // se c'è solo un record significa che dopo la cancellazione blog la categoria rimarrà vuota, quindi la devo cancellare
+        //    if (mysqli_num_rows($risCercaCat) == 1) {
+        //        $sqlCancCat = "DELETE FROM `categorie` WHERE `idCategoria` = $catBlog";
+        //        $daCancellare = true;
+        //    }
 
 
-// sql cancella blog
-    $cancBlog = "DELETE FROM `blog` WHERE `idBlog` = $idBlog";
+        // sql cancella blog
+        $cancBlog = "DELETE FROM `blog` WHERE `idBlog` = $idBlog";
 
-    if ($conn->query($cancBlog) === TRUE) {
-        // se la query è andata a buon fine
-    $cancCatVuota = "DELETE FROM categorie AS a 
-Where a.idCategoria = ?
-And not exists(
- Select 1
- From blog b
- Where b.categoria = a.idCategoria
-)";
-    $conn->query($cancCatVuota);
-        $esito = '<br><div class="alert alert-success" role="alert"><p><strong>' . " Record cancellato" . '</strong></p></div>';
+        if ($conn->query($cancBlog) === TRUE) {
+            // se la query è andata a buon fine
+            $cancCatVuota = "DELETE FROM categorie AS a 
+                                WHERE a.idCategoria = ?
+                                AND NOT EXISTS(
+                                 SELECT 1
+                                 FROM blog b
+                                 WHERE b.categoria = a.idCategoria
+                                )";
+            $conn->query($cancCatVuota);
+            $esito = '<br><div class="alert alert-success" role="alert"><p><strong>' . " Record cancellato" . '</strong></p></div>';
+        } else {
+            // se query fallita
+            $esito = '<br><div class="alert alert-danger" role="alert"><p><strong>' . "Si è verificato un errore:" . $conn->error . '</strong></p></div>';
+        }
+
+        // close connection
+        $conn->close();
     } else {
-        // se query fallita
-        $esito = '<br><div class="alert alert-danger" role="alert"><p><strong>' . "Si è verificato un errore:" . $conn->error . '</strong></p></div>';
+        header("Location: ops.php");
     }
-
-    // close connection
-    $conn->close();
-} else {
-    header("Location: ops.php");
-}
 ?>
-<html>
+
+<html lang="it">
+
 <!-- pulsante torna indietro -->
 <div class="col-sm-3">
     <br>

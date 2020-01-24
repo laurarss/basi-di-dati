@@ -13,7 +13,7 @@ if (isset($_GET['idCommento'])) {
     $nomeUtente = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']);
     $idCommento = $_GET['idCommento'];
 
-// sql to delete a record
+    // sql to delete a record
     $sql = "DELETE FROM `commenti` WHERE `idCommento` = $idCommento";
 
     if ($conn->query($sql) === TRUE) {
