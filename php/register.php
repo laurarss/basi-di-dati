@@ -10,10 +10,13 @@ include 'head.php';
 ?>
 
 <body>
+
 <!-- IMPLEMENTAZIONE REGISTRAZIONE CON BOOTSTRAP -->
-<div class="container" style="padding-top: 18vh;">
+<div class="container py-5">
+
     <div class="row justify-content-center">
         <div class="col-sm-6">
+
             <div class="card bg-light shadow">
                 <div class="card-body">
                     <h4 class="card-title text-center">Registrazione</h4>
@@ -169,6 +172,7 @@ include 'head.php';
         </div>
     </div>
 </div>
+
 </body>
 <?php include('footer.php'); ?>
 </html>

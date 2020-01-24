@@ -1,150 +1,158 @@
 <?php
 
-/**
- * La pagina index è la prima pagina che compare a chiunque visiti il sito.
- * gli utenti sloggati vedranno l'elenco dei blog a sx e l'elenco delle categorie a dx.
- * per tutti è possibile visionare blog cercati per titolo o elencati per categoria.
- */
+    /**
+     * La pagina index è la prima pagina che compare a chiunque visiti il sito.
+     * gli utenti sloggati vedranno l'elenco dei blog a sx e l'elenco delle categorie a dx.
+     * per tutti è possibile visionare blog cercati per titolo o elencati per categoria.
+     */
 
-//connessione al db
-include('db_connect.php');
-//header & nav
-include('header.php');
+    //connessione al db
+    include('db_connect.php');
+    //header & nav
+    include('header.php');
 
-$nomeUtente = '';
-if (isset($_SESSION['nomeUtente'])) {
-    // recupero nome utente dalla sessione
-    $nomeUtente = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']);
-}
+    $nomeUtente = '';
 
-// sql blog
-$sqlGetBlogData = "SELECT blog.idBlog, blog.titolo, blog.autore, categorie.idCategoria, categorie.nomeCategoria, blog.data, blog.descrizione, blog.categoria, blog.banner
-FROM categorie , blog
-WHERE  categorie.idCategoria = blog.categoria";
-// sql categorie
-$sqlCategorie = "SELECT * FROM `categorie`";
+    if (isset($_SESSION['nomeUtente'])) {
+        // recupero nome utente dalla sessione
+        $nomeUtente = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']);
+    }
 
-// righe risultato
-$resultBlogData = mysqli_query($conn, $sqlGetBlogData);
-$resultCategorie = mysqli_query($conn, $sqlCategorie);
+    // sql blog
+    $sqlGetBlogData = "SELECT blog.idBlog, blog.titolo, blog.autore, categorie.idCategoria, categorie.nomeCategoria, blog.data, blog.descrizione, blog.categoria, blog.banner
+                        FROM categorie , blog
+                        WHERE  categorie.idCategoria = blog.categoria";
 
-// righe risultato "fetchate" in array
-$blogs = mysqli_fetch_all($resultBlogData, MYSQLI_ASSOC);
-$categorie = mysqli_fetch_all($resultCategorie, MYSQLI_ASSOC);
+    // sql categorie
+    $sqlCategorie = "SELECT * FROM `categorie`";
 
-// libero memoria
-mysqli_free_result($resultBlogData);
-mysqli_free_result($resultCategorie);
+    // righe risultato
+    $resultBlogData = mysqli_query($conn, $sqlGetBlogData);
+    $resultCategorie = mysqli_query($conn, $sqlCategorie);
 
-// chiusura connessione al db
-mysqli_close($conn);
+    // righe risultato "fetchate" in array
+    $blogs = mysqli_fetch_all($resultBlogData, MYSQLI_ASSOC);
+    $categorie = mysqli_fetch_all($resultCategorie, MYSQLI_ASSOC);
 
+    // libero memoria
+    mysqli_free_result($resultBlogData);
+    mysqli_free_result($resultCategorie);
+
+    // chiusura connessione al db
+    mysqli_close($conn);
 ?>
 
 <!DOCTYPE html>
 <html lang="it">
+
 <?php
-//includo file header
-include 'head.php';
+    //includo file header
+    include 'head.php';
 ?>
+
 <body>
-<div class="container">
+<div class="container py-3">
 
-    <!--alert grigio di benvenuto utente (solo se utente loggato)-->
-    <?php if (!empty($nomeUtente)) : ?>
+    <?php if (count($blogs) > 0) { ?>
+
         <div class="row py-2">
-            <div class="col-12">
 
-                <a class="btn btn-sm btn-primary"
-                   href="gestione_blog.php?nomeUtente=<?php echo $nomeUtente; ?>">
-                    Gestisci i tuoi blog, <?php echo ucfirst($nomeUtente); ?>
-                </a>
-            </div>
-        </div>
-    <?php endif; ?>
+            <div class="col-10">
 
-    <div class="row py-2">
-
-        <div class="col-10">
-
-            <div class="row">
-                <div class="col-3">
-                    <h3 class="text-left grey-text">Esplora blog</h3>
-                </div>
+                <div class="row">
+                    <div class="col-3">
+                        <h3 class="text-left grey-text">Esplora blog</h3>
+                    </div>
 
 
-                <div class="col-9">
-                    <!--form ricerca-->
-                    <div class="form-inline my-2 my-lg-0 float-right">
-                        <input id="titoloCercato"
-                               name="titoloCercato"
-                               type="text"
-                               class="form-control mr-sm-2"
-                               placeholder="Cerca blog per titolo..">
+                    <div class="col-9">
+                        <!--form ricerca-->
+                        <div class="form-inline my-2 my-lg-0 float-right">
+                            <input id="titoloCercato"
+                                   name="titoloCercato"
+                                   type="text"
+                                   class="form-control mr-sm-2"
+                                   placeholder="Cerca blog per titolo..">
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- lista dei blog -->
-            <div class="row">
-                <div class="col-12">
-                    <div class="row" id="containerBlogs">
+                <!-- lista dei blog -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="row" id="containerBlogs">
 
-                        <?php foreach ($blogs as $blog) { ?>
+                            <?php foreach ($blogs as $blog) { ?>
 
-                            <!-- assegno alla colonna di bootstrap l'id del blog come id del tag -->
-                            <div id="<?php echo $blog['idBlog']; ?>" class="blog col-lg-4 py-3">
-                                <div class="card card-bg text-white h-100 z-depth-0"
-                                     style="background-image: url('<?php echo htmlspecialchars($blog['banner']) ?>');">
-                                    <div class="card-header text-center h-50r">
-                                        <?php echo ucfirst(htmlspecialchars($blog['titolo'])); ?>
-                                    </div>
-                                    <div class="card-body text-center">
-                                        <h6 class="card-title">
-                                            <small>Autore: </small><?php echo ucfirst(htmlspecialchars($blog['autore'])); ?>
-                                        </h6>
-                                        <small class="card-text">
-                                            Categoria: <?php echo htmlspecialchars($blog['nomeCategoria']); ?></small>
-                                        <div class="card-text"><?php echo htmlspecialchars($blog['descrizione']); ?></div>
-                                        <!-- card commands row -->
-                                        <div class="row py-2">
-                                            <div class="col-12">
-                                                <!--  passa il codice del blog(array che stiamo scorrendo col for) alla pagina visual_blog  -->
-                                                <a class="btn btn-md btn-primary"
-                                                   href="visual_blog.php?idBlog=<?php echo $blog['idBlog']; ?>">Apri</a>
+                                <!-- assegno alla colonna di bootstrap l'id del blog come id del tag -->
+                                <div id="<?php echo $blog['idBlog']; ?>" class="blog col-lg-4 py-3">
+                                    <div class="card card-bg text-white h-100 z-depth-0"
+                                         style="background-image: url('<?php echo htmlspecialchars($blog['banner']) ?>');">
+                                        <div class="card-header text-center h-50r">
+                                            <?php echo ucfirst(htmlspecialchars($blog['titolo'])); ?>
+                                        </div>
+                                        <div class="card-body text-center">
+                                            <h6 class="card-title">
+                                                <small>Autore: </small><?php echo ucfirst(htmlspecialchars($blog['autore'])); ?>
+                                            </h6>
+                                            <small class="card-text">
+                                                Categoria: <?php echo htmlspecialchars($blog['nomeCategoria']); ?></small>
+                                            <div class="card-text"><?php echo htmlspecialchars($blog['descrizione']); ?></div>
+                                            <!-- card commands row -->
+                                            <div class="row py-2">
+                                                <div class="col-12">
+                                                    <!--  passa il codice del blog(array che stiamo scorrendo col for) alla pagina visual_blog  -->
+                                                    <a class="btn btn-md btn-primary"
+                                                       href="visual_blog.php?idBlog=<?php echo $blog['idBlog']; ?>">Apri</a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        <?php } ?>
+                            <?php } ?>
+                        </div>
                     </div>
                 </div>
+
+            </div>
+
+            <!-- colonna delle categorie -->
+            <div class="col-2">
+
+                <h6 class="lead display-6">Categorie</h6>
+
+                <ul id="listaCateg" class="list-group list-group-flush">
+
+                    <li id="allCategorie" class="list-group-item">Tutte</li>
+
+                    <?php foreach ($categorie as $categoria) { ?>
+                        <!-- assegno al li di bootstrap l'id della cateoria come id del tag -->
+                        <li style="cursor: pointer"
+                            id="<?php echo $categoria['idCategoria']; ?>"
+                            class="list-group-item"><?php echo ucwords(htmlspecialchars($categoria['nomeCategoria'])); ?>
+                        </li>
+                    <?php } ?>
+                </ul>
+
             </div>
 
         </div>
 
-        <!-- colonna delle categorie -->
-        <div class="col-2">
+    <?php } else { ?>
 
-            <h6 class="lead display-6">Categorie</h6>
-
-            <ul id="listaCateg" class="list-group list-group-flush">
-
-                <li id="allCategorie" class="list-group-item">Tutte</li>
-
-                <?php foreach ($categorie as $categoria) { ?>
-                    <!-- assegno al li di bootstrap l'id della cateoria come id del tag -->
-                    <li style="cursor: pointer"
-                        id="<?php echo $categoria['idCategoria']; ?>"
-                        class="list-group-item"><?php echo ucwords(htmlspecialchars($categoria['nomeCategoria'])); ?>
-                    </li>
-                <?php } ?>
-            </ul>
-
+        <div class="row d-flex h-75 py-2">
+            <div class="col-12 justify-content-center align-self-center text-center">
+                <h1>Ancora nessun blog presente</h1>
+                <p>
+                    Benvenuto! Sembra che non sia stato creato nessun blog, per il momento.
+                    <br>
+                    <?php if(empty($nomeUtente)) {?> Registrati ed esegui l'accesso se vuoi creare un tuo blog! <?php } ?>
+                </p>
+            </div>
         </div>
 
-    </div>
+    <?php } ?>
+
 </div> <!-- fine container -->
 
 <?php include('footer.php') ?>

@@ -1,68 +1,70 @@
 <?php
 
-/**
- * Gestione blog e' la pagina che gestisce i blog dell'utente loggato.
- * Permette di creare nuovi blog, eliminare e modificare i propri blog.
- */
+    /**
+     * Gestione blog e' la pagina che gestisce i blog dell'utente loggato.
+     * Permette di creare nuovi blog, eliminare e modificare i propri blog.
+     */
 
-//includo file connessione al db
-include('db_connect.php');
-//includo file header
-include('header.php');
+    // includo file connessione al db
+    include('db_connect.php');
 
-if (isset($_SESSION['nomeUtente'])) {
-    // recupero nome utente dalla sessione
-    $nomeUtente = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']);
+    // includo file header
+    include('header.php');
 
-    // sql blog creati dall'utente loggato
-    $sqlGetBlogsByAutore = "SELECT blog.idBlog, blog.titolo, blog.autore, categorie.nomeCategoria, blog.data, blog.descrizione, blog.categoria, blog.banner
-FROM categorie , blog WHERE categorie.idCategoria = blog.categoria AND blog.autore = '$nomeUtente'";
+    if (isset($_SESSION['nomeUtente'])) {
+        // recupero nome utente dalla sessione
+        $nomeUtente = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']);
 
-    // sql categorie
-    $sqlCategorie = "SELECT * FROM `categorie`";
+        // sql blog creati dall'utente loggato
+        $sqlGetBlogsByAutore = "SELECT blog.idBlog, blog.titolo, blog.autore, categorie.nomeCategoria, blog.data, blog.descrizione, blog.categoria, blog.banner
+                                FROM categorie , blog WHERE categorie.idCategoria = blog.categoria AND blog.autore = '$nomeUtente'";
 
-    // sql tipo utente
-    $sqlTipoUtente = "SELECT tipoUtente FROM utenti WHERE nomeUtente = '$nomeUtente'";
+        // sql categorie
+        $sqlCategorie = "SELECT * FROM `categorie`";
 
-    // righe risultato
-    $result = mysqli_query($conn, $sqlGetBlogsByAutore);
-    $resultCategorie = mysqli_query($conn, $sqlCategorie);
-    $resTipoUtente = mysqli_query($conn, $sqlTipoUtente);
+        // sql tipo utente
+        $sqlTipoUtente = "SELECT tipoUtente FROM utenti WHERE nomeUtente = '$nomeUtente'";
 
-    //conto i blog creati dall'utente
-    $numBlog = mysqli_num_rows($result);
+        // righe risultato
+        $result = mysqli_query($conn, $sqlGetBlogsByAutore);
+        $resultCategorie = mysqli_query($conn, $sqlCategorie);
+        $resTipoUtente = mysqli_query($conn, $sqlTipoUtente);
 
-    // righe risultato "fetchate" in array
-    $blogs = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    $categorie = mysqli_fetch_all($resultCategorie, MYSQLI_ASSOC);
-    $tipoUtente = mysqli_fetch_assoc($resTipoUtente);
+        //conto i blog creati dall'utente
+        $numBlog = mysqli_num_rows($result);
 
-    // libero memoria
-    mysqli_free_result($result);
-    mysqli_free_result($resultCategorie);
+        // righe risultato "fetchate" in array
+        $blogs = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        $categorie = mysqli_fetch_all($resultCategorie, MYSQLI_ASSOC);
+        $tipoUtente = mysqli_fetch_assoc($resTipoUtente);
 
-    // chiusura connessione al db
-    mysqli_close($conn);
-} else {
-    header("Location: ops.php");
-}
+        // libero memoria
+        mysqli_free_result($result);
+        mysqli_free_result($resultCategorie);
+
+        // chiusura connessione al db
+        mysqli_close($conn);
+    } else {
+        header("Location: ops.php");
+    }
 ?>
 
 <!DOCTYPE html>
 <html lang="it">
 <body>
 <?php
-//includo file header
-include 'head.php';
+    //includo file header
+    include 'head.php';
 ?>
 
-<div class="container"> <!-- tutte le row e le col di bootstrap devono stare dentro un unico container -->
+<div class="container py-3"> <!-- tutte le row e le col di bootstrap devono stare dentro un unico container -->
 
     <div class="row py-2">
         <h3 class="text-left grey-text">Gestisci i tuoi blog, <?php echo ucfirst($nomeUtente); ?></h3>
     </div>
 
     <div class="row">
+
         <!--- mostra le card con i blog dell'utente -->
         <?php foreach ($blogs as $blog) { ?>
 
@@ -99,36 +101,37 @@ include 'head.php';
 
 
         <?php // mostro pulsante crea blog solo agli utenti normali che hanno meno di 3 blog o a quelli che sono premium
-        if (($tipoUtente['tipoUtente'] == "Normale" && $numBlog < 3) ||  $tipoUtente['tipoUtente'] == "Premium") { ?>
-        <!--aggiunta card di crea blog-->
-        <div class="cardCreaBlog col-lg-3 py-3">
-            <div class="card h-100 z-depth-0">
+            if (($tipoUtente['tipoUtente'] == "Normale" && $numBlog < 3) || $tipoUtente['tipoUtente'] == "Premium") { ?>
+                <!--aggiunta card di crea blog-->
+                <div class="cardCreaBlog col-lg-3 py-3">
+                    <div class="card h-100 z-depth-0">
 
-                <div class="card-header">
-                    Nuovo Blog
-                </div>
+                        <div class="card-header">
+                            Nuovo Blog
+                        </div>
 
-                <div class="card-body text-center">
+                        <div class="card-body text-center">
 
-                    <div class="row py-2">
-                        <div class="col-12">
-                            <div class="card-text">Crea un nuovo blog</div>
+                            <div class="row py-2">
+                                <div class="col-12">
+                                    <div class="card-text">Crea un nuovo blog</div>
+                                </div>
+                            </div>
+
+                            <!-- card commands row -->
+                            <div class="row py-2">
+                                <div class="col-12 text-center">
+                                    <!--  pulsante crea nuovo blog  -->
+                                    <a class="btn btn-outline-primary" href="crea_blog.php"> <i
+                                                class="fa fa-plus-circle"></i>
+                                    </a>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
-
-                    <!-- card commands row -->
-                    <div class="row py-2">
-                        <div class="col-12 text-center">
-                            <!--  pulsante crea nuovo blog  -->
-                            <a class="btn btn-outline-primary" href="crea_blog.php"> <i class="fa fa-plus-circle"></i>
-                            </a>
-                        </div>
-                    </div>
-
                 </div>
-            </div>
-        </div>
-        <?php } ?>
+            <?php } ?>
 
     </div>
 
