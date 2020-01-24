@@ -1,108 +1,109 @@
 <?php
 
-/**
- * La pagina visualizzazione blog permette di visualizzare un blog dell'utente loggato.
- * Mostra l'elenco di tutti i post al suo interno, con i relativi commenti e i mi piace per ogni post.
- * Permette all'utente proprietario di aggiungere/rimuovere post.
- * Permette l'aggiunta di commenti e mi piace da parte di un qualsiasi utente loggato.
- */
-//includo file connessione al db
-include('db_connect.php');
+    /**
+     * La pagina visualizzazione blog permette di visualizzare un blog dell'utente loggato.
+     * Mostra l'elenco di tutti i post al suo interno, con i relativi commenti e i mi piace per ogni post.
+     * Permette all'utente proprietario di aggiungere/rimuovere post.
+     * Permette l'aggiunta di commenti e mi piace da parte di un qualsiasi utente loggato.
+     */
 
-//includo file header
-include('header.php');
+    //includo file connessione al db
+    include('db_connect.php');
 
-$blog = $posts = $followers = $like = $utenteSession = '';
+    //includo file header
+    include('header.php');
 
-//verifica la richiesta GET del parametro idBlog
-if (isset($_GET['idBlog'])) {
+    $blog = $posts = $followers = $like = $utenteSession = '';
 
-    mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+    //verifica la richiesta GET del parametro idBlog
+    if (isset($_GET['idBlog'])) {
 
-    $idBlog = mysqli_real_escape_string($conn, $_GET['idBlog']);
+        mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
-// sql codice
-    $sqlBlog = "SELECT * FROM `blog` WHERE idBlog = $idBlog"; //dati blog
-    $sqlPost = "SELECT * FROM `post` WHERE idBlog = $idBlog"; //elenco post
-    $sqlCommenti = "SELECT * FROM `commenti` ORDER BY data DESC"; //commenti per post
-    $sqlTemi = "SELECT * FROM `temi`"; //elenco temi
+        $idBlog = mysqli_real_escape_string($conn, $_GET['idBlog']);
+
+        // sql codice
+        $sqlBlog = "SELECT * FROM `blog` WHERE idBlog = $idBlog"; //dati blog
+        $sqlPost = "SELECT * FROM `post` WHERE idBlog = $idBlog"; //elenco post
+        $sqlCommenti = "SELECT * FROM `commenti` ORDER BY data DESC"; //commenti per post
+        $sqlTemi = "SELECT * FROM `temi`"; //elenco temi
 
 
-// risultato righe query
-    $risBlog = mysqli_query($conn, $sqlBlog);
-    $risPost = mysqli_query($conn, $sqlPost);
-    $risCommenti = mysqli_query($conn, $sqlCommenti);
-    $risTemi = mysqli_query($conn, $sqlTemi); //ris temi
+        // risultato righe query
+        $risBlog = mysqli_query($conn, $sqlBlog);
+        $risPost = mysqli_query($conn, $sqlPost);
+        $risCommenti = mysqli_query($conn, $sqlCommenti);
+        $risTemi = mysqli_query($conn, $sqlTemi); //ris temi
 
-// fetch righe risultato in un array
-    $blog = mysqli_fetch_assoc($risBlog); // si usa assoc e non all perchè prendiamo solo una riga della tab risultato
-    $posts = mysqli_fetch_all($risPost, MYSQLI_ASSOC);
-    $commenti = mysqli_fetch_all($risCommenti, MYSQLI_ASSOC);
-    $temi = mysqli_fetch_all($risTemi, MYSQLI_ASSOC);
+        // fetch righe risultato in un array
+        $blog = mysqli_fetch_assoc($risBlog); // si usa assoc e non all perchè prendiamo solo una riga della tab risultato
+        $posts = mysqli_fetch_all($risPost, MYSQLI_ASSOC);
+        $commenti = mysqli_fetch_all($risCommenti, MYSQLI_ASSOC);
+        $temi = mysqli_fetch_all($risTemi, MYSQLI_ASSOC);
 
-// prendo dall'array associativo blog l'id della categoria associata, poi faccio la query che prende la categoria
-    $idCategoriaBlog = $blog['categoria'];
-    $sqlCategorie = "SELECT * FROM categorie WHERE idCategoria = $idCategoriaBlog";
+        // prendo dall'array associativo blog l'id della categoria associata, poi faccio la query che prende la categoria
+        $idCategoriaBlog = $blog['categoria'];
+        $sqlCategorie = "SELECT * FROM categorie WHERE idCategoria = $idCategoriaBlog";
 
-    $risCateg = mysqli_query($conn, $sqlCategorie);
-    $categoriaBlog = mysqli_fetch_assoc($risCateg);
+        $risCateg = mysqli_query($conn, $sqlCategorie);
+        $categoriaBlog = mysqli_fetch_assoc($risCateg);
 
-    // serve a pulsante "segui" e "mi piace"
-    if (isset($_SESSION['nomeUtente'])) {
-        $utenteSession = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']);
-    }
-
-    // query per cercare nella tab follower l'utente attualmente loggato (e capire se segue già il blog o no)
-    // la risposta sarà un array di un elemento, nel caso venga trovato, o vuoto in caso contrario
-    $sqlFollower = "SELECT * FROM follower WHERE idBlog = '$idBlog' AND idUtente = '$utenteSession'";
-    $risFollow = mysqli_query($conn, $sqlFollower);
-    $followers = mysqli_fetch_all($risFollow, MYSQLI_ASSOC);
-
-    // se trovo il record nel db follower
-    if (mysqli_num_rows($risFollow) === 1 AND $followers[0]['idUtente'] == $utenteSession) {
-        $segui = '<a class="btn btn-primary btn-sm" id="following" value="following"><i class="fa fa-rss-square"></i>' . " Stai seguendo" . '</a>';
-    } else {
-        $segui = '<a class="btn btn-outline-primary btn-sm" id="follow" value="follow"><i class="fa fa-rss"></i>' . " Segui" . '</a>';
-    }
-
-    /** GESTIONE MI PIACE **/
-
-    //se e' stato premuto un tasto like/dislike su un qualsiasi post
-    if (isset($_POST['likeButtonIdPost'])) { // controllo se la POST è stata mandata alla pagina e ha un campo like
-
-        $idPost = $_POST['likeButtonIdPost']; // prendiamo l'idPost inerente al post sul quale abbiamo cliccato like/dislike
-        $isPostLiked = $_POST['likeButtonIsPostLiked']; // prendiamo lo stato del post -> true se c'e' gia' mi piace, false altrimenti
-
-        if ($isPostLiked == true) { // se il post ha gia' il mi piace...
-
-            $sqlDecrementLikeCounter = "UPDATE post SET cont_like = cont_like - 1 WHERE idPost = '$idPost'";
-            $risDecrementLikeCounter = mysqli_query($conn, $sqlDecrementLikeCounter);
-
-            $sqlRemoveMiPiace = "DELETE FROM mipiace WHERE idPost= '$idPost' AND idUtente = '$utenteSession'";
-            $risRemoveMiPiace = mysqli_query($conn, $sqlRemoveMiPiace);
-        } else { // se il post non ha il mi piace...
-
-            $sqlUpdateLikeCounter = "UPDATE post SET cont_like = cont_like + 1 WHERE idPost = '$idPost'";
-            $risUpdateLikeCounter = mysqli_query($conn, $sqlUpdateLikeCounter);
-
-            $sqlAddMiPiace = "INSERT INTO mipiace (idLike, idPost, idUtente) VALUES (NULL, '$idPost', '$utenteSession')";
-            $risAddMiPiace = mysqli_query($conn, $sqlAddMiPiace);
+        // serve a pulsante "segui" e "mi piace"
+        if (isset($_SESSION['nomeUtente'])) {
+            $utenteSession = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']);
         }
+
+        // query per cercare nella tab follower l'utente attualmente loggato
+        // la risposta sarà un array di un elemento, nel caso venga trovato, o vuoto in caso contrario
+        $sqlFollower = "SELECT * FROM follower WHERE idBlog = '$idBlog' AND idUtente = '$utenteSession'";
+        $risFollow = mysqli_query($conn, $sqlFollower);
+        $followers = mysqli_fetch_all($risFollow, MYSQLI_ASSOC);
+
+        // se trovo il record nel db follower
+        if (mysqli_num_rows($risFollow) === 1 AND $followers[0]['idUtente'] == $utenteSession) {
+            $segui = '<a class="btn btn-primary btn-sm" id="following" value="following"><i class="fa fa-rss-square"></i>' . " Stai seguendo" . '</a>';
+        } else {
+            $segui = '<a class="btn btn-outline-primary btn-sm" id="follow" value="follow"><i class="fa fa-rss"></i>' . " Segui" . '</a>';
+        }
+
+        /** GESTIONE MI PIACE **/
+
+        //se e' stato premuto un tasto like/dislike su un qualsiasi post
+        if (isset($_POST['likeButtonIdPost'])) { // controllo se la POST è stata mandata alla pagina e ha un campo like
+
+            $idPost = $_POST['likeButtonIdPost']; // prendiamo l'idPost inerente al post sul quale abbiamo cliccato like/dislike
+            $isPostLiked = $_POST['likeButtonIsPostLiked']; // prendiamo lo stato del post -> true se c'e' gia' mi piace, false altrimenti
+
+            if ($isPostLiked == true) { // se il post ha gia' il mi piace...
+
+                $sqlDecrementLikeCounter = "UPDATE post SET cont_like = cont_like - 1 WHERE idPost = '$idPost'";
+                $risDecrementLikeCounter = mysqli_query($conn, $sqlDecrementLikeCounter);
+
+                $sqlRemoveMiPiace = "DELETE FROM mipiace WHERE idPost= '$idPost' AND idUtente = '$utenteSession'";
+                $risRemoveMiPiace = mysqli_query($conn, $sqlRemoveMiPiace);
+            } else { // se il post non ha il mi piace...
+
+                $sqlUpdateLikeCounter = "UPDATE post SET cont_like = cont_like + 1 WHERE idPost = '$idPost'";
+                $risUpdateLikeCounter = mysqli_query($conn, $sqlUpdateLikeCounter);
+
+                $sqlAddMiPiace = "INSERT INTO mipiace (idLike, idPost, idUtente) VALUES (NULL, '$idPost', '$utenteSession')";
+                $risAddMiPiace = mysqli_query($conn, $sqlAddMiPiace);
+            }
+        }
+
+        // chiudi connessione
+        // mysqli_close($conn);
+
+
+    } else {
+        //header("Location: ops.php");
     }
-
-    // chiudi connessione
-    // mysqli_close($conn);
-
-
-} else {
-    //header("Location: ops.php");
-}
 ?>
 
 <!DOCTYPE html>
 
-<!-- Link css custom personalizz blog-->
-<link id="cssBlog" href="../css/temi_blog/<?php echo $blog['tema']; ?>.css" rel="stylesheet" type="text/css"/>
+<!-- Link css custom personalizz blog -->
+<link id="theme" href="../css/temi_blog/<?php echo $blog['tema']; ?>.css" rel="stylesheet" type="text/css"/>
 
 <body xmlns="http://www.w3.org/1999/xhtml" xml:lang="it" lang="it" class="user-bg user-text user-font">
 
@@ -110,8 +111,8 @@ if (isset($_GET['idBlog'])) {
 <meta http-equiv="Content-Language" content="it"/>
 
 <?php
-//includo file header
-include 'head.php';
+    //includo file header
+    include 'head.php';
 ?>
 
 <!-- banner -->
@@ -163,7 +164,33 @@ include 'head.php';
     </div>
 </div>
 
-<div class="container">
+<div class="container py-2">
+
+    <!-- scelta tema -->
+    <form class="form-inline">
+
+        <p>Cambia tema:</p>
+
+        <div class="form-row align-items-center">
+
+            <label class="sr-only" for="selezTema">Scegli tema blog:</label>
+
+            <select id="selezTema" data-id-blog="<?php echo $idBlog ?>"
+                    class="form-control form-control-md mb-2 mx-sm-2">
+                <?php foreach ($temi as $nomeTema) { ?>
+                    <option <?php if ($blog['tema'] === $nomeTema['nomeTema']) echo 'selected' ?>
+                            value="<?php echo htmlspecialchars($nomeTema['nomeTema']); ?>">
+                        <?php echo htmlspecialchars($nomeTema['nomeTema']); ?>
+                    </option>
+                <?php } ?>
+            </select>
+
+            <button id="changeTheme" type="button" class="btn btn-primary btn-sm mb-2">
+                Applica
+            </button>
+        </div>
+
+    </form>
 
     <!-- messaggio assenza post -->
     <?php if (!$posts): ?>
@@ -368,7 +395,6 @@ include 'head.php';
 </script>
 
 
-
 <script type="text/javascript">
     /*
     * mi lego all'evento di click sul bottone like button che serve
@@ -431,4 +457,29 @@ include 'head.php';
     });
 </script>
 
-</html>
+<!-- cambio link css in base a tema selezionato -->
+<script type="text/javascript">
+
+    $(function () {
+
+        $('#changeTheme').on('click', function () {
+
+            // prendo il nome del tema, che per definizione corrisponde a quello del file css da impostare
+            const themeName = $("#selezTema option:selected").val();
+            const idBlog = $("#selezTema").data('id-blog');
+
+            $.ajax({
+                type: "POST",
+                url: "cambia_tema.php",
+                data: {
+                    idBlog: idBlog,
+                    selectedTheme: themeName,
+                },
+                dataType: "text",
+                success: function (response) {
+                    $('#theme').attr('href', '../css/temi_blog/' + response + '.css');
+                }
+            });
+        });
+    });
+</script>
