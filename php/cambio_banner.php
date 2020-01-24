@@ -15,15 +15,17 @@ if (isset($_GET['idBlog'])) {
 
     // sql codice
     $sqlBlog = "SELECT * FROM `blog` WHERE idBlog = $idBlog";
+
     // risultato righe query
     $risBlog = mysqli_query($conn, $sqlBlog);
+
     // fetch righe risultato in un array
     $blog = mysqli_fetch_assoc($risBlog); // si usa assoc e non all perchè prendiamo solo una riga della tab risultato
 
     if (isset($_POST['carica_banner_submit'])) {
 
         // check immagine
-        if (empty($_POST['$imgPost'])) {
+        if (empty($_FILES['blog_banner'])) {
 
             $errore = "Non hai selezionato alcuna immagine";
 
@@ -58,6 +60,7 @@ if (isset($_GET['idBlog'])) {
                 }
             }
         }
+
         if ($errore == '') {
             //se non ci sono errori
             $banner = $targetFile; //salvo path immagine
@@ -131,12 +134,14 @@ include 'head.php';
 
             <!-- carica immagine -->
             <div class="col-12 p-3">
+
                 <h4 class="card-title text-center">Scegli un nuovo sfondo </h4>
+
                 <label for="fileInput">Carica immagine:</label>
                 <div class="custom-file">
-                    <input type="file"
+                    <input id="changeBanner"
+                           type="file"
                            class="custom-file-input"
-                           id="fileInput"
                            required
                            placeholder="Carica uno sfondo per il blog"
                            value="<?php echo htmlspecialchars($banner) ?>"
@@ -171,7 +176,8 @@ include 'head.php';
      si usa il javascript per ovviare al problema.
 -->
 <script>
-    $('#fileInput').on('change', function () {
+    $('#changeBanner').on('change', function () {
+
         // estraggo il nome del file facendo una substring sul percorso completo del file caricato
         const filePath = $(this).val();
         const fileName = filePath.substr(filePath.lastIndexOf('\\') + 1);
