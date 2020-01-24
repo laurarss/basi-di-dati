@@ -52,7 +52,7 @@ if (isset($_GET['idBlog'])) {
         $utenteSession = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']);
     }
 
-    // query per cercare nella tab follower l'utente attualmente loggato
+    // query per cercare nella tab follower l'utente attualmente loggato (e capire se segue già il blog o no)
     // la risposta sarà un array di un elemento, nel caso venga trovato, o vuoto in caso contrario
     $sqlFollower = "SELECT * FROM follower WHERE idBlog = '$idBlog' AND idUtente = '$utenteSession'";
     $risFollow = mysqli_query($conn, $sqlFollower);
@@ -69,8 +69,6 @@ if (isset($_GET['idBlog'])) {
 
     //se e' stato premuto un tasto like/dislike su un qualsiasi post
     if (isset($_POST['likeButtonIdPost'])) { // controllo se la POST è stata mandata alla pagina e ha un campo like
-
-        var_dump($_POST);
 
         $idPost = $_POST['likeButtonIdPost']; // prendiamo l'idPost inerente al post sul quale abbiamo cliccato like/dislike
         $isPostLiked = $_POST['likeButtonIsPostLiked']; // prendiamo lo stato del post -> true se c'e' gia' mi piace, false altrimenti
@@ -226,6 +224,7 @@ include 'head.php';
                         data-id-post="<?php echo $post['idPost']; ?>"
                         data-is-liked="<?php echo isset($miPiace) ?>"
                         data-cont-like="<?php echo $post['cont_like']; ?>">
+
                         <span class="cont_like py-3 px-2 text-primary">
                             <?php if ($miPiace !== null) { ?>
                                 <i class="px-1 fas fa-thumbs-down"></i>
@@ -236,6 +235,7 @@ include 'head.php';
                             <!-- numero di like da tab post-->
                             (<?php echo $post['cont_like']; ?>)
                         </span>
+
                 </button>
 
             </div>
@@ -323,7 +323,6 @@ include 'head.php';
         $('.formCreaCommento').hide();//nasconde crea commenti ai non loggati
         $('.like-button').hide(); //nasconde pulsante mi piace ai non loggati
     </script>
-
 <?php elseif ($_SESSION['nomeUtente'] !== $blog['autore']): ?>
     <!-- nasconde pulsanti di un blog di un utente diverso dal visualizzatore, ma mostrare segui -->
     <script type="text/javascript">

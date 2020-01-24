@@ -13,7 +13,7 @@ $errors = array();
 if (isset($_SESSION['nomeUtente'])) {
     $nomeUtente = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']);
 
-// azioni conseguenti a submit
+    // azioni conseguenti a submit
     if (isset($_POST['paga_submit'])) {
 
         // ricevo valori dal form
