@@ -6,7 +6,7 @@ include('header.php');
 
 $nomeUtente = $_SESSION['nomeUtente'];
 
-// sql blog creati dall'utente loggato(se < 3 con utente normale devo nascondere la pagina)
+// sql blog creati dall'utente loggato(se sono più di 3 e l'utente non è premium, devo nascondere la pagina)
 $sqlContaBlog = "SELECT COUNT(*) as contati FROM blog WHERE autore = '$nomeUtente'";
 $risContaBlog = mysqli_query($conn, $sqlContaBlog);
 $numBlog = mysqli_fetch_assoc($risContaBlog);

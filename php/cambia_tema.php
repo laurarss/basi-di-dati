@@ -4,17 +4,21 @@ include('db_connect.php');
 //includo php header
 include('header.php');
 
-$selectedOptionVal = $_POST['optionVal'];
+//verifica la richiesta GET del parametro idBlog
+if (isset($_GET['idBlog'])) {
 
-// You are trying to "UPDATE" a table data based on some ID and not inserting. Included both operations
+    $idBlog = $_GET['idBlog'];
+    var_dump($idBlog);
+    $selectedOptionVal = $_POST['optionVal'];
+    var_dump($selectedOptionVal);
 
-// If you are INSERTING A new table entry, use below code.
-//INSERT INTO snagging (taskstatus, updated_at) VALUES ('$selectedOptionVal', 'Now()');
+    $sqlCambiaTema = "UPDATE `blog` SET `tema` = '$selectedOptionVal' WHERE `blog`.`idBlog` = $idBlog";
+    if (mysqli_query($conn, $sqlCambiaTema)) {
+        return $selectedOptionVal;
+    } else {
+        echo('Errore');
+    }
 
-// If you are UPDATING an existing table entry, use below code.
-//UPDATE snagging SET taskstatus = '$selectedOptionVal', updated_at = 'Now()' WHERE ID = 1234;
-$sqlCambiaTema = "UPDATE `blog` SET `tema` = '$selectedOptionVal' WHERE `blog`.`idBlog` = $idBlog";
-mysqli_query($conn, $sqlCambiaTema);
-
+}
 
 

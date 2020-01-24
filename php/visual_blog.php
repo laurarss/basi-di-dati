@@ -2,8 +2,9 @@
 
 /**
  * La pagina visualizzazione blog permette di visualizzare un blog dell'utente loggato.
- * Mostra l'elenco di tutti i post al suo interno, con i relativi commenti.
- * Permette di aggiungere/rimuovere post e commenti.
+ * Mostra l'elenco di tutti i post al suo interno, con i relativi commenti e i mi piace per ogni post.
+ * Permette all'utente proprietario di aggiungere/rimuovere post.
+ * Permette l'aggiunta di commenti e mi piace da parte di un qualsiasi utente loggato.
  */
 //includo file connessione al db
 include('db_connect.php');
@@ -94,20 +95,16 @@ if (isset($_GET['idBlog'])) {
     // chiudi connessione
     // mysqli_close($conn);
 
-    // debug
-    //    print_r($posts);
-    //    print_r($categoria);
 
 } else {
-    header("Location: ops.php");
+    //header("Location: ops.php");
 }
 ?>
 
 <!DOCTYPE html>
 
 <!-- Link css custom personalizz blog-->
-<link id="cssBlog" href="../css/temi_blog/<?php echo $blog['tema']; ?>.css" rel="stylesheet"
-      type="text/css"/>
+<link id="cssBlog" href="../css/temi_blog/<?php echo $blog['tema']; ?>.css" rel="stylesheet" type="text/css"/>
 
 <body xmlns="http://www.w3.org/1999/xhtml" xml:lang="it" lang="it" class="user-bg user-text user-font">
 
@@ -170,20 +167,6 @@ include 'head.php';
 
 <div class="container">
 
-    <div class="row">
-        <!-- scelta tema -->
-        <div class="col-3 text-center">
-            <label for="temaBlog">Scegli tema blog:</label>
-            <select name="selezTema" class="form-control form-control-sm">
-                <?php foreach ($temi as $nomeTema) { ?>
-                    <option value="<?php echo htmlspecialchars($nomeTema['nomeTema']); ?>"><?php echo htmlspecialchars($nomeTema['nomeTema']); ?></option>
-                <?php } ?>
-
-            </select>
-            <div class="invalid-feedback">Esempio file non accettato</div>
-        </div>
-    </div>
-
     <!-- messaggio assenza post -->
     <?php if (!$posts): ?>
         <div class="lead text-center">
@@ -225,7 +208,7 @@ include 'head.php';
         </div>
 
         <?php
-//        php per pulsante mi piace
+        // php per pulsante mi piace
         // recupero id post
         $idPost = $post['idPost'];
         // query per cercare nella tabella dei mi piace l'utente attualmente loggato
@@ -385,31 +368,9 @@ include 'head.php';
     });
 </script>
 
-<!-- cambio link css in base a tema selezionato -->
-<script type="text/javascript">
 
-    $(function () {
-
-        $("#selezTema").change(function () { //** on selecting an option based on ID you assigned
-
-            const optionVal = $("#selezTema option:selected").val(); //** get the selected option's value
-
-            $.ajax({
-                type: "POST", //**how data is send
-                url: "cambia_tema.php", //** where to send the option data so that it can be saved in DB
-                data: {optionVal: optionVal}, //** send the selected option's value to above page
-                dataType: "json",
-                success: function (data) {
-                    //** what should do after value is saved to DB and returned from above URL page.
-                    $("#cssBlog").attr("href", "../css/temi_blog/<?php echo $blog['tema']; ?>.css");
-                }
-            });
-        });
-    });
-</script>
 
 <script type="text/javascript">
-
     /*
     * mi lego all'evento di click sul bottone like button che serve
     * per aggiungere o togliere il mi piace da un post

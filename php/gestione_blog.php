@@ -1,12 +1,9 @@
 <?php
 
 /**
- * Gestione blog e' la pagine che gestisce i blog dell'utente loggato.
- * Permette di creare nuovi blog, eliminare propri blog, modificare propri blog.
- * Si puo' anche aggiornare i blog seguiti, seguendone di nuovi o togliendo i segui messi fino ad ora.
+ * Gestione blog e' la pagina che gestisce i blog dell'utente loggato.
+ * Permette di creare nuovi blog, eliminare e modificare i propri blog.
  */
-
-// todo valutare se possibile inserire analitics con i dati dei propri blog (i.e. mi piace ricevuti, top blog eccetera)
 
 //includo file connessione al db
 include('db_connect.php');
@@ -39,7 +36,6 @@ FROM categorie , blog WHERE categorie.idCategoria = blog.categoria AND blog.auto
     $blogs = mysqli_fetch_all($result, MYSQLI_ASSOC);
     $categorie = mysqli_fetch_all($resultCategorie, MYSQLI_ASSOC);
     $tipoUtente = mysqli_fetch_assoc($resTipoUtente);
-
 
     // libero memoria
     mysqli_free_result($result);
