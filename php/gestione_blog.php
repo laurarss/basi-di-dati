@@ -57,84 +57,97 @@
     include 'head.php';
 ?>
 
-<div class="container py-3"> <!-- tutte le row e le col di bootstrap devono stare dentro un unico container -->
+<div class="container"> <!-- tutte le row e le col di bootstrap devono stare dentro un unico container -->
 
-    <div class="row py-2">
-        <h3 class="text-left grey-text">Gestisci i tuoi blog, <?php echo ucfirst($nomeUtente); ?></h3>
-    </div>
+    <?php if (count($blogs) > 0) { ?>
 
-    <div class="row">
+        <div class="row py-2">
+            <h3 class="text-left grey-text">Gestisci i tuoi blog, <?php echo ucfirst($nomeUtente); ?></h3>
+        </div>
 
-        <!--- mostra le card con i blog dell'utente -->
-        <?php foreach ($blogs as $blog) { ?>
+        <div class="row">
 
-            <div class="col-lg-3 py-3">
-                <div class="card h-100 z-depth-0">
-                    <div class="card-header card-header-bg text-center"
-                         style="background-image: url(<?php echo htmlspecialchars($blog['banner']); ?>">
-                        <?php echo htmlspecialchars($blog['titolo']); ?>
-                    </div>
-                    <div class="card-body text-center">
-                        <h6 class="card-text">
-                            <small>Autore: </small>
-                            <?php echo htmlspecialchars($blog['autore']); ?>
-                        </h6>
-                        <small class="card-text"><small>Categoria: </small><?php echo ucwords(htmlspecialchars($blog['nomeCategoria'])); ?>
-                        </small>
-                        <div class="card-text"><?php echo ucfirst(htmlspecialchars($blog['descrizione'])); ?></div>
-                        <!-- card commands row -->
-                        <div class="row py-2">
-                            <div class="col-6">
-                                <!--  passa il codice del blog(array che stiamo scorrendo col for) alla pagina visual_blog  -->
-                                <a class="btn btn-sm btn-primary"
-                                   href="visual_blog.php?idBlog=<?php echo $blog['idBlog'] ?>">Apri</a>
-                            </div>
-                            <div class="col-6">
-                                <a class="btn btn-sm btn-danger"
-                                   href="cancella_blog.php?idBlog=<?php echo $blog['idBlog'] ?>">Elimina</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        <?php } ?>
+            <!--- mostra le card con i blog dell'utente -->
+            <?php foreach ($blogs as $blog) { ?>
 
-
-        <?php // mostro pulsante crea blog solo agli utenti normali che hanno meno di 3 blog o a quelli che sono premium
-            if (($tipoUtente['tipoUtente'] == "Normale" && $numBlog < 3) || $tipoUtente['tipoUtente'] == "Premium") { ?>
-                <!--aggiunta card di crea blog-->
-                <div class="cardCreaBlog col-lg-3 py-3">
+                <div class="col-lg-3 py-3">
                     <div class="card h-100 z-depth-0">
-
-                        <div class="card-header">
-                            Nuovo Blog
+                        <div class="card-header card-header-bg text-center"
+                             style="background-image: url(<?php echo htmlspecialchars($blog['banner']); ?>">
+                            <?php echo htmlspecialchars($blog['titolo']); ?>
                         </div>
-
                         <div class="card-body text-center">
-
-                            <div class="row py-2">
-                                <div class="col-12">
-                                    <div class="card-text">Crea un nuovo blog</div>
-                                </div>
-                            </div>
-
+                            <h6 class="card-text">
+                                <small>Autore: </small>
+                                <?php echo htmlspecialchars($blog['autore']); ?>
+                            </h6>
+                            <small class="card-text"><small>Categoria: </small><?php echo ucwords(htmlspecialchars($blog['nomeCategoria'])); ?>
+                            </small>
+                            <div class="card-text"><?php echo ucfirst(htmlspecialchars($blog['descrizione'])); ?></div>
                             <!-- card commands row -->
                             <div class="row py-2">
-                                <div class="col-12 text-center">
-                                    <!--  pulsante crea nuovo blog  -->
-                                    <a class="btn btn-outline-primary" href="crea_blog.php"> <i
-                                                class="fa fa-plus-circle"></i>
-                                    </a>
+                                <div class="col-6">
+                                    <!--  passa il codice del blog(array che stiamo scorrendo col for) alla pagina visual_blog  -->
+                                    <a class="btn btn-sm btn-primary"
+                                       href="visual_blog.php?idBlog=<?php echo $blog['idBlog'] ?>">Apri</a>
+                                </div>
+                                <div class="col-6">
+                                    <a class="btn btn-sm btn-danger"
+                                       href="cancella_blog.php?idBlog=<?php echo $blog['idBlog'] ?>">Elimina</a>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
             <?php } ?>
 
-    </div>
 
+            <?php // mostro pulsante crea blog solo agli utenti normali che hanno meno di 3 blog o a quelli che sono premium
+                if (($tipoUtente['tipoUtente'] == "Normale" && $numBlog < 3) || $tipoUtente['tipoUtente'] == "Premium") { ?>
+                    <!--aggiunta card di crea blog-->
+                    <div class="cardCreaBlog col-lg-3 py-3">
+                        <div class="card h-100 z-depth-0">
+
+                            <div class="card-header">
+                                Nuovo Blog
+                            </div>
+
+                            <div class="card-body text-center">
+
+                                <div class="row py-2">
+                                    <div class="col-12">
+                                        <div class="card-text">Crea un nuovo blog</div>
+                                    </div>
+                                </div>
+
+                                <!-- card commands row -->
+                                <div class="row py-2">
+                                    <div class="col-12 text-center">
+                                        <!--  pulsante crea nuovo blog  -->
+                                        <a class="btn btn-outline-primary" href="crea_blog.php"> <i
+                                                    class="fa fa-plus-circle"></i>
+                                        </a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
+
+        </div>
+
+    <?php } else { ?>
+
+        <div class="row d-flex h-75 py-2">
+            <div class="col-12 justify-content-center align-self-center text-center">
+                <h1>Non hai creato nessun blog!</h1>
+                <p> Puoi aiutare la community creando un tuo blog riguardo ad un argomento a tuo piacere! </p>
+                <p><span class="font-italic">"Quando qualcuno condivide, tutti vincono."</span> - (Jim Rohn)</p>
+            </div>
+        </div>
+
+    <?php } ?>
 
 </div> <!-- fine container -->
 </body>
