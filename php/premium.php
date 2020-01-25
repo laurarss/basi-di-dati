@@ -23,6 +23,9 @@ if (isset($_SESSION['nomeUtente'])) {
         $nome = mysqli_real_escape_string($conn, $_POST['nome']);
         $cognome = mysqli_real_escape_string($conn, $_POST['cognome']);
 
+        var_dump($nome);
+        var_dump($cognome);
+
         //check numero carta
         if (empty($numeroCarta)) {
             array_push($errors, 'Manca il numero della tua carta!');
@@ -73,7 +76,7 @@ if (isset($_SESSION['nomeUtente'])) {
 
         if (count($errors) == 0) {
             //inserisco dati pagamento in db
-            $sqlDatiPagam = "INSERT INTO `pagamenti` (`numeroCarta`, `scadenzaCarta`, `codSicurezza`, `idUtente`) VALUES ('$numeroCarta', '$scadenzaCarta', '$codSicurezza', '$nomeUtente')";
+            $sqlDatiPagam = "INSERT INTO `pagamenti` (`numeroCarta`, `scadenzaCarta`, `codSicurezza`,`nome`,`cognome`,`idUtente`) VALUES ('$numeroCarta', '$scadenzaCarta', '$codSicurezza', '$nome', '$cognome', '$nomeUtente')";
             $insDatiPagam = mysqli_query($conn, $sqlDatiPagam);
 
             // sql aggiorna utente a premium
@@ -87,7 +90,7 @@ if (isset($_SESSION['nomeUtente'])) {
                 echo "Errore richiesta";
             }
             if ($risAggiornaUtente) {
-                header('Location: profilo.php');
+                //header('Location: profilo.php');
             } else {
                 echo "Errore richiesta";
             }
