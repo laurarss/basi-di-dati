@@ -15,7 +15,7 @@ include 'head.php';
 <div class="container py-5">
 
     <div class="row justify-content-center">
-        <div class="col-sm-6">
+        <div class="col-md-6">
 
             <div class="card bg-light shadow">
                 <div class="card-body">

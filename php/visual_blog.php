@@ -1,19 +1,21 @@
 <?php
 
-    /**
-     * La pagina visualizzazione blog permette di visualizzare un blog dell'utente loggato.
-     * Mostra l'elenco di tutti i post al suo interno, con i relativi commenti e i mi piace per ogni post.
-     * Permette all'utente proprietario di aggiungere/rimuovere post.
-     * Permette l'aggiunta di commenti e mi piace da parte di un qualsiasi utente loggato.
-     */
+/**
+ * La pagina visualizzazione blog permette di visualizzare un blog dell'utente loggato.
+ * Mostra l'elenco di tutti i post al suo interno, con i relativi commenti e i mi piace per ogni post.
+ * Permette all'utente proprietario di aggiungere/rimuovere post.
+ * Permette l'aggiunta di commenti e mi piace da parte di un qualsiasi utente loggato.
+ */
 
-    // includo file connessione al db
-    include('db_connect.php');
+// includo file connessione al db
+include('db_connect.php');
 
-    // includo file header
-    include('header.php');
+// includo file header
+include('header.php');
 
-    $blog = $posts = $followers = $like = $utenteSession = '';
+$blog = $posts = $followers = $like = $utenteSession = '';
+
+if (isset($_SESSION['nomeUtente'])) {
 
     //verifica la richiesta GET del parametro idBlog
     if (isset($_GET['idBlog'])) {
@@ -90,6 +92,9 @@
             }
         }
     }
+} else {
+    header("Location: ops.php");
+}
 ?>
 
 <!DOCTYPE html>
@@ -103,8 +108,8 @@
 <meta http-equiv="Content-Language" content="it"/>
 
 <?php
-    //includo file header
-    include 'head.php';
+//includo file header
+include 'head.php';
 ?>
 
 <!-- banner -->
