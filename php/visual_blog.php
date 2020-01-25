@@ -54,18 +54,14 @@ if (isset($_SESSION['nomeUtente'])) {
             $utenteSession = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']);
         }
 
+        /** GESTIONE FOLLOW */
+
         // query per cercare nella tab follower l'utente attualmente loggato
         // la risposta sarà un array di un elemento, nel caso venga trovato, o vuoto in caso contrario
-        $sqlFollower = "SELECT * FROM follower WHERE idBlog = '$idBlog' AND idUtente = '$utenteSession'";
-        $risFollow = mysqli_query($conn, $sqlFollower);
-        $followers = mysqli_fetch_all($risFollow, MYSQLI_ASSOC);
-
-        // se trovo il record nel db follower
-        if (mysqli_num_rows($risFollow) === 1 AND $followers[0]['idUtente'] == $utenteSession) {
-            $segui = '<a class="btn btn-primary btn-sm" id="following" value="following"><i class="fa fa-rss-square"></i>' . " Stai seguendo" . '</a>';
-        } else {
-            $segui = '<a class="btn btn-outline-primary btn-sm" id="follow" value="follow"><i class="fa fa-rss"></i>' . " Segui" . '</a>';
-        }
+        $sqlFollow = "SELECT * FROM follower WHERE idBlog = '$idBlog' AND idUtente = '$utenteSession'";
+        $risFollow = mysqli_query($conn, $sqlFollow);
+        $follow = mysqli_fetch_assoc($risFollow);
+        $isFollower = !empty($follow);
 
         /** GESTIONE MI PIACE **/
 
@@ -140,8 +136,17 @@ include 'head.php';
                 <!-- pulsante segui -->
                 <!-- la visual cambia in base all'esito della query sul db "follower" -->
                 <div class="row">
-                    <div class="segui col-12 text-center">
-                        <?php echo $segui; ?>
+                    <div class="col-12 text-center">
+                        <button id="followButton" type="button"
+                                data-id-blog="<?php echo $idBlog ?>"
+                                data-is-follower="<?php echo $isFollower ?>"
+                                class="btn btn-secondary btn-sm">
+                            <?php if ($follow) { ?>
+                                <i class="fa fa-rss-square"></i> Stai seguendo
+                            <?php } else { ?>
+                                <i class="fa fa-rss"></i> Segui
+                            <?php } ?>
+                        </button>
                     </div>
                 </div>
 
@@ -414,37 +419,6 @@ include 'head.php';
         });
 
         /**
-         * SEGUI
-         * se il pulsante ha id "follow" NON sto seguendo e devo aggiungere il record dal db
-         */
-        $('#follow').on('click', function () {
-
-            $.ajax({
-                type: "POST",
-                url: "crea_follower.php?idBlog=<?php echo $blog['idBlog'] ?>",
-                dataType: "html",
-                success: function (response) {
-                    $(".segui").html(response);
-                }
-            });
-        });
-
-        /**
-         * NON SEGUIRE PIU'
-         * se il pulsante ha id "following" sto già seguendo e devo rimuovere il record dal db
-         */
-        $('#following').on('click', function () {
-            $.ajax({
-                type: "POST",
-                url: "cancella_follower.php?idBlog=<?php echo $blog['idBlog'] ?>",
-                dataType: "html",
-                success: function (response) {
-                    $(".segui").html(response);
-                }
-            });
-        });
-
-        /**
          * MI PIACE
          */
         $(".like-button").on('click', function () {
@@ -517,6 +491,44 @@ include 'head.php';
                 }
             });
         });
+
+        /**
+         * FOLLOW
+         * funzione parametrica per aggiornamento stato di follow sul blog.
+         * Tramite il tag html passa una variabile booleana che ci dice se l'utente segue o non segue il blog.
+         * In base a questo aggiorniamo lo stato con insert o update, in base al valore booleano
+         */
+        $('#followButton').on('click', function () {
+
+            const followButton = $(this);
+            const idBlog = followButton.data('id-blog');
+            const isFollower = followButton.data('is-follower');
+
+            $.post({
+                url: "aggiorna_follower.php",
+                dataType: "text",
+                data: {
+                    idBlog: idBlog,
+                    isFollower: isFollower
+                },
+                success: function (response) {
+
+                    if (response === 'true') {
+
+                        if (isFollower === 1) {
+                            followButton.html('<i class="fa fa-rss"></i> Segui');
+                            followButton.data('is-follower', '');
+
+                        } else {
+                            followButton.html('<i class="fa fa-rss-square"></i> Stai seguendo');
+                            followButton.data('is-follower', 1);
+                        }
+                    } else {
+                        console.error('Errore durante l\'aggiornamento del follow');
+                    }
+                }
+            });
+        })
     });
 </script>
 
