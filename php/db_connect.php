@@ -1,7 +1,6 @@
 <?php
-
-    // connetto al database
-    $conn = mysqli_connect('localhost', 'tobet', 'tobet', 'bdd');
+    //connetto al database
+    $conn = mysqli_connect('localhost', 'laura', 'bl0gcr34t0r', 'progdb');
 
     //controllo la connessione
     if (!$conn) {
