@@ -49,7 +49,7 @@
 <div class="container py-5">
 
     <div class="row py-2 justify-content-center">
-        <div class="col-8">
+        <div class="col-md-8">
 
             <div class="card bg-light shadow">
                 <div class="card-body">
