@@ -481,7 +481,7 @@
             const testoCommento = $("#nuovoCommentoTextarea").serialize();
 
             $.post({
-                data: {testoCommento: testoCommento},
+                data: testoCommento,
                 url: "inser_commento.php?idPost=<?php echo $post['idPost'] ?>",
                 dataType: "text",
                 success: function () {
