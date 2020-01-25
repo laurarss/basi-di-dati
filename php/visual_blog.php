@@ -7,10 +7,10 @@
      * Permette l'aggiunta di commenti e mi piace da parte di un qualsiasi utente loggato.
      */
 
-    //includo file connessione al db
+    // includo file connessione al db
     include('db_connect.php');
 
-    //includo file header
+    // includo file header
     include('header.php');
 
     $blog = $posts = $followers = $like = $utenteSession = '';
@@ -27,7 +27,6 @@
         $sqlPost = "SELECT * FROM `post` WHERE idBlog = $idBlog"; //elenco post
         $sqlCommenti = "SELECT * FROM `commenti` ORDER BY data DESC"; //commenti per post
         $sqlTemi = "SELECT * FROM `temi`"; //elenco temi
-
 
         // risultato righe query
         $risBlog = mysqli_query($conn, $sqlBlog);
@@ -90,13 +89,6 @@
                 $risAddMiPiace = mysqli_query($conn, $sqlAddMiPiace);
             }
         }
-
-        // chiudi connessione
-        // mysqli_close($conn);
-
-
-    } else {
-        //header("Location: ops.php");
     }
 ?>
 
@@ -128,17 +120,16 @@
                     <p class="lead display-5">
                         Creato da: <?php echo htmlspecialchars($blog['autore']); ?>
                     </p>
-                    <p class="lead text-muted display-5">
+                    <p class="lead display-5">
                         Ultima modifica il: <?php echo date_format(new DateTime($blog['data']), 'd M Y H:i:s'); ?>
                     </p>
-                    <p class="lead text text-muted display-5">
+                    <p class="lead text display-5">
                         Categoria: <?php echo ucwords(htmlspecialchars($categoriaBlog['nomeCategoria'])); //prende nome categoria da tab categorie?>
                     </p>
                     <p class="lead display-5">
                         <?php echo ucfirst(htmlspecialchars($blog['descrizione'])); ?>
                     </p>
 
-                <?php else: ?>
                 <?php endif; ?>
 
                 <!-- pulsante segui -->
@@ -148,6 +139,7 @@
                         <?php echo $segui; ?>
                     </div>
                 </div>
+
                 <div class="row">
                     <div class="col-12 text-left">
                         <!-- implementata procedura cambio sfondo con nuova pag php -->
@@ -200,57 +192,65 @@
     <?php else: ?>
     <?php endif; ?>
 
-    <!-- mostra i post del blog dal db:-->
-
+    <!-- mostra i post del blog dal db -->
     <?php foreach ($posts as $post) { ?>
 
-        <!-- riga intestazione post -->
-        <div class="row py-2">
-
-            <div class="col-sm-10">
-                <h1 class="lead display-5 font-weight-bold"><?php echo htmlspecialchars($post['titolo']); ?></h1>
-                <small class="text-muted"><?php echo date_format(new DateTime($post['data']), 'd M Y H:i:s'); ?></small>
-            </div>
-
-            <div class="col-sm-2 text-right">
-                <a class="daNascondere btn btn-md btn-danger fa fa-trash"
-                   href="cancella_post.php?idPost=<?php echo $post['idPost']; ?>&idBlog=<?php echo $blog['idBlog']; ?>"></a>
-            </div>
-
-        </div>
-
-        <!-- riga immagine descrizione e bottoni post -->
-        <div class="row py-2">
-
-            <div class="col-sm-6">
-                <img class="img-fluid" alt="Immagine post" src="<?php echo htmlspecialchars($post['media']); ?>">
-            </div>
-
-            <div class="col-sm-6">
-                <p><?php echo htmlspecialchars($post['testo']); ?></p>
-            </div>
-
-        </div>
-
         <?php
-        // php per pulsante mi piace
+
         // recupero id post
         $idPost = $post['idPost'];
+
         // query per cercare nella tabella dei mi piace l'utente attualmente loggato
+        // il risultato sara' necessario per aggiornare il tasto di mi piace al caricamento della pagina
         $sqlMiPiace = "SELECT * FROM mipiace WHERE idPost = '$idPost' AND idUtente = '$utenteSession'";
         $risMiPiace = mysqli_query($conn, $sqlMiPiace);
         $miPiace = mysqli_fetch_assoc($risMiPiace);
+
         ?>
 
-        <div class="text-right">
-            <!-- pulsante mi piace -->
-            <!-- la visual cambia in base all'esito della query sul db "mipiace" -->
-            <div class="col-12 py-2">
+        <!-- container del post: necessario per rimozione asicrona tramite ajax post request -->
+        <div class="post-container" data-id-post="<?php echo $idPost ?>">
 
-                <button class="like-button btn btn-md btn-outline-primary"
-                        data-id-post="<?php echo $post['idPost']; ?>"
-                        data-is-liked="<?php echo isset($miPiace) ?>"
-                        data-cont-like="<?php echo $post['cont_like']; ?>">
+            <div class="row py-2">
+
+                <!-- intestazione post -->
+                <div class="col-sm-10">
+                    <h1 class="lead display-5 font-weight-bold"><?php echo htmlspecialchars($post['titolo']); ?></h1>
+                    <small class="text-muted"><?php echo date_format(new DateTime($post['data']), 'd M Y H:i:s'); ?></small>
+                </div>
+
+                <!-- bottone delete post -->
+                <div class="col-sm-2 text-right">
+                    <button class="delete-post-button daNascondere btn btn-sm btn-danger fa fa-trash"
+                            data-id-post="<?php echo $idPost ?>"
+                            type="button">
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- riga immagine descrizione e bottoni post -->
+            <div class="row py-2">
+
+                <div class="col-sm-6">
+                    <img class="img-fluid" alt="Immagine post" src="<?php echo htmlspecialchars($post['media']); ?>">
+                </div>
+
+                <div class="col-sm-6">
+                    <p><?php echo htmlspecialchars($post['testo']); ?></p>
+                </div>
+
+            </div>
+
+            <div class="text-right">
+                <!-- pulsante mi piace -->
+                <!-- la visual cambia in base all'esito della query sul db "mipiace" -->
+                <div class="col-12 py-2">
+
+                    <button class="like-button btn btn-md btn-outline-primary"
+                            data-id-post="<?php echo $post['idPost']; ?>"
+                            data-is-liked="<?php echo isset($miPiace) ?>"
+                            data-cont-like="<?php echo $post['cont_like']; ?>">
 
                         <span class="cont_like py-3 px-2 text-primary">
                             <?php if ($miPiace !== null) { ?>
@@ -263,63 +263,71 @@
                             (<?php echo $post['cont_like']; ?>)
                         </span>
 
-                </button>
-
-            </div>
-        </div>
-
-        <!-- commenti -->
-        <?php foreach ($commenti as $commento) {
-            if ($commento['idPost'] === $post['idPost']) { ?>
-                <div class="row py-2 pl-5">
-                    <div class="col-1 pt-4"><i class="far fa-comment-alt fa-2x"></i></div>
-                    <div class="col-10">
-                        <h6><?php echo htmlspecialchars($commento['autore']); ?></h6>
-                        <small class="text-muted"><?php echo date_format(new DateTime($commento['data']), 'd M Y H:i:s'); ?></small>
-                        <p><?php echo htmlspecialchars($commento['nota']); ?></p>
-                    </div>
-                    <div class="col-sm-1 text-right">
-                        <a class="btn btn-sm btn-danger fa fa-trash"
-                           href="canc_commento.php?idCommento=<?php echo $commento['idCommento']; ?>&idBlog=<?php echo $blog['idBlog']; ?>"></a>
-                    </div>
-                </div>
-            <?php } ?>
-        <?php } ?>
-
-        <!-- Card crea commento -->
-        <form enctype="multipart/form-data"
-              class="formCreaCommento"
-              method="POST"
-              action="inser_commento.php?idPost=<?php echo $post['idPost'] ?>&idBlog=<?php echo $blog['idBlog'] ?>">
-
-            <div class="row pl-5">
-                <h5 class="display-5">+ aggiungi un commento:</h5>
-            </div>
-
-            <div class="row py-2 pl-md-5 text-center">
-
-                <div class="col-sm-1 pt-4 pb-2">
-                    <i class="fas fa-comment-alt fa-2x"></i>
-                </div>
-
-                <div class="col-sm-9">
-                    <label class="sr-only" for="commentoFormInput">Nuovo Commento</label>
-                    <textarea name="nuovoCommentoTextarea"
-                              class="form-control mb-2 mr-sm-2 nuovoCommentoTextarea user-bg user-text"
-                              rows="2"
-                              placeholder="Scrivi un commento"></textarea>
-                </div>
-
-                <div class="col-sm-2">
-                    <button name="crea_commento" type="submit"
-                            class="btn btn-outline-primary btn-lg mb-2 crea_commento"
-                            href="crea_post.php?idPost=<?php echo $post['idPost']; ?>">
-                        <i class="fa fa-plus-circle"></i>
                     </button>
+
+                </div>
+            </div>
+
+            <!-- commenti -->
+            <?php foreach ($commenti as $commento) {
+                if ($commento['idPost'] === $post['idPost']) { ?>
+
+                    <div class="row py-2 pl-5">
+
+                        <div class="col-1 pt-4"><i class="far fa-comment-alt fa-2x"></i></div>
+
+                        <div class="col-10">
+                            <h6><?php echo htmlspecialchars($commento['autore']); ?></h6>
+                            <small class="text-muted"><?php echo date_format(new DateTime($commento['data']), 'd M Y H:i:s'); ?></small>
+                            <p><?php echo htmlspecialchars($commento['nota']); ?></p>
+                        </div>
+
+                        <div class="col-sm-1 text-right">
+                            <a class="btn btn-sm btn-danger fa fa-trash"
+                               href="canc_commento.php?idCommento=<?php echo $commento['idCommento']; ?>&idBlog=<?php echo $blog['idBlog']; ?>"></a>
+                        </div>
+
+                    </div>
+                <?php } ?>
+            <?php } ?>
+
+            <!-- Card crea commento -->
+            <form enctype="multipart/form-data"
+                  class="formCreaCommento"
+                  method="POST"
+                  action="inser_commento.php?idPost=<?php echo $post['idPost'] ?>&idBlog=<?php echo $blog['idBlog'] ?>">
+
+                <div class="row pl-5">
+                    <h5 class="display-5">+ aggiungi un commento:</h5>
                 </div>
 
-            </div>
-        </form>
+                <div class="row py-2 pl-md-5 text-center">
+
+                    <div class="col-sm-1 pt-4 pb-2">
+                        <i class="fas fa-comment-alt fa-2x"></i>
+                    </div>
+
+                    <div class="col-sm-9">
+                        <label class="sr-only" for="commentoFormInput">Nuovo Commento</label>
+                        <textarea name="nuovoCommentoTextarea"
+                                  class="form-control mb-2 mr-sm-2 nuovoCommentoTextarea user-bg user-text"
+                                  rows="2"
+                                  placeholder="Scrivi un commento">
+                    </textarea>
+                    </div>
+
+                    <div class="col-sm-2">
+                        <button name="crea_commento" type="submit"
+                                class="btn btn-outline-primary btn-lg mb-2 crea_commento"
+                                href="crea_post.php?idPost=<?php echo $post['idPost']; ?>">
+                            <i class="fa fa-plus-circle"></i>
+                        </button>
+                    </div>
+
+                </div>
+            </form>
+
+        </div>
 
     <?php } ?>
 
@@ -337,10 +345,8 @@
         </div>
     </div>
 </div>
-</div>
 
 <?php include('footer.php'); ?>
-</body>
 
 <!-- nasconde tutti i bottoni blog(con la classe daNascondere) a chi non è loggato -->
 <?php if (!isset($_SESSION['nomeUtente'])): ?>
@@ -364,24 +370,65 @@
     </script>
 <?php endif; ?>
 
-<!-- pulsante segui -->
 <script type="text/javascript">
-    $(document).ready(function () {
-        // SEGUI
-// se il pulsante ha id "follow" NON sto seguendo e devo aggiungere il record dal db
-        $('#follow').click(function () {
-            $.ajax({    //creo richiesta ajax
+
+    $(function () {
+
+        /**
+         * DELETE POST
+         */
+        $('.delete-post-button').on('click', function () {
+
+            const idPost = $(this).data('id-post');
+
+            $.ajax({
+                type: "POST",
+                url: "cancella_post.php",
+                data: {idPost: idPost},
+                dataType: 'text',
+                success: function (response) {
+
+                    // se la delete del post e' andata a buon fine mi ritorna una stringa true/false
+                    if (response === 'true') {
+
+                        // ciclo tutti i container di post e se trovo quello interessato rimuovo il post dal DOM
+                        $('.post-container').each(function () {
+
+                            const tempIdPost = $(this).data('id-post');
+
+                            if (idPost === tempIdPost) {
+                                $(this).remove();
+                                return false;
+                            }
+                        })
+                    } else {
+                        console.error('Errore: eliminazione post fallita!');
+                    }
+                }
+            })
+        });
+
+        /**
+         * SEGUI
+         * se il pulsante ha id "follow" NON sto seguendo e devo aggiungere il record dal db
+         */
+        $('#follow').on('click', function () {
+
+            $.ajax({
                 type: "POST",
                 url: "crea_follower.php?idBlog=<?php echo $blog['idBlog'] ?>",
-                dataType: "html",   //la richiesta ritorna del codice html
+                dataType: "html",
                 success: function (response) {
                     $(".segui").html(response);
                 }
             });
         });
-        // NON SEGUIRE PIU'
-// se il pulsante ha id "following" sto già seguendo e devo rimuovere il record dal db
-        $('#following').click(function () {
+
+        /**
+         * NON SEGUIRE PIU'
+         * se il pulsante ha id "following" sto già seguendo e devo rimuovere il record dal db
+         */
+        $('#following').on('click', function () {
             $.ajax({
                 type: "POST",
                 url: "cancella_follower.php?idBlog=<?php echo $blog['idBlog'] ?>",
@@ -391,18 +438,10 @@
                 }
             });
         });
-    });
-</script>
 
-
-<script type="text/javascript">
-    /*
-    * mi lego all'evento di click sul bottone like button che serve
-    * per aggiungere o togliere il mi piace da un post
-    */
-
-    $(function () {
-
+        /**
+         * MI PIACE
+         */
         $(".like-button").on('click', function () {
 
             const button = $(this); // elemento html corrispondente al bottone
@@ -433,14 +472,10 @@
                 }
             )
         });
-    });
 
-</script>
-
-<!--crea commento-->
-<script>
-    $(function () {
-
+        /**
+         * AGGIUNGI COMMENTO
+         */
         $('#crea_commento').on('click', function () {
 
             const testoCommento = $("#nuovoCommentoTextarea").serialize();
@@ -454,14 +489,10 @@
                 }
             });
         });
-    });
-</script>
 
-<!-- cambio link css in base a tema selezionato -->
-<script type="text/javascript">
-
-    $(function () {
-
+        /**
+         * CAMBIO TEMA
+         */
         $('#changeTheme').on('click', function () {
 
             // prendo il nome del tema, che per definizione corrisponde a quello del file css da impostare
@@ -483,3 +514,5 @@
         });
     });
 </script>
+
+</body>

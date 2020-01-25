@@ -131,9 +131,7 @@
 
         //chiudi connessione
         mysqli_close($conn);
-
     }
-
 ?>
 <!DOCTYPE html>
 <html lang="it">
@@ -144,6 +142,7 @@
 <body>
 
 <div class="container">
+
     <!-- pulsante torna indietro -->
     <div class="row">
         <div class="col-sm-12 px-5 py-4 text-left">
@@ -153,6 +152,7 @@
             </a>
         </div>
     </div>
+
     <div class="row justify-content-center">
         <div class="col-12 px-5">
             <div class="card bg-light shadow">
@@ -230,6 +230,7 @@
                                     Crea
                                 </button>
                             </div>
+
                         </div>
                     </form>
                 </div>
@@ -237,32 +238,36 @@
         </div>
     </div>
 </div>
-</div>
 
 <?php include('footer.php'); ?>
 
 <!-- script errori form -->
 <script type="text/javascript">
+
     $("form").submit(function (event) {
         let errore = "";
+
         if ($("#titoloCreaPost").val() === "") { //se il campo titolo del post è vuoto
             errore += "Il titolo del post è obbligatorio.<br>";
             $("#titoloCreaPost").css('border-color', '#b32d39');
         } else {
             $("#titoloCreaPost").css('border-color', '#28a745');
         }
+
         if ($("#testoPost").val() === "") { //se il campo testo è vuoto
             errore += "Non hai inserito un testo nel tuo post.<br>";
             $("#testoPost").css('border-color', '#b32d39');
         } else {
             $("#testoPost").css('border-color', '#28a745');
         }
+
         if (errore !== "") {
             event.preventDefault();//fa in modo che il form non si refreshi al "submit" ma mi permetta di validare i dati prima di mandarli al server
             $("#errore").addClass("alert-danger"); // aggiunge al div il colore rosso con classe bootstrap
             $("#errore").html('<p><strong>Nel form sono stati trovati i seguenti errori:</strong></p>' + errore);
         }
     });
+
     // script colora di rosso errori dal php al refersh della pagina, per controllo fallito sull'img (aggiungendo classe alert-danger di bootstrap)
     if ($('#errore').children().length > 0) { //se div errore non è vuoto
         $("#errore").addClass("alert-danger");
