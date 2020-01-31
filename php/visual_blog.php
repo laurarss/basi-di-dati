@@ -15,81 +15,78 @@ include('header.php');
 
 $blog = $posts = $followers = $like = $utenteSession = '';
 
-if (isset($_SESSION['nomeUtente'])) {
 
-    //verifica la richiesta GET del parametro idBlog
-    if (isset($_GET['idBlog'])) {
+//verifica la richiesta GET del parametro idBlog
+if (isset($_GET['idBlog'])) {
 
-        mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+    mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
-        $idBlog = mysqli_real_escape_string($conn, $_GET['idBlog']);
+    $idBlog = mysqli_real_escape_string($conn, $_GET['idBlog']);
 
-        // sql codice
-        $sqlBlog = "SELECT * FROM `blog` WHERE idBlog = $idBlog"; //dati blog
-        $sqlPost = "SELECT * FROM `post` WHERE idBlog = $idBlog"; //elenco post
-        $sqlCommenti = "SELECT * FROM `commenti` ORDER BY data DESC"; //commenti per post
-        $sqlTemi = "SELECT * FROM `temi`"; //elenco temi
+    // sql codice
+    $sqlBlog = "SELECT * FROM `blog` WHERE idBlog = $idBlog"; //dati blog
+    $sqlPost = "SELECT * FROM `post` WHERE idBlog = $idBlog"; //elenco post
+    $sqlCommenti = "SELECT * FROM `commenti` ORDER BY data DESC"; //commenti per post
+    $sqlTemi = "SELECT * FROM `temi`"; //elenco temi
 
-        // risultato righe query
-        $risBlog = mysqli_query($conn, $sqlBlog);
-        $risPost = mysqli_query($conn, $sqlPost);
-        $risCommenti = mysqli_query($conn, $sqlCommenti);
-        $risTemi = mysqli_query($conn, $sqlTemi); //ris temi
+    // risultato righe query
+    $risBlog = mysqli_query($conn, $sqlBlog);
+    $risPost = mysqli_query($conn, $sqlPost);
+    $risCommenti = mysqli_query($conn, $sqlCommenti);
+    $risTemi = mysqli_query($conn, $sqlTemi); //ris temi
 
-        // fetch righe risultato in un array
-        $blog = mysqli_fetch_assoc($risBlog); // si usa assoc e non all perchè prendiamo solo una riga della tab risultato
-        $posts = mysqli_fetch_all($risPost, MYSQLI_ASSOC);
-        $commenti = mysqli_fetch_all($risCommenti, MYSQLI_ASSOC);
-        $temi = mysqli_fetch_all($risTemi, MYSQLI_ASSOC);
+    // fetch righe risultato in un array
+    $blog = mysqli_fetch_assoc($risBlog); // si usa assoc e non all perchè prendiamo solo una riga della tab risultato
+    $posts = mysqli_fetch_all($risPost, MYSQLI_ASSOC);
+    $commenti = mysqli_fetch_all($risCommenti, MYSQLI_ASSOC);
+    $temi = mysqli_fetch_all($risTemi, MYSQLI_ASSOC);
 
-        // prendo dall'array associativo blog l'id della categoria associata, poi faccio la query che prende la categoria
-        $idCategoriaBlog = $blog['categoria'];
-        $sqlCategorie = "SELECT * FROM categorie WHERE idCategoria = $idCategoriaBlog";
+    // prendo dall'array associativo blog l'id della categoria associata, poi faccio la query che prende la categoria
+    $idCategoriaBlog = $blog['categoria'];
+    $sqlCategorie = "SELECT * FROM categorie WHERE idCategoria = $idCategoriaBlog";
 
-        $risCateg = mysqli_query($conn, $sqlCategorie);
-        $categoriaBlog = mysqli_fetch_assoc($risCateg);
+    $risCateg = mysqli_query($conn, $sqlCategorie);
+    $categoriaBlog = mysqli_fetch_assoc($risCateg);
 
-        // serve a pulsante "segui" e "mi piace"
-        if (isset($_SESSION['nomeUtente'])) {
-            $utenteSession = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']);
-        }
+    // serve a pulsante "segui" e "mi piace"
+    if (isset($_SESSION['nomeUtente'])) {
+        $utenteSession = mysqli_real_escape_string($conn, $_SESSION['nomeUtente']);
+    }
 
-        /** GESTIONE FOLLOW */
+    /** GESTIONE FOLLOW */
 
-        // query per cercare nella tab follower l'utente attualmente loggato
-        // la risposta sarà un array di un elemento, nel caso venga trovato, o vuoto in caso contrario
-        $sqlFollow = "SELECT * FROM follower WHERE idBlog = '$idBlog' AND idUtente = '$utenteSession'";
-        $risFollow = mysqli_query($conn, $sqlFollow);
-        $follow = mysqli_fetch_assoc($risFollow);
-        $isFollower = !empty($follow);
+    // query per cercare nella tab follower l'utente attualmente loggato
+    // la risposta sarà un array di un elemento, nel caso venga trovato, o vuoto in caso contrario
+    $sqlFollow = "SELECT * FROM follower WHERE idBlog = '$idBlog' AND idUtente = '$utenteSession'";
+    $risFollow = mysqli_query($conn, $sqlFollow);
+    $follow = mysqli_fetch_assoc($risFollow);
+    $isFollower = !empty($follow);
 
-        /** GESTIONE MI PIACE **/
+    /** GESTIONE MI PIACE **/
 
-        //se e' stato premuto un tasto like/dislike su un qualsiasi post
-        if (isset($_POST['likeButtonIdPost'])) { // controllo se la POST è stata mandata alla pagina e ha un campo like
+    //se e' stato premuto un tasto like/dislike su un qualsiasi post
+    if (isset($_POST['likeButtonIdPost'])) { // controllo se la POST è stata mandata alla pagina e ha un campo like
 
-            $idPost = $_POST['likeButtonIdPost']; // prendiamo l'idPost inerente al post sul quale abbiamo cliccato like/dislike
-            $isPostLiked = $_POST['likeButtonIsPostLiked']; // prendiamo lo stato del post -> true se c'e' gia' mi piace, false altrimenti
+        $idPost = $_POST['likeButtonIdPost']; // prendiamo l'idPost inerente al post sul quale abbiamo cliccato like/dislike
+        $isPostLiked = $_POST['likeButtonIsPostLiked']; // prendiamo lo stato del post -> true se c'e' gia' mi piace, false altrimenti
 
-            if ($isPostLiked == true) { // se il post ha gia' il mi piace...
+        if ($isPostLiked == true) { // se il post ha gia' il mi piace...
 
-                $sqlDecrementLikeCounter = "UPDATE post SET cont_like = cont_like - 1 WHERE idPost = '$idPost'";
-                $risDecrementLikeCounter = mysqli_query($conn, $sqlDecrementLikeCounter);
+            $sqlDecrementLikeCounter = "UPDATE post SET cont_like = cont_like - 1 WHERE idPost = '$idPost'";
+            $risDecrementLikeCounter = mysqli_query($conn, $sqlDecrementLikeCounter);
 
-                $sqlRemoveMiPiace = "DELETE FROM mipiace WHERE idPost= '$idPost' AND idUtente = '$utenteSession'";
-                $risRemoveMiPiace = mysqli_query($conn, $sqlRemoveMiPiace);
-            } else { // se il post non ha il mi piace...
+            $sqlRemoveMiPiace = "DELETE FROM mipiace WHERE idPost= '$idPost' AND idUtente = '$utenteSession'";
+            $risRemoveMiPiace = mysqli_query($conn, $sqlRemoveMiPiace);
+        } else { // se il post non ha il mi piace...
 
-                $sqlUpdateLikeCounter = "UPDATE post SET cont_like = cont_like + 1 WHERE idPost = '$idPost'";
-                $risUpdateLikeCounter = mysqli_query($conn, $sqlUpdateLikeCounter);
+            $sqlUpdateLikeCounter = "UPDATE post SET cont_like = cont_like + 1 WHERE idPost = '$idPost'";
+            $risUpdateLikeCounter = mysqli_query($conn, $sqlUpdateLikeCounter);
 
-                $sqlAddMiPiace = "INSERT INTO mipiace (idLike, idPost, idUtente) VALUES (NULL, '$idPost', '$utenteSession')";
-                $risAddMiPiace = mysqli_query($conn, $sqlAddMiPiace);
-            }
+            $sqlAddMiPiace = "INSERT INTO mipiace (idLike, idPost, idUtente) VALUES (NULL, '$idPost', '$utenteSession')";
+            $risAddMiPiace = mysqli_query($conn, $sqlAddMiPiace);
         }
     }
-} else {
-    header("Location: ops.php");
+
 }
 ?>
 
@@ -136,7 +133,7 @@ include 'head.php';
                 <!-- pulsante segui -->
                 <!-- la visual cambia in base all'esito della query sul db "follower" -->
                 <div class="row">
-                    <div class="col-12 text-center">
+                    <div class="daNascondere col-12 text-center">
                         <button id="followButton" type="button"
                                 data-id-blog="<?php echo $idBlog ?>"
                                 data-is-follower="<?php echo $isFollower ?>"
@@ -292,7 +289,7 @@ include 'head.php';
                             <p><?php echo htmlspecialchars($commento['nota']); ?></p>
                         </div>
 
-                        <div class="col-sm-1 text-right">
+                        <div class="daNascondere col-sm-1 text-right">
                             <a class="btn btn-sm btn-danger fa fa-trash"
                                href="canc_commento.php?idCommento=<?php echo $commento['idCommento']; ?>&idBlog=<?php echo $blog['idBlog']; ?>"></a>
                         </div>
