@@ -105,7 +105,7 @@
             <?php // mostro pulsante crea blog solo agli utenti normali che hanno meno di 3 blog o a quelli che sono premium
                 if (($tipoUtente['tipoUtente'] == "Normale" && $numBlog < 3) || $tipoUtente['tipoUtente'] == "Premium") { ?>
                     <!--aggiunta card di crea blog-->
-                    <div class="cardCreaBlog col-lg-3 py-3">
+                    <div class="cardCreaBlog col-lg-3 py-3 mx-auto">
                         <div class="card h-100 z-depth-0">
 
                             <div class="card-header">
@@ -113,7 +113,6 @@
                             </div>
 
                             <div class="card-body text-center">
-
                                 <div class="row py-2">
                                     <div class="col-12">
                                         <div class="card-text">Crea un nuovo blog</div>
@@ -129,21 +128,50 @@
                                         </a>
                                     </div>
                                 </div>
-
                             </div>
+
                         </div>
                     </div>
                 <?php } ?>
 
         </div>
 
-    <?php } else { ?>
+    <?php } else { // se utente loggato non ha ancora nessun blog ?>
 
         <div class="row d-flex h-75 py-2">
             <div class="col-12 justify-content-center align-self-center text-center">
                 <h1>Non hai creato nessun blog!</h1>
                 <p> Puoi aiutare la community creando un tuo blog riguardo ad un argomento a tuo piacere! </p>
                 <p><span class="font-italic">"Quando qualcuno condivide, tutti vincono."</span> - (Jim Rohn)</p>
+
+                <?php // mostro pulsante crea blog solo agli utenti loggati
+                if (isset($_SESSION['nomeUtente'])) { ?>
+                    <!--aggiunta card di crea blog-->
+                    <div class="cardCreaBlog col-lg-3 py-3 ">
+                        <div class="card z-depth-0">
+
+                            <div class="card-body text-center">
+                                <div class="row py-2">
+                                    <div class="col-12">
+                                        <div class="card-text">Crea un nuovo blog</div>
+                                    </div>
+                                </div>
+
+                                <!-- card commands row -->
+                                <div class="row py-2">
+                                    <div class="col-12 text-center">
+                                        <!--  pulsante crea nuovo blog  -->
+                                        <a class="btn btn-outline-primary" href="crea_blog.php"> <i
+                                                    class="fa fa-plus-circle"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                <?php } ?>
+
             </div>
         </div>
 
