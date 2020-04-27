@@ -132,31 +132,36 @@ include 'head.php';
 
                 <!-- pulsante segui -->
                 <!-- la visual cambia in base all'esito della query sul db "follower" -->
-                <div class="row">
-                    <div class="daNascondere col-12 text-center">
-                        <button id="followButton" type="button"
-                                data-id-blog="<?php echo $idBlog ?>"
-                                data-is-follower="<?php echo $isFollower ?>"
-                                class="btn btn-secondary btn-sm">
-                            <?php if ($follow) { ?>
-                                <i class="fa fa-rss-square"></i> Stai seguendo
-                            <?php } else { ?>
-                                <i class="fa fa-rss"></i> Segui
-                            <?php } ?>
-                        </button>
+                <?php if (isset($_SESSION['nomeUtente']) && ($_SESSION['nomeUtente'] !== $blog['autore'])) { ?>
+                    <div class="row">
+                        <div class="daNascondere col-12 text-center">
+                            <button id="followButton" type="button"
+                                    data-id-blog="<?php echo $idBlog ?>"
+                                    data-is-follower="<?php echo $isFollower ?>"
+                                    class="btn btn-secondary btn-sm">
+                                <?php if ($follow) { ?>
+                                    <i class="fa fa-rss-square"></i> Stai seguendo
+                                <?php } else { ?>
+                                    <i class="fa fa-rss"></i> Segui
+                                <?php } ?>
+                            </button>
+                        </div>
                     </div>
-                </div>
+                <?php } ?>
 
-                <div class="row">
-                    <div class="col-12 text-left">
-                        <!-- implementata procedura cambio sfondo con nuova pag php -->
-                        <a class="daNascondere btn btn-outline-secondary btn-sm"
-                           href="cambio_banner.php?idBlog=<?php echo $blog['idBlog']; ?>">
-                            <i class="fa fa-edit"></i>
-                            Cambia sfondo banner
-                        </a>
+
+                <?php if (isset($_SESSION['nomeUtente']) && ($_SESSION['nomeUtente'] == $blog['autore'])) { ?>
+                    <div class="row">
+                        <div class="col-12 text-left">
+                            <!-- implementata procedura cambio sfondo con nuova pag php -->
+                            <a class="daNascondere btn btn-outline-secondary btn-sm"
+                               href="cambio_banner.php?idBlog=<?php echo $blog['idBlog']; ?>">
+                                <i class="fa fa-edit"></i>
+                                Cambia sfondo banner
+                            </a>
+                        </div>
                     </div>
-                </div>
+                <?php } ?>
 
             </div>
         </div>
@@ -166,30 +171,31 @@ include 'head.php';
 <div class="container py-2">
 
     <!-- scelta tema -->
-    <form class="form-inline">
+    <?php if (isset($_SESSION['nomeUtente']) && ($_SESSION['nomeUtente'] == $blog['autore'])) { ?>
+        <form class="form-inline">
+            <p>Cambia tema:</p>
 
-        <p>Cambia tema:</p>
+            <div class="form-row align-items-center">
 
-        <div class="form-row align-items-center">
+                <label class="sr-only" for="selezTema">Scegli tema blog:</label>
 
-            <label class="sr-only" for="selezTema">Scegli tema blog:</label>
+                <select id="selezTema" data-id-blog="<?php echo $idBlog ?>"
+                        class="form-control form-control-md mb-2 mx-sm-2">
+                    <?php foreach ($temi as $nomeTema) { ?>
+                        <option <?php if ($blog['tema'] === $nomeTema['nomeTema']) echo 'selected' ?>
+                                value="<?php echo htmlspecialchars($nomeTema['nomeTema']); ?>">
+                            <?php echo htmlspecialchars($nomeTema['nomeTema']); ?>
+                        </option>
+                    <?php } ?>
+                </select>
 
-            <select id="selezTema" data-id-blog="<?php echo $idBlog ?>"
-                    class="form-control form-control-md mb-2 mx-sm-2">
-                <?php foreach ($temi as $nomeTema) { ?>
-                    <option <?php if ($blog['tema'] === $nomeTema['nomeTema']) echo 'selected' ?>
-                            value="<?php echo htmlspecialchars($nomeTema['nomeTema']); ?>">
-                        <?php echo htmlspecialchars($nomeTema['nomeTema']); ?>
-                    </option>
-                <?php } ?>
-            </select>
+                <button id="changeTheme" type="button" class="btn btn-primary btn-sm mb-2">
+                    Applica
+                </button>
+            </div>
+        </form>
+    <?php } ?>
 
-            <button id="changeTheme" type="button" class="btn btn-primary btn-sm mb-2">
-                Applica
-            </button>
-        </div>
-
-    </form>
 
     <!-- messaggio assenza post -->
     <?php if (!$posts): ?>
@@ -227,12 +233,14 @@ include 'head.php';
                 </div>
 
                 <!-- bottone delete post -->
+                <?php if (isset($_SESSION['nomeUtente']) && ($_SESSION['nomeUtente'] == $blog['autore'])) { ?>
                 <div class="col-sm-2 text-right">
                     <button class="delete-post-button daNascondere btn btn-sm btn-danger fa fa-trash"
                             data-id-post="<?php echo $idPost ?>"
                             type="button">
                     </button>
                 </div>
+                <?php } ?>
 
             </div>
 
@@ -249,31 +257,31 @@ include 'head.php';
 
             </div>
 
-            <div class="text-right">
-                <!-- pulsante mi piace -->
-                <!-- la visual cambia in base all'esito della query sul db "mipiace" -->
-                <div class="col-12 py-2">
+            <?php if ((isset($_SESSION['nomeUtente'])) && ($_SESSION['nomeUtente'] !== $blog['autore'])) { ?>
+                <div class="text-right">
+                    <!-- pulsante mi piace -->
+                    <!-- la visual cambia in base all'esito della query sul db "mipiace" -->
+                    <div class="col-12 py-2">
+                        <button class="like-button btn btn-md btn-outline-primary"
+                                data-id-post="<?php echo $post['idPost']; ?>"
+                                data-is-liked="<?php echo isset($miPiace) ?>"
+                                data-cont-like="<?php echo $post['cont_like']; ?>">
 
-                    <button class="like-button btn btn-md btn-outline-primary"
-                            data-id-post="<?php echo $post['idPost']; ?>"
-                            data-is-liked="<?php echo isset($miPiace) ?>"
-                            data-cont-like="<?php echo $post['cont_like']; ?>">
+                            <span class="cont_like py-3 px-2 text-primary">
+                                <?php if ($miPiace !== null) { ?>
+                                    <i class="px-1 fas fa-thumbs-down"></i>
+                                <?php } else { ?>
+                                    <i class="px-1 fas fa-thumbs-up"></i>
+                                <?php } ?>
+                                Mi piace
+                                <!-- numero di like da tab post-->
+                                (<?php echo $post['cont_like']; ?>)
+                            </span>
 
-                        <span class="cont_like py-3 px-2 text-primary">
-                            <?php if ($miPiace !== null) { ?>
-                                <i class="px-1 fas fa-thumbs-down"></i>
-                            <?php } else { ?>
-                                <i class="px-1 fas fa-thumbs-up"></i>
-                            <?php } ?>
-                            Mi piace
-                            <!-- numero di like da tab post-->
-                            (<?php echo $post['cont_like']; ?>)
-                        </span>
-
-                    </button>
-
+                        </button>
+                    </div>
                 </div>
-            </div>
+            <?php } ?>
 
             <!-- commenti -->
             <?php foreach ($commenti as $commento) {
@@ -289,68 +297,70 @@ include 'head.php';
                             <p><?php echo htmlspecialchars($commento['nota']); ?></p>
                         </div>
 
+                    <?php if (isset($_SESSION['nomeUtente']) && ($_SESSION['nomeUtente'] == $blog['autore'])) { ?>
                         <div class="daNascondere col-sm-1 text-right">
                             <a class="btn btn-sm btn-danger fa fa-trash"
                                href="canc_commento.php?idCommento=<?php echo $commento['idCommento']; ?>&idBlog=<?php echo $blog['idBlog']; ?>"></a>
                         </div>
+                    <?php } ?>
 
                     </div>
                 <?php } ?>
             <?php } ?>
 
             <!-- Card crea commento -->
-            <form enctype="multipart/form-data"
-                  class="formCreaCommento"
-                  method="POST"
-                  action="inser_commento.php?idPost=<?php echo $post['idPost'] ?>&idBlog=<?php echo $blog['idBlog'] ?>">
+            <?php if (isset($_SESSION['nomeUtente'])) { ?>
+                <form enctype="multipart/form-data"
+                      class="formCreaCommento"
+                      method="POST"
+                      action="inser_commento.php?idPost=<?php echo $post['idPost'] ?>&idBlog=<?php echo $blog['idBlog'] ?>">
 
-                <div class="row pl-5">
-                    <h5 class="display-5">+ aggiungi un commento:</h5>
-                </div>
-
-                <div class="row py-2 pl-md-5 text-center">
-
-                    <div class="col-sm-1 pt-4 pb-2">
-                        <i class="fas fa-comment-alt fa-2x"></i>
+                    <div class="row pl-5">
+                        <h5 class="display-5">+ aggiungi un commento:</h5>
                     </div>
 
-                    <div class="col-sm-9">
-                        <label class="sr-only" for="commentoFormInput">Nuovo Commento</label>
-                        <textarea name="nuovoCommentoTextarea"
-                                  class="form-control mb-2 mr-sm-2 nuovoCommentoTextarea user-bg user-text"
-                                  rows="2"
-                                  placeholder="Scrivi un commento">
-                    </textarea>
+                    <div class="row py-2 pl-md-5 text-center">
+
+                        <div class="col-sm-1 pt-4 pb-2">
+                            <i class="fas fa-comment-alt fa-2x"></i>
+                        </div>
+
+                        <div class="col-sm-9">
+                            <label class="sr-only" for="commentoFormInput">Nuovo Commento</label>
+                            <textarea name="nuovoCommentoTextarea" class="form-control mb-2 mr-sm-2 nuovoCommentoTextarea user-bg user-text" rows="2" placeholder="Scrivi un commento"></textarea>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <button name="crea_commento" type="submit"
+                                    class="btn btn-outline-primary btn-lg mb-2 crea_commento"
+                                    href="crea_post.php?idPost=<?php echo $post['idPost']; ?>">
+                                <i class="fa fa-plus-circle"></i>
+                            </button>
+                        </div>
+
                     </div>
-
-                    <div class="col-sm-2">
-                        <button name="crea_commento" type="submit"
-                                class="btn btn-outline-primary btn-lg mb-2 crea_commento"
-                                href="crea_post.php?idPost=<?php echo $post['idPost']; ?>">
-                            <i class="fa fa-plus-circle"></i>
-                        </button>
-                    </div>
-
-                </div>
-            </form>
-
+                </form>
+            <?php } ?>
         </div>
 
     <?php } ?>
 
 
     <!--Card crea post-->
-    <div class="daNascondere row py-2">
-        <div class="col-sm-10">
-            <h1 class="lead display-5 font-weight-bold">+ Crea un nuovo post</h1>
-            <p class="text-muted">nuovo post</p>
+    <?php if (isset($_SESSION['nomeUtente']) && ($_SESSION['nomeUtente'] == $blog['autore'])) { ?>
+        <div class="daNascondere row py-2">
+            <div class="col-sm-10">
+                <h1 class="lead display-5 font-weight-bold">+ Crea un nuovo post</h1>
+                <p class="text-muted">nuovo post</p>
+            </div>
+            <div class="col-sm-2">
+                <a class="btn btn-outline-primary btn-lg" href="crea_post.php?idBlog=<?php echo $blog['idBlog']; ?>">
+                    <i class="fa fa-plus-circle"></i>
+                </a>
+            </div>
         </div>
-        <div class="col-sm-2">
-            <a class="btn btn-outline-primary btn-lg" href="crea_post.php?idBlog=<?php echo $blog['idBlog']; ?>">
-                <i class="fa fa-plus-circle"></i>
-            </a>
-        </div>
-    </div>
+    <?php } ?>
+
 </div>
 
 <?php include('footer.php'); ?>
